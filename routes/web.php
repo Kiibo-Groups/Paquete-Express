@@ -5,6 +5,8 @@
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/loco', function () {  return public_path(); });
+
 Route::group(['middleware' => 'adminlocalize'], function () {
 
     Route::prefix('admin')->group(function () {

@@ -214,7 +214,7 @@ class FrontendController extends Controller
                 $two_column_category_items3 = Item::where('childcategory_id',$two_column_category_ids['childcategory_id3'])->whereStatus(1)->where('category_id',$two_column_category_ids['category_id3'])->orderby('id','desc')->take(10)->get();
             }
             }
-            
+
 
 
 

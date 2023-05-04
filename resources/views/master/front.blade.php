@@ -3,6 +3,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+
+
 @if (url()->current() == route('front.index'))
 <title>@yield('hometitle')</title>
 @else
@@ -23,11 +25,16 @@
 <link rel="apple-touch-icon" sizes="180x180" href="{{asset('assets/images/'.$setting->favicon)}}">
 <link rel="apple-touch-icon" sizes="167x167" href="{{asset('assets/images/'.$setting->favicon)}}">
 <!-- Vendor Styles including: Bootstrap, Font Icons, Plugins, etc.-->
-<link rel="stylesheet" media="screen" href="{{asset('assets/front/css/plugins.min.css')}}">
+
+
+<link href="{{ asset('assets/front/css/plugins.min.css') }}" rel="stylesheet">
+
+
+
 
 @yield('styleplugins')
 
-<link id="mainStyles" rel="stylesheet" media="screen" href="{{asset('assets/front/css/styles.min.css')}}">
+<link id="mainStyles" rel="stylesheet" media="screen" href="{{url('/assets/front/css/styles.min.css')}}">
 
 <link id="mainStyles" rel="stylesheet" media="screen" href="{{asset('assets/front/css/responsive.css')}}">
 <!-- Color css -->
@@ -99,7 +106,7 @@ body_theme4
                     <div class="right-area">
 
                         <a class="track-order-link wishlist-mobile d-inline-block d-lg-none" href="{{route('user.wishlist.index')}}"><i class="icon-heart"></i>{{ __('Wishlist') }}</a>
-                        
+
                         <div class="t-h-dropdown ">
                             <a class="main-link" href="#">{{ __('Currency') }}<i class="icon-chevron-down"></i></a>
                             <div class="t-h-dropdown-menu">
