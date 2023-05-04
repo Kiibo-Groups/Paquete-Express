@@ -1,19 +1,18 @@
-@extends('master.front')
+<?php $__env->startSection('title'); ?>
+    <?php echo e(__('Shipping')); ?>
 
-@section('title')
-    {{ __('Shipping') }}
-@endsection
+<?php $__env->stopSection(); ?>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-@section('content')
+<?php $__env->startSection('content'); ?>
     <!-- Page Title-->
     <div class="page-title">
         <div class="container">
             <div class="column">
                 <ul class="breadcrumbs">
-                    <li><a href="{{ route('front.index') }}">{{ __('Home') }}</a> </li>
+                    <li><a href="<?php echo e(route('front.index')); ?>"><?php echo e(__('Home')); ?></a> </li>
                     <li class="separator"></li>
-                    <li>{{ __('Shipping address') }}</li>
+                    <li><?php echo e(__('Shipping address')); ?></li>
                 </ul>
             </div>
         </div>
@@ -23,92 +22,92 @@
         <div class="row">
             <!-- Shipping Adress-->
             <div class="col-xl-9 col-lg-8">
-                <div class="steps flex-sm-nowrap mb-5"><a class="step" href="{{ route('front.checkout.billing') }}">
-                        <h4 class="step-title">1. {{ __('Billing Address') }}:</h4>
-                    </a><a class="step active" href="{{ route('front.checkout.shipping') }}">
-                        <h4 class="step-title">2. {{ __('Shipping Address') }}:</h4>
-                    </a><a class="step" href="{{ route('front.checkout.payment') }}">
-                        <h4 class="step-title">3. {{ __('Review and pay') }}</h4>
+                <div class="steps flex-sm-nowrap mb-5"><a class="step" href="<?php echo e(route('front.checkout.billing')); ?>">
+                        <h4 class="step-title">1. <?php echo e(__('Billing Address')); ?>:</h4>
+                    </a><a class="step active" href="<?php echo e(route('front.checkout.shipping')); ?>">
+                        <h4 class="step-title">2. <?php echo e(__('Shipping Address')); ?>:</h4>
+                    </a><a class="step" href="<?php echo e(route('front.checkout.payment')); ?>">
+                        <h4 class="step-title">3. <?php echo e(__('Review and pay')); ?></h4>
                     </a>
                 </div>
                 <div class="card">
                     <div class="card-body">
-                        <h6>{{ __('Shipping Address') }}</h6>
+                        <h6><?php echo e(__('Shipping Address')); ?></h6>
 
-                        <form id="checkoutShipping" action="{{ route('front.checkout.shipping.store') }}" method="POST">
-                            @csrf
+                        <form id="checkoutShipping" action="<?php echo e(route('front.checkout.shipping.store')); ?>" method="POST">
+                            <?php echo csrf_field(); ?>
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="checkout-fn">{{ __('First Name') }}</label>
+                                        <label for="checkout-fn"><?php echo e(__('First Name')); ?></label>
                                         <input class="form-control" name="ship_first_name" type="text" id="checkout-fn"
-                                            value="{{ isset($user) ? $user->first_name : '' }}">
+                                            value="<?php echo e(isset($user) ? $user->first_name : ''); ?>">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="checkout-ln">{{ __('Last Name') }}</label>
+                                        <label for="checkout-ln"><?php echo e(__('Last Name')); ?></label>
                                         <input class="form-control" name="ship_last_name" type="text" id="checkout-ln"
-                                            value="{{ isset($user) ? $user->last_name : '' }}">
+                                            value="<?php echo e(isset($user) ? $user->last_name : ''); ?>">
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="checkout-email">{{ __('E-mail Address') }}</label>
+                                        <label for="checkout-email"><?php echo e(__('E-mail Address')); ?></label>
                                         <input class="form-control" name="ship_email" type="email" id="checkout-email"
-                                            value="{{ isset($user) ? $user->email : '' }}">
+                                            value="<?php echo e(isset($user) ? $user->email : ''); ?>">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="checkout-phone">{{ __('Phone Number') }}</label>
+                                        <label for="checkout-phone"><?php echo e(__('Phone Number')); ?></label>
                                         <input class="form-control" name="ship_phone" type="text" id="checkout-phone"
-                                            value="{{ isset($user) ? $user->phone : '' }}">
+                                            value="<?php echo e(isset($user) ? $user->phone : ''); ?>">
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                        <label for="checkout-company">{{ __('Company') }}</label>
+                                        <label for="checkout-company"><?php echo e(__('Company')); ?></label>
                                         <input class="form-control" name="ship_company" type="text" id="checkout-company"
-                                            value="{{ isset($user) ? $user->ship_company : '' }}">
+                                            value="<?php echo e(isset($user) ? $user->ship_company : ''); ?>">
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="checkout-address1">{{ __('Address') }} 1</label>
+                                        <label for="checkout-address1"><?php echo e(__('Address')); ?> 1</label>
                                         <input class="form-control" name="ship_address1" required type="text"
-                                            id="checkout-address1" value="{{ isset($user) ? $user->ship_address1 : '' }}">
+                                            id="checkout-address1" value="<?php echo e(isset($user) ? $user->ship_address1 : ''); ?>">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="checkout-address2">{{ __('Address') }} 2</label>
+                                        <label for="checkout-address2"><?php echo e(__('Address')); ?> 2</label>
                                         <input class="form-control" name="ship_address2" type="text"
-                                            id="checkout-address2" value="{{ isset($user) ? $user->ship_address2 : '' }}">
+                                            id="checkout-address2" value="<?php echo e(isset($user) ? $user->ship_address2 : ''); ?>">
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="checkout-zip">{{ __('Zip Code') }} </label>
+                                        <label for="checkout-zip"><?php echo e(__('Zip Code')); ?> </label>
                                         <input class="form-control" name="ship_zip" type="text" id="checkout-zip"
-                                            value="{{ isset($user) ? $user->ship_zip : '' }}">
+                                            value="<?php echo e(isset($user) ? $user->ship_zip : ''); ?>">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="checkout-city">{{ __('City') }}</label>
-                                        {{-- <input class="form-control" name="ship_city" required type="text" id="checkout-city" value="{{isset($user) ? $user->ship_city : ''}}" > --}}
+                                        <label for="checkout-city"><?php echo e(__('City')); ?></label>
+                                        
                                         <select class="form-control select2 select-search" name="ship_city"
                                             id="checkout-city" required disabled>
-                                            <option value="{{ isset($user) ? $user->ship_city : '' }}">Select</option>
+                                            <option value="<?php echo e(isset($user) ? $user->ship_city : ''); ?>">Select</option>
                                         </select>
                                     </div>
                                 </div>
@@ -116,14 +115,14 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                        <label for="checkout-country">{{ __('Country') }}</label>
+                                        <label for="checkout-country"><?php echo e(__('Country')); ?></label>
                                         <select class="form-control" name="ship_country" required id="billing-country">
-                                            <option selected>{{ __('Choose Country') }}</option>
-                                            @foreach (DB::table('countries')->where('name', 'Mexico')->get() as $country)
-                                                <option value="{{ $country->name }}"
-                                                    {{ isset($user) && $user->ship_country == $country->name ? 'selected' : '' }}>
-                                                    {{ $country->name }}</option>
-                                            @endforeach
+                                            <option selected><?php echo e(__('Choose Country')); ?></option>
+                                            <?php $__currentLoopData = DB::table('countries')->where('name', 'Mexico')->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $country): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <option value="<?php echo e($country->name); ?>"
+                                                    <?php echo e(isset($user) && $user->ship_country == $country->name ? 'selected' : ''); ?>>
+                                                    <?php echo e($country->name); ?></option>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         </select>
                                     </div>
                                 </div>
@@ -166,11 +165,11 @@
 
 
                             <div class="d-flex justify-content-between paddin-top-1x mt-4">
-                                <a class="btn btn-primary btn-sm" href="{{ route('front.cart') }}"><span
+                                <a class="btn btn-primary btn-sm" href="<?php echo e(route('front.cart')); ?>"><span
                                         class="hidden-xs-down"><i class="icon-arrow-left"></i>
-                                        {{ __('Back To Cart') }}</span>
+                                        <?php echo e(__('Back To Cart')); ?></span>
                                 </a><button class="btn btn-primary  btn-sm" type="submit"><span
-                                        class="hidden-xs-down">{{ __('Continue') }}</span><i
+                                        class="hidden-xs-down"><?php echo e(__('Continue')); ?></span><i
                                         class="icon-arrow-right"></i></button>
                             </div>
                         </form>
@@ -178,10 +177,10 @@
                 </div>
             </div>
             <!-- Sidebar          -->
-            @include('includes.checkout_sitebar', $cart)
+            <?php echo $__env->make('includes.checkout_sitebar', $cart, \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
 
 <script>
@@ -190,11 +189,11 @@
             var input_value = $(this).val();
 
             $.ajax({
-                url: '{{ route('user.shipping.code.submit') }}',
+                url: '<?php echo e(route('user.shipping.code.submit')); ?>',
                 type: "GET",
                 data: {
                     codezip: input_value,
-                    _token: '{{ csrf_token() }}'
+                    _token: '<?php echo e(csrf_token()); ?>'
                 },
                 dataType: 'json',
                 success: function(response) {
@@ -212,3 +211,5 @@
         });
     });
 </script>
+
+<?php echo $__env->make('master.front', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /var/www/html/Paquete-Express/resources/views/front/checkout/shipping.blade.php ENDPATH**/ ?>

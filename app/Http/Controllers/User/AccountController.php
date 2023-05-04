@@ -15,6 +15,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
+use GuzzleHttp\Client;
+
 class AccountController extends Controller
 {
 
@@ -35,7 +37,7 @@ class AccountController extends Controller
 
     public function index()
     {
-        return view('user.dashboard.dashboard',[
+        return view('user.dashboard.dashboard', [
             'allorders' => Order::whereUserId(Auth::user()->id)->count(),
             'pending' => Order::whereUserId(Auth::user()->id)->whereOrderStatus('pending')->count(),
             'progress' => Order::whereUserId(Auth::user()->id)->whereOrderStatus('In Progress')->count(),
@@ -43,15 +45,14 @@ class AccountController extends Controller
             'canceled' => Order::whereUserId(Auth::user()->id)->whereOrderStatus('Canceled')->count()
 
         ]);
-
     }
 
 
     public function profile()
     {
         $user = Auth::user();
-        $check_newsletter = Subscriber::where('email',$user->email)->exists();
-        return view('user.dashboard.index',[
+        $check_newsletter = Subscriber::where('email', $user->email)->exists();
+        return view('user.dashboard.index', [
             'user' => $user,
             'check_newsletter' => $check_newsletter,
         ]);
@@ -60,15 +61,16 @@ class AccountController extends Controller
 
 
     public function profileUpdate(UserRequest $request)
-    {   $this->repository->profileUpdate($request);
-        Session::flash('success',__('Profile Updated Successfully.'));
+    {
+        $this->repository->profileUpdate($request);
+        Session::flash('success', __('Profile Updated Successfully.'));
         return redirect()->back();
     }
 
     public function addresses()
     {
         $user = Auth::user();
-        return view('user.dashboard.address',[
+        return view('user.dashboard.address', [
             'user' => $user
         ]);
     }
@@ -87,7 +89,7 @@ class AccountController extends Controller
         $user =  Auth::user();
         $input = $request->all();
         $user->update($input);
-        Session::flash('success',__('Address update successfully'));
+        Session::flash('success', __('Address update successfully'));
         return back();
     }
 
@@ -104,19 +106,46 @@ class AccountController extends Controller
         $user =  Auth::user();
         $input = $request->all();
         $user->update($input);
-        Session::flash('success',__('Address update successfully'));
+        Session::flash('success', __('Address update successfully'));
         return back();
+    }
+
+
+    public function shippingSubmitCode(Request $request)
+    {
+
+        $client = new Client();
+
+        $code = $request->codezip;
+
+        $response = $client->get('https://api.copomex.com/query/info_cp/'. $code .'?token=pruebas');
+        $data = json_decode($response->getBody());
+        $zip = [];
+        foreach($data as $value){
+
+                $data = [
+                    'ciudad' => $value->response->asentamiento,
+
+                ];
+                array_push($zip, $data);
+        }
+
+
+
+
+        //$response = $client->get('https://api.example.com/data?input=' . $code);
+
+
+        return response()->json(['code' => 200, 'data' => $zip, 'message' => 'Se ha obtenido la siguiente información.']);
     }
 
 
     public function removeAccount()
     {
-        $user = User::where('id',Auth::user()->id)->first();
-        ImageHelper::handleDeletedImage($user,'photo','assets/images/');
+        $user = User::where('id', Auth::user()->id)->first();
+        ImageHelper::handleDeletedImage($user, 'photo', 'assets/images/');
         $user->delete();
-        Session::flash('success',__('Your account successfully remove'));
+        Session::flash('success', __('Your account successfully remove'));
         return redirect(route('front.index'));
     }
-
-
 }

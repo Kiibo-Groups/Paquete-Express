@@ -4,8 +4,8 @@
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
-
 Route::get('/loco', function () {  return public_path(); });
+
 
 Route::group(['middleware' => 'adminlocalize'], function () {
 
@@ -340,6 +340,7 @@ Route::group(['middleware' => 'maintainance'], function () {
             Route::get('/addresses', 'User\AccountController@addresses')->name('user.address');
             Route::post('/billing/addresses', 'User\AccountController@billingSubmit')->name('user.billing.submit');
             Route::post('/shipping/addresses', 'User\AccountController@shippingSubmit')->name('user.shipping.submit');
+            Route::get('/shipping/addresses/code', 'User\AccountController@shippingSubmitCode')->name('user.shipping.code.submit');
 
             //------------ ORDER ------------
             Route::get('/orders', 'User\OrderController@index')->name('user.order.index');
