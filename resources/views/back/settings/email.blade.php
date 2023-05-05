@@ -115,6 +115,26 @@
 
 
 
+                                                    <div class="form-group ">
+                                                        <h2><b>Datos Cotización</b></h2>
+                                                    </div>
+                                                    <div class="form-group ">
+                                                        <label for="code_zip">Código Postal</label>
+                                                        <input type="text" class="form-control " id="code_zip" name="code_zip" placeholder="{{ __('Enter CCódigo Postal') }}" value="{{ $setting->code_zip }}" ="">
+                                                    </div>
+                                                    <div class="form-group ">
+                                                        <label for="token_compomex">Token Api COPOMEX</label>
+                                                        <input type="text" class="form-control " id="token_compomex" name="token_compomex" placeholder="{{ __('Enter Token Api COPOMEX') }}" value="{{ $setting->token_compomex }}" ="">
+                                                    </div>
+
+                                                    <div class="form-group ">
+                                                        <label for="token_paqexpress">Token Api Paquete Express</label>
+                                                        <input type="text" class="form-control " id="token_paqexpress" name="token_paqexpress" placeholder="{{ __('Enter Token Api Paquete Express') }}" value="{{ $setting->token_paqexpress }}" ="">
+                                                    </div>
+
+
+
+
                                                         <div>
 
                                                             <div class="form-group d-flex justify-content-center">

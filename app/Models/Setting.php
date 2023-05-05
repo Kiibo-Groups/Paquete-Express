@@ -122,6 +122,9 @@ class Setting extends Model
         'decimal_separator',
         'thousand_separator',
         'is_decimal',
+        'code_zip',
+        'token_compomex',
+        'token_paqexpress',
     ];
 
     public $timestamps = false;
