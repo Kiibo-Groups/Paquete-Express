@@ -14,6 +14,7 @@ use App\{
     Traits\CashOnDeliveryCheckout,
     Traits\BankCheckout,
 };
+
 use App\Helpers\PriceHelper;
 use App\Helpers\SmsHelper;
 use App\Models\Currency;
@@ -56,7 +57,7 @@ class CheckoutController extends Controller
 
 	public function ship_address()
 	{
-        
+
         if (!Session::has('cart')) {
             return redirect(route('front.cart'));
         }
@@ -65,7 +66,7 @@ class CheckoutController extends Controller
         $total_tax = 0;
         $cart_total = 0;
         $total = 0;
-        
+
         foreach($cart as $key => $item){
             $total += ($item['main_price'] + $item['attribute_price']) * $item['qty'];
             $cart_total = $total;
@@ -75,7 +76,7 @@ class CheckoutController extends Controller
             }
         }
 
-        
+
         $shipping = [];
         if(ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->exists()){
             $shipping = ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->first();
@@ -219,6 +220,8 @@ class CheckoutController extends Controller
         $data['shipping'] = $shipping;
         $data['tax'] = $total_tax;
         $data['payments'] = PaymentSetting::whereStatus(1)->get();
+        $data['token'] =  Setting::value('token_compomex');
+
         return view('front.checkout.shipping',$data);
     }
 

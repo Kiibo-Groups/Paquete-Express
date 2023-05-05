@@ -116,25 +116,18 @@ class AccountController extends Controller
 
         $client = new Client();
 
-        $code = $request->codezip;
+        $code  = $request->codezip;
+        $token = $request->token_compomex;
 
-        $response = $client->get('https://api.copomex.com/query/info_cp/'. $code .'?token=pruebas');
+        $response = $client->get('https://api.copomex.com/query/info_cp/' . $code . '?token=' . $token);
         $data = json_decode($response->getBody());
         $zip = [];
-        foreach($data as $value){
-
-                $data = [
-                    'ciudad' => $value->response->asentamiento,
-
-                ];
-                array_push($zip, $data);
+        foreach ($data as $value) {
+            $data = [
+                'ciudad' => $value->response->asentamiento,
+            ];
+            array_push($zip, $data);
         }
-
-
-
-
-        //$response = $client->get('https://api.example.com/data?input=' . $code);
-
 
         return response()->json(['code' => 200, 'data' => $zip, 'message' => 'Se ha obtenido la siguiente información.']);
     }

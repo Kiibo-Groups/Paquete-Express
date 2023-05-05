@@ -94,6 +94,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
@@ -174,6 +175,7 @@
                                         class="icon-arrow-right"></i></button>
                             </div>
                         </form>
+                        <input id="token_compomex" type="hidden"  value="{{ $token }}" >
                     </div>
                 </div>
             </div>
@@ -188,12 +190,14 @@
     $(document).ready(function() {
         $("#checkout-zip").blur(function() {
             var input_value = $(this).val();
+            var token_compomex = $("#token_compomex").val();
 
             $.ajax({
                 url: '{{ route('user.shipping.code.submit') }}',
                 type: "GET",
                 data: {
                     codezip: input_value,
+                    token_compomex: token_compomex,
                     _token: '{{ csrf_token() }}'
                 },
                 dataType: 'json',
