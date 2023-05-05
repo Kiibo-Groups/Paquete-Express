@@ -21,10 +21,9 @@
     </div>
 </div>
 <!-- Nested Row within Card Body -->
-<form class="admin-form tab-form" action="<?php echo e(route('back.item.store')); ?>" method="POST"
-                enctype="multipart/form-data">
-                <input type="hidden" value="normal" name="item_type">
-                <?php echo csrf_field(); ?>
+<form class="admin-form tab-form" action="<?php echo e(route('back.affiliate.store')); ?>" method="POST" enctype="multipart/form-data">
+<input type="hidden" value="affiliate" name="item_type">
+<?php echo csrf_field(); ?>
     <div class="row">
 
         <div class="col-lg-8">
@@ -34,6 +33,12 @@
                         <label for="name"><?php echo e(__('Name')); ?> *</label>
                         <input type="text" name="name" class="form-control item-name"
                             id="name" placeholder="<?php echo e(__('Enter Name')); ?>"
+                            value="<?php echo e(old('name')); ?>" >
+                    </div>
+                    <div class="form-group">
+                        <label for="affiliate__link"><?php echo e(__('Affiliate Link')); ?> *</label>
+                        <input type="text" name="affiliate_link" class="form-control"
+                            id="affiliate__link" placeholder="<?php echo e(__('Enter Affiliate Link')); ?>"
                             value="<?php echo e(old('name')); ?>" >
                     </div>
                     <div class="form-group">
@@ -176,9 +181,8 @@
         <div class="col-lg-4">
             <div class="card">
                 <div class="card-body">
-                    <input type="hidden" class="check_button" name="is_button" value="0">
                     <button type="submit" class="btn btn-secondary mr-2"><?php echo e(__('Save')); ?></button>
-                    <button type="submit" class="btn btn-info save__edit"><?php echo e(__('Save & Edit')); ?></button>
+                    <button type="submit" class="btn btn-info "><?php echo e(__('Save & Edit')); ?></button>
                 </div>
             </div>
             <div class="card">
@@ -259,27 +263,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="stock"><?php echo e(__('Total in stock')); ?>
-
-                            *</label>
-                        <div class="input-group mb-3">
-                            <input type="number" id="stock"
-                                name="stock" class="form-control"
-                                placeholder="<?php echo e(__('Total in stock')); ?>" value="<?php echo e(old('stock')); ?>" >
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="tax_id"><?php echo e(__('Select Tax')); ?> *</label>
-                        <select name="tax_id" id="tax_id" class="form-control">
-                            <option value=""><?php echo e(__('Select One')); ?></option>
-                            <?php $__currentLoopData = DB::table('taxes')->whereStatus(1)->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tax): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <option value="<?php echo e($tax->id); ?>"><?php echo e($tax->name); ?></option>
-                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="sku"><?php echo e(__('SKU')); ?> *</label>
-                        <input type="text" name="sku" class="form-control"
+                        <input type="hidden" name="sku" class="form-control"
                             id="sku" placeholder="<?php echo e(__('Enter SKU')); ?>"
                             value="<?php echo e(Str::random(10)); ?>" >
                     </div>
@@ -288,43 +272,6 @@
                         <input type="text" name="video" class="form-control"
                             id="video" placeholder="<?php echo e(__('Enter Video Link')); ?>"
                             value="<?php echo e(old('video')); ?>">
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-body">
-                    <div class="form-group">
-                        <label for="peso">Peso (Cm)</label>
-                        <div class="input-group mb-3">
-                            <input type="number" id="peso" step="0.1" min="0"
-                                name="peso" class="form-control"
-                                placeholder="Peso" value="<?php echo e(old('peso')); ?>" >
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="alto">Alto (Cm)</label>
-                        <div class="input-group mb-3">
-                            <input type="number" id="alto" step="0.1" min="0"
-                                name="alto" class="form-control"
-                                placeholder="Alto" value="<?php echo e(old('alto')); ?>" >
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="ancho">Ancho (Cm)</label>
-                        <div class="input-group mb-3">
-                            <input type="number" id="ancho" step="0.1" min="0"
-                                name="ancho" class="form-control"
-                                placeholder="Ancho" value="<?php echo e(old('ancho')); ?>" >
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="largo">Largo (Cm)</label>
-                        <div class="input-group mb-3">
-                            <input type="number" id="largo" step="0.1" min="0"
-                                name="largo" class="form-control"
-                                placeholder="Largo" value="<?php echo e(old('largo')); ?>" >
-                        </div>
                     </div>
                 </div>
             </div>
@@ -340,4 +287,4 @@
 
 <?php $__env->stopSection(); ?>
 
-<?php echo $__env->make('master.back', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /var/www/html/Paquete-Express/resources/views/back/item/create.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('master.back', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /var/www/html/Paquete-Express/resources/views/back/item/affiliate/create.blade.php ENDPATH**/ ?>

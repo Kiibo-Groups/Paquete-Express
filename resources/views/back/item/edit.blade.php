@@ -339,6 +339,45 @@
                     </div>
                 </div>
             </div>
+
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="peso">Peso (Kg)</label>
+                        <div class="input-group mb-3">
+                            <input type="number" id="peso" step="0.1" min="0"
+                                name="peso" class="form-control"
+                                placeholder="Peso" value="{{$item->peso}}" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="alto">Alto (Cm)</label>
+                        <div class="input-group mb-3">
+                            <input type="number" id="alto" step="0.1" min="0"
+                                name="alto" class="form-control"
+                                placeholder="Alto" value="{{$item->alto}}" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="ancho">Ancho (Cm)</label>
+                        <div class="input-group mb-3">
+                            <input type="number" id="ancho" step="0.1" min="0"
+                                name="ancho" class="form-control"
+                                placeholder="Ancho" value="{{$item->ancho}}" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="largo">Largo (Cm)</label>
+                        <div class="input-group mb-3">
+                            <input type="number" id="largo" step="0.1" min="0"
+                                name="largo" class="form-control"
+                                placeholder="Largo" value="{{$item->largo}}" >
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
     </div>

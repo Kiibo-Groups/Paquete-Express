@@ -6,13 +6,11 @@
 <div class="card mb-4">
     <div class="card-body">
         <div class="d-sm-flex align-items-center justify-content-between">
-            <h3 class="mb-0 bc-title"><b><?php echo e(__('Create Product')); ?></b> </h3>
+            <h3 class="mb-0 bc-title"><b><?php echo e(__('Create Digital Product')); ?></b> </h3>
             <a class="btn btn-primary   btn-sm" href="<?php echo e(route('back.item.index')); ?>"><i class="fas fa-chevron-left"></i> <?php echo e(__('Back')); ?></a>
         </div>
     </div>
 </div>
-
-<!-- Form -->
 
 
 <div class="row">
@@ -21,10 +19,10 @@
     </div>
 </div>
 <!-- Nested Row within Card Body -->
-<form class="admin-form tab-form" action="<?php echo e(route('back.item.store')); ?>" method="POST"
+<form class="admin-form tab-form" action="<?php echo e(route('back.digital.item.store')); ?>" method="POST"
                 enctype="multipart/form-data">
-                <input type="hidden" value="normal" name="item_type">
-                <?php echo csrf_field(); ?>
+    <input type="hidden" value="digital" name="item_type">
+    <?php echo csrf_field(); ?>
     <div class="row">
 
         <div class="col-lg-8">
@@ -82,6 +80,36 @@
                         </label>
                         <br>
                         <span class="mt-1 text-info"><?php echo e(__('Image Size Should Be 800 x 800. or square size')); ?></span>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="file_type"><?php echo e(__('Select Type')); ?> *</label>
+                        <select class="form-control" id="file_type" name="file_type">
+                            <option value="file"><?php echo e(__('File')); ?></option>
+                            <option value="link"><?php echo e(__('Link')); ?></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group view_file ">
+                        <label for="file"><?php echo e(__('File')); ?>
+
+                            *</label>
+                        <div class="input-group mb-1">
+                            <input type="file" required class="form-control" id="file" name="file">
+                        </div>
+                        <p class="text-warning"><?php echo e(__('File type must be zip')); ?></p>
+                    </div>
+
+                    <div class="form-group d-none view_link">
+                        <label for="link"><?php echo e(__('Link')); ?>
+
+                            *</label>
+                        <div class="input-group mb-3">
+                            <input type="text" id="link" name="link" class="form-control" placeholder="<?php echo e(__('Enter Link')); ?>">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -258,16 +286,7 @@
             </div>
             <div class="card">
                 <div class="card-body">
-                    <div class="form-group">
-                        <label for="stock"><?php echo e(__('Total in stock')); ?>
 
-                            *</label>
-                        <div class="input-group mb-3">
-                            <input type="number" id="stock"
-                                name="stock" class="form-control"
-                                placeholder="<?php echo e(__('Total in stock')); ?>" value="<?php echo e(old('stock')); ?>" >
-                        </div>
-                    </div>
                     <div class="form-group">
                         <label for="tax_id"><?php echo e(__('Select Tax')); ?> *</label>
                         <select name="tax_id" id="tax_id" class="form-control">
@@ -291,53 +310,34 @@
                     </div>
                 </div>
             </div>
-
-            <div class="card">
-                <div class="card-body">
-                    <div class="form-group">
-                        <label for="peso">Peso (Cm)</label>
-                        <div class="input-group mb-3">
-                            <input type="number" id="peso" step="0.1" min="0"
-                                name="peso" class="form-control"
-                                placeholder="Peso" value="<?php echo e(old('peso')); ?>" >
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="alto">Alto (Cm)</label>
-                        <div class="input-group mb-3">
-                            <input type="number" id="alto" step="0.1" min="0"
-                                name="alto" class="form-control"
-                                placeholder="Alto" value="<?php echo e(old('alto')); ?>" >
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="ancho">Ancho (Cm)</label>
-                        <div class="input-group mb-3">
-                            <input type="number" id="ancho" step="0.1" min="0"
-                                name="ancho" class="form-control"
-                                placeholder="Ancho" value="<?php echo e(old('ancho')); ?>" >
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="largo">Largo (Cm)</label>
-                        <div class="input-group mb-3">
-                            <input type="number" id="largo" step="0.1" min="0"
-                                name="largo" class="form-control"
-                                placeholder="Largo" value="<?php echo e(old('largo')); ?>" >
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 
     </div>
 </form>
 
 
-</div>
 
 </div>
 
 <?php $__env->stopSection(); ?>
 
-<?php echo $__env->make('master.back', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /var/www/html/Paquete-Express/resources/views/back/item/create.blade.php ENDPATH**/ ?>
+
+<?php $__env->startSection('scripts'); ?>
+    <script>
+        $(document).on('change','#file_type',function(){
+            let type = $(this).val();
+            if(type == 'file'){
+                $('.view_link').addClass('d-none');
+                $('.view_file').removeClass('d-none');
+                $('.view_file input').prop('required',true);
+                $('.view_link input').prop('required',false);
+            }else{
+                $('.view_link').removeClass('d-none');
+                $('.view_file').addClass('d-none');
+                $('.view_file input').prop('required',false);
+                $('.view_link input').prop('required',true);
+            }
+        })
+    </script>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('master.back', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /var/www/html/Paquete-Express/resources/views/back/item/digital/create.blade.php ENDPATH**/ ?>

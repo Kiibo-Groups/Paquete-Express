@@ -158,6 +158,10 @@ Route::group(['middleware' => 'adminlocalize'], function () {
             //------------ PAYMENT SETTING ------------
             Route::get('/setting/payment', 'Back\PaymentSettingController@payment')->name('back.setting.payment');
             Route::post('/setting/payment/update', 'Back\PaymentSettingController@update')->name('back.setting.payment.update');
+
+             //------------ Cotizador de envios SETTING ------------
+             Route::get('/setting/cotizador', 'Back\EmailSettingController@cotizador')->name('back.setting.cotizador');
+             Route::post('/setting/cotizador/update', 'Back\EmailSettingController@cotizadorUpdate')->name('back.setting.cotizador.update');
         });
 
         Route::group(['middleware' => 'permissions:System Backup'], function () {

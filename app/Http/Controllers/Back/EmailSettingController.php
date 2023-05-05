@@ -33,6 +33,14 @@ class EmailSettingController extends Controller
         ]);
     }
 
+
+    public function cotizador()
+    {
+        return view('back.settings.cotizador',[
+            'datas' => EmailTemplate::get()
+        ]);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -46,8 +54,9 @@ class EmailSettingController extends Controller
 
     public function emailUpdate(Request $request)
     {
+
         $request->validate([
-           
+
             "email_host" => "required:max:200",
             "email_port" => "required|max:10",
             "email_encryption" => "required|max:10",
@@ -69,6 +78,22 @@ class EmailSettingController extends Controller
         return redirect()->back()->withSuccess(__('Data Updated Successfully.'));
     }
 
+    public function cotizadorUpdate(Request $request)
+    {
+
+        $request->validate([
+
+            "code_zip" => "required:max:200",
+
+        ]);
+
+        $input = $request->all();
+
+
+        Setting::first()->update($input);
+        return redirect()->back()->withSuccess(__('Data Updated Successfully.'));
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -78,9 +103,12 @@ class EmailSettingController extends Controller
      */
     public function update(Request $request,EmailTemplate $template)
     {
+
         $template->update($request->all());
         return redirect()->route('back.setting.email')->withSuccess(__('Email Template Updated Successfully.'));
     }
+
+
 
 
 }

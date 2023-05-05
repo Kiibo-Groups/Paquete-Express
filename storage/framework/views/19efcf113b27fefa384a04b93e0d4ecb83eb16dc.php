@@ -124,7 +124,7 @@
         </a>
     </li>
     <hr />
-    
+
     <li class="nav-item">
         <a href="<?php echo e(route('back.user.index')); ?>">
           <i class="fas fa-users"></i>
@@ -141,7 +141,7 @@
             <i class="fas fa-comments"></i>
           <p><?php echo e(__('Manages Tickets')); ?></p></a>
     </li>
-    
+
     <hr />
     <li class="nav-item">
         <a data-toggle="collapse" href="#ecommerce">
@@ -178,6 +178,11 @@
                 <li>
                     <a class="sub-link" href="<?php echo e(route('back.setting.payment')); ?>">
                         <span class="sub-item"><?php echo e(__('Payment')); ?></span>
+                    </a>
+                </li>
+                <li>
+                    <a class="sub-link" href="<?php echo e(route('back.setting.cotizador')); ?>">
+                        <span class="sub-item">Cotizador de envios</span>
                     </a>
                 </li>
             </ul>
@@ -330,7 +335,7 @@
                 </li>
             </ul>
         </div>
-    </li> 
+    </li>
 
 </ul>
 <?php /**PATH /var/www/html/Paquete-Express/resources/views/master/inc/super.blade.php ENDPATH**/ ?>

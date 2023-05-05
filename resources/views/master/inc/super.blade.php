@@ -124,7 +124,7 @@
         </a>
     </li>
     <hr />
-    
+
     <li class="nav-item">
         <a href="{{ route('back.user.index') }}">
           <i class="fas fa-users"></i>
@@ -141,7 +141,7 @@
             <i class="fas fa-comments"></i>
           <p>{{ __('Manages Tickets') }}</p></a>
     </li>
-    
+
     <hr />
     <li class="nav-item">
         <a data-toggle="collapse" href="#ecommerce">
@@ -178,6 +178,11 @@
                 <li>
                     <a class="sub-link" href="{{ route('back.setting.payment') }}">
                         <span class="sub-item">{{ __('Payment') }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="sub-link" href="{{ route('back.setting.cotizador') }}">
+                        <span class="sub-item">Cotizador de envios</span>
                     </a>
                 </li>
             </ul>
@@ -330,6 +335,6 @@
                 </li>
             </ul>
         </div>
-    </li> 
+    </li>
 
 </ul>
