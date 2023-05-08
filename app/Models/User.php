@@ -26,7 +26,24 @@ class User extends Authenticatable
         'bill_city',
         'bill_country',
         'bill_company',
-        'state_id'
+        'state_id',
+        'colonia_envio',
+        'localidad_envio',
+        'municipio_envio',
+        'estado_envio',
+        'rc_fiscal',
+        'calle_fiscal',
+        'numero_interior',
+        'numero_exterior',
+        'colonia_fiscal',
+        'codigo_postal',
+        'localidad_fiscal',
+        'regimen_fiscal',
+        'cp_envio',
+        'referencia_direccion',
+        'clave_pais',
+        'forma_pago_sat',
+        'referencia_direccion_envio'
 
 
     ];

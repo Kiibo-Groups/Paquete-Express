@@ -94,6 +94,7 @@ $message = $__bag->first($__errorArgs[0]); ?>
                          <?php endif; ?>
                         </div>
                    </div>
+
                    <div class="col-md-6">
                       <div class="form-group">
                          <label for="billing-country"><?php echo e(__('Country')); ?></label>
@@ -112,6 +113,62 @@ $message = $__bag->first($__errorArgs[0]); ?>
                       <?php endif; ?>
                       </div>
                    </div>
+
+                   <div class="col-md-6">
+                    <div class="form-group">
+                       <label for="billing-company"><?php echo e(__('CP Envío ')); ?></label>
+                       <input class="form-control" type="text" placeholder="<?php echo e(__('CP Envío ')); ?>" name="cp_envio" id="billing-company" value="<?php echo e($user->cp_envio); ?>">
+                       <?php $__errorArgs = ['cp_envio'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                       <p class="text-danger"><?php echo e($message); ?></p>
+                       <?php endif; ?>
+                      </div>
+                 </div>
+                 <div class="col-md-6">
+                    <div class="form-group">
+                       <label for="billing-company"><?php echo e(__('Referencia de dirección de envío')); ?></label>
+                       <input class="form-control" type="text" placeholder="<?php echo e(__('Referencia de dirección de envío')); ?>" name="referencia_direccion_envio" id="billing-company" value="<?php echo e($user->referencia_direccion_envio); ?>">
+                       <?php $__errorArgs = ['referencia_direccion_envio'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                       <p class="text-danger"><?php echo e($message); ?></p>
+                       <?php endif; ?>
+                      </div>
+                 </div>
+                 <div class="col-md-6">
+                    <div class="form-group">
+                       <label for="billing-company"><?php echo e(__('Clave Pais SAT')); ?></label>
+                       <input class="form-control" type="text" placeholder="<?php echo e(__('Clave Pais SAT')); ?>" name="clave_pais" id="billing-company" value="<?php echo e($user->clave_pais); ?>">
+                       <?php $__errorArgs = ['clave_pais'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                       <p class="text-danger"><?php echo e($message); ?></p>
+                       <?php endif; ?>
+                      </div>
+                 </div>
+                 <div class="col-md-6">
+                    <div class="form-group">
+                       <label for="billing-company"><?php echo e(__('Forma de pago SAT')); ?></label>
+                       <input class="form-control" type="text" placeholder="<?php echo e(__('Forma de pago SAT')); ?>" name="forma_pago_sat" id="billing-company" value="<?php echo e($user->forma_pago_sat); ?>">
+                       <?php $__errorArgs = ['forma_pago_sat'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                       <p class="text-danger"><?php echo e($message); ?></p>
+                       <?php endif; ?>
+                      </div>
+                 </div>
+
+
+
                    <div class="col-12 ">
                       <div class="text-right">
                          <button class="btn btn-primary margin-bottom-none  btn-sm" type="submit"><span><?php echo e(__('Update Address')); ?></span></button>
@@ -208,7 +265,7 @@ $message = $__bag->first($__errorArgs[0]); ?>
                      </div>
                   </div>
                    <?php endif; ?>
-             
+
                    <div class="<?php echo e(DB::table('states')->count() > 0  ? 'col-md-12' : 'col-md-6'); ?> ">
                       <div class="form-group">
                          <label for="shipping-country"><?php echo e(__('Country')); ?></label>

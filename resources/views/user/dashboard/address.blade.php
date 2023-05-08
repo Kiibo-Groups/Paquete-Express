@@ -74,6 +74,7 @@
                          @endif
                         </div>
                    </div>
+
                    <div class="col-md-6">
                       <div class="form-group">
                          <label for="billing-country">{{__('Country')}}</label>
@@ -88,6 +89,46 @@
                       @endif
                       </div>
                    </div>
+
+                   <div class="col-md-6">
+                    <div class="form-group">
+                       <label for="billing-company">{{__('CP Envío ')}}</label>
+                       <input class="form-control" type="text" placeholder="{{__('CP Envío ')}}" name="cp_envio" id="billing-company" value="{{$user->cp_envio}}">
+                       @error('cp_envio')
+                       <p class="text-danger">{{$message}}</p>
+                       @endif
+                      </div>
+                 </div>
+                 <div class="col-md-6">
+                    <div class="form-group">
+                       <label for="billing-company">{{__('Referencia de dirección de envío')}}</label>
+                       <input class="form-control" type="text" placeholder="{{__('Referencia de dirección de envío')}}" name="referencia_direccion_envio" id="billing-company" value="{{$user->referencia_direccion_envio}}">
+                       @error('referencia_direccion_envio')
+                       <p class="text-danger">{{$message}}</p>
+                       @endif
+                      </div>
+                 </div>
+                 <div class="col-md-6">
+                    <div class="form-group">
+                       <label for="billing-company">{{__('Clave Pais SAT')}}</label>
+                       <input class="form-control" type="text" placeholder="{{__('Clave Pais SAT')}}" name="clave_pais" id="billing-company" value="{{$user->clave_pais}}">
+                       @error('clave_pais')
+                       <p class="text-danger">{{$message}}</p>
+                       @endif
+                      </div>
+                 </div>
+                 <div class="col-md-6">
+                    <div class="form-group">
+                       <label for="billing-company">{{__('Forma de pago SAT')}}</label>
+                       <input class="form-control" type="text" placeholder="{{__('Forma de pago SAT')}}" name="forma_pago_sat" id="billing-company" value="{{$user->forma_pago_sat}}">
+                       @error('forma_pago_sat')
+                       <p class="text-danger">{{$message}}</p>
+                       @endif
+                      </div>
+                 </div>
+
+
+
                    <div class="col-12 ">
                       <div class="text-right">
                          <button class="btn btn-primary margin-bottom-none  btn-sm" type="submit"><span>{{__('Update Address')}}</span></button>
@@ -160,7 +201,7 @@
                      </div>
                   </div>
                    @endif
-             
+
                    <div class="{{DB::table('states')->count() > 0  ? 'col-md-12' : 'col-md-6'}} ">
                       <div class="form-group">
                          <label for="shipping-country">{{__('Country')}}</label>
