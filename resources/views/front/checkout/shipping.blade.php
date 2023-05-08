@@ -132,38 +132,47 @@
 
                             <h6>Cotizar Envío</h6>
 
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="checkout-address1">Peso</label>
-                                        <input class="form-control" name="ship_address1" required type="number"
-                                            step="0.1" id="checkout-address1" value="">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="checkout-address2">Alto</label>
-                                        <input class="form-control" name="ship_address2" type="number" step="0.1"
-                                            id="checkout-address2" value="">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="checkout-address1">Ancho</label>
-                                        <input class="form-control" name="ship_address1" required type="number"
-                                            step="0.1" id="checkout-address1" value="">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="checkout-address2">Largo</label>
-                                        <input class="form-control" name="ship_address2" type="number" step="0.1"
-                                            id="checkout-address2" value="">
-                                    </div>
-                                </div>
-                            </div>
+                            <table class="table table-responsive">
+                                <caption>List of users</caption>
+                                <thead>
+                                  <tr>
+                                    <th scope="col">Proveedor</th>
+                                    <th scope="col">Descripción</th>
+                                    <th scope="col">Días</th>
+                                    <th scope="col">Valor</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <th scope="row">1</th>
+                                    <td>Mark</td>
+                                    <td>Otto</td>
+                                    <td>@mdo</td>
+                                  </tr>
+                                  <tr>
+                                    <th scope="row">2</th>
+                                    <td>Jacob</td>
+                                    <td>Thornton</td>
+                                    <td>@fat</td>
+                                  </tr>
+                                  <tr>
+                                    <th scope="row">3</th>
+                                    <td>Larry</td>
+                                    <td>the Bird</td>
+                                    <td>@twitter</td>
+                                  </tr>
+                                </tbody>
+                              </table>
+
+
+                            <input class="form-control" name="peso" required type="hidden" step="0.1" id="peso" value="{{ $peso }}">
+
+                            <input class="form-control" name="alto" type="hidden" step="0.1" id="alto" value="{{ $alto }}">
+
+                            <input class="form-control" name="ancho" required type="hidden" step="0.1" id="ancho" value="{{ $ancho }}">
+
+                            <input class="form-control" name="largo" type="hidden" step="0.1"  id="largo" value="{{ $largo }}">
+
 
 
                             <div class="d-flex justify-content-between paddin-top-1x mt-4">
