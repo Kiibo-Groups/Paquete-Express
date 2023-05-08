@@ -111,6 +111,7 @@ class CheckoutController extends Controller
         $data['shipping'] = $shipping;
         $data['tax'] = $total_tax;
         $data['payments'] = PaymentSetting::whereStatus(1)->get();
+        $data['token'] =  Setting::value('token_compomex');
         return view('front.checkout.billing',$data);
 
     }

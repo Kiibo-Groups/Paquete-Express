@@ -3,7 +3,7 @@
 @section('title')
     {{ __('Billing') }}
 @endsection
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 @section('content')
     <!-- Page Title-->
     <div class="page-title">
@@ -98,10 +98,11 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="checkout-zip">{{ __('Zip Code') }}</label>
+                                            <label for="checkout-zip">{{ __('Zip Code') }} </label>
                                             <input class="form-control" name="bill_zip" type="text" id="checkout-zip"
                                                 value="{{ isset($user) ? $user->bill_zip : '' }}">
                                         </div>
@@ -109,8 +110,11 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label for="checkout-city">{{ __('City') }}</label>
-                                            <input class="form-control" name="bill_city" type="text" required
-                                                id="checkout-city" value="{{ isset($user) ? $user->bill_city : '' }}">
+                                            {{-- <input class="form-control" name="ship_city" required type="text" id="checkout-city" value="{{isset($user) ? $user->ship_city : ''}}" > --}}
+                                            <select class="form-control select2 select-search" name="bill_city"
+                                                id="checkout-city" required disabled>
+                                                <option value="{{ isset($user) ? $user->bill_city : '' }}">Select</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -118,10 +122,9 @@
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <label for="checkout-country">{{ __('Country') }}</label>
-                                            <select class="form-control" required name="bill_country"
-                                                id="billing-country">
+                                            <select class="form-control" name="bill_country" required id="billing-country">
                                                 <option selected>{{ __('Choose Country') }}</option>
-                                                @foreach (DB::table('countries')->get() as $country)
+                                                @foreach (DB::table('countries')->where('name', 'Mexico')->get() as $country)
                                                     <option value="{{ $country->name }}"
                                                         {{ isset($user) && $user->bill_country == $country->name ? 'selected' : '' }}>
                                                         {{ $country->name }}</option>
@@ -130,6 +133,8 @@
                                         </div>
                                     </div>
                                 </div>
+
+
                             @endif
 
 
@@ -172,6 +177,7 @@
                                 @endif
                             </div>
                         </form>
+                        <input id="token_compomex" type="hidden"  value="{{ $token }}" >
                     </div>
                 </div>
             </div>
@@ -180,4 +186,37 @@
         </div>
     </div>
 @endsection
+
+
+<script>
+    $(document).ready(function() {
+        $("#checkout-zip").blur(function() {
+            var input_value = $(this).val();
+            var token_compomex = $("#token_compomex").val();
+
+            $.ajax({
+                url: '{{ route('user.shipping.code.submit') }}',
+                type: "GET",
+                data: {
+                    codezip: input_value,
+                    token_compomex: token_compomex,
+                    _token: '{{ csrf_token() }}'
+                },
+                dataType: 'json',
+                success: function(response) {
+
+                    $("#checkout-city").prop('disabled', false);
+                    if (response.code == 200) {
+
+                        $.each(response.data, function(key, value) {
+                            $("#checkout-city").append('<option value="' + value
+                                .ciudad + '">' + value.ciudad + '</option>');
+                        });
+                    }
+                }
+            });
+        });
+    });
+</script>
+
 

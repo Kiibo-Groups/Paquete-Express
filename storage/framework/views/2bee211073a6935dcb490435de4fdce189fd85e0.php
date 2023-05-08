@@ -348,7 +348,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="peso">Peso (Lb)</label>
+                        <label for="peso">Peso (Kg)</label>
                         <div class="input-group mb-3">
                             <input type="number" id="peso" step="0.1" min="0"
                                 name="peso" class="form-control"

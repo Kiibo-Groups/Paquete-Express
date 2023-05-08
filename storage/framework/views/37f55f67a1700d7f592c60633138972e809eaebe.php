@@ -2,7 +2,7 @@
     <?php echo e(__('Billing')); ?>
 
 <?php $__env->stopSection(); ?>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <?php $__env->startSection('content'); ?>
     <!-- Page Title-->
     <div class="page-title">
@@ -97,10 +97,11 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="checkout-zip"><?php echo e(__('Zip Code')); ?></label>
+                                            <label for="checkout-zip"><?php echo e(__('Zip Code')); ?> </label>
                                             <input class="form-control" name="bill_zip" type="text" id="checkout-zip"
                                                 value="<?php echo e(isset($user) ? $user->bill_zip : ''); ?>">
                                         </div>
@@ -108,8 +109,11 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label for="checkout-city"><?php echo e(__('City')); ?></label>
-                                            <input class="form-control" name="bill_city" type="text" required
-                                                id="checkout-city" value="<?php echo e(isset($user) ? $user->bill_city : ''); ?>">
+                                            
+                                            <select class="form-control select2 select-search" name="bill_city"
+                                                id="checkout-city" required disabled>
+                                                <option value="<?php echo e(isset($user) ? $user->bill_city : ''); ?>">Select</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -117,10 +121,9 @@
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <label for="checkout-country"><?php echo e(__('Country')); ?></label>
-                                            <select class="form-control" required name="bill_country"
-                                                id="billing-country">
+                                            <select class="form-control" name="bill_country" required id="billing-country">
                                                 <option selected><?php echo e(__('Choose Country')); ?></option>
-                                                <?php $__currentLoopData = DB::table('countries')->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $country): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <?php $__currentLoopData = DB::table('countries')->where('name', 'Mexico')->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $country): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                     <option value="<?php echo e($country->name); ?>"
                                                         <?php echo e(isset($user) && $user->bill_country == $country->name ? 'selected' : ''); ?>>
                                                         <?php echo e($country->name); ?></option>
@@ -129,6 +132,8 @@
                                         </div>
                                     </div>
                                 </div>
+
+
                             <?php endif; ?>
 
 
@@ -171,6 +176,7 @@
                                 <?php endif; ?>
                             </div>
                         </form>
+                        <input id="token_compomex" type="hidden"  value="<?php echo e($token); ?>" >
                     </div>
                 </div>
             </div>
@@ -179,6 +185,39 @@
         </div>
     </div>
 <?php $__env->stopSection(); ?>
+
+
+<script>
+    $(document).ready(function() {
+        $("#checkout-zip").blur(function() {
+            var input_value = $(this).val();
+            var token_compomex = $("#token_compomex").val();
+
+            $.ajax({
+                url: '<?php echo e(route('user.shipping.code.submit')); ?>',
+                type: "GET",
+                data: {
+                    codezip: input_value,
+                    token_compomex: token_compomex,
+                    _token: '<?php echo e(csrf_token()); ?>'
+                },
+                dataType: 'json',
+                success: function(response) {
+
+                    $("#checkout-city").prop('disabled', false);
+                    if (response.code == 200) {
+
+                        $.each(response.data, function(key, value) {
+                            $("#checkout-city").append('<option value="' + value
+                                .ciudad + '">' + value.ciudad + '</option>');
+                        });
+                    }
+                }
+            });
+        });
+    });
+</script>
+
 
 
 <?php echo $__env->make('master.front', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /var/www/html/Paquete-Express/resources/views/front/checkout/billing.blade.php ENDPATH**/ ?>
