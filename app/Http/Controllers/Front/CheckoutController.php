@@ -166,9 +166,9 @@ class CheckoutController extends Controller
     public function shipping()
     {
 
-        if(Session::has('shipping_address')){
-            return redirect(route('front.checkout.payment'));
-        }
+        // if(Session::has('shipping_address')){
+        //     return redirect(route('front.checkout.payment'));
+        // }
 
         if (!Session::has('cart')) {
             return redirect(route('front.cart'));

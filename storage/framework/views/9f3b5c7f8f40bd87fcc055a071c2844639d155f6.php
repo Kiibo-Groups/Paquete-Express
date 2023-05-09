@@ -95,6 +95,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
@@ -130,40 +131,43 @@
                                 </div>
                             </div>
 
-                            <h6>Cotizar Envío</h6>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="u-table-res">
+                                        <div id="mostrarcotizacion" style="display: none">
+                                            <h6>Cotizar Envío</h6>
 
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="checkout-address1">Peso</label>
-                                        <input class="form-control" name="ship_address1" required type="number"
-                                            step="0.1" id="checkout-address1" value="">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="checkout-address2">Alto</label>
-                                        <input class="form-control" name="ship_address2" type="number" step="0.1"
-                                            id="checkout-address2" value="">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="checkout-address1">Ancho</label>
-                                        <input class="form-control" name="ship_address1" required type="number"
-                                            step="0.1" id="checkout-address1" value="">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="checkout-address2">Largo</label>
-                                        <input class="form-control" name="ship_address2" type="number" step="0.1"
-                                            id="checkout-address2" value="">
+                                            <table class="table table-bordered mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Proveedor</th>
+                                                        <th scope="col">Descripción</th>
+                                                        <th scope="col">Detalle</th>
+                                                        <th scope="col">Peso</th>
+                                                        <th scope="col">Valor</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tablaexpress">
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
+
+                            <input class="form-control" name="peso" required type="hidden" step="0.1"
+                                id="peso" value="<?php echo e($peso); ?>">
+
+                            <input class="form-control" name="alto" type="hidden" step="0.1" id="alto"
+                                value="<?php echo e($alto); ?>">
+
+                            <input class="form-control" name="ancho" required type="hidden" step="0.1"
+                                id="ancho" value="<?php echo e($ancho); ?>">
+
+                            <input class="form-control" name="largo" type="hidden" step="0.1" id="largo"
+                                value="<?php echo e($largo); ?>">
+
 
 
                             <div class="d-flex justify-content-between paddin-top-1x mt-4">
@@ -175,6 +179,9 @@
                                         class="icon-arrow-right"></i></button>
                             </div>
                         </form>
+                        <input id="token_compomex" type="hidden" value="<?php echo e($token); ?>" >
+                        <input id="code_zip" type="hidden" value="<?php echo e($code_zip); ?>">
+                        <input id="token_express" type="hidden" value="<?php echo e($token_express); ?>">
                     </div>
                 </div>
             </div>
@@ -187,14 +194,19 @@
 
 <script>
     $(document).ready(function() {
+
         $("#checkout-zip").blur(function() {
             var input_value = $(this).val();
+            var token_compomex = $("#token_compomex").val();
+            var code_zip = $("#code_zip").val();
+            var token_express = $("#token_express").val();
 
             $.ajax({
                 url: '<?php echo e(route('user.shipping.code.submit')); ?>',
                 type: "GET",
                 data: {
                     codezip: input_value,
+                    token_compomex: token_compomex,
                     _token: '<?php echo e(csrf_token()); ?>'
                 },
                 dataType: 'json',
@@ -206,6 +218,44 @@
                         $.each(response.data, function(key, value) {
                             $("#checkout-city").append('<option value="' + value
                                 .ciudad + '">' + value.ciudad + '</option>');
+                        });
+                    }
+                }
+            });
+
+
+
+            $.ajax({
+                url: '<?php echo e(route('user.shipping.paquete.submit')); ?>',
+                type: "GET",
+                data: {
+                    codezip: input_value,
+                    code_zip_tienda: code_zip,
+                    token_express: token_express,
+                    _token: '<?php echo e(csrf_token()); ?>'
+                },
+                dataType: 'json',
+                success: function(response) {
+
+
+                    if (response.code == 200) {
+
+                        console.log(response);
+                        $("#mostrarcotizacion").show();
+                        //$("#tablaexpress").load(location.href+" #tablaexpress>*","");
+
+
+                        $.each(response.data, function(key, value) {
+                            $("#tablaexpress").append(
+
+                                '<tr>' +
+                                '<td>' + value.provider + '</td>' +
+                                '<td>' + value.description + '</td>' +
+                                '<td>' + value.display + '</td>' +
+                                '<td style="text-align: center" >' + value.weight + '</td>' +
+                                '<td style="text-align: right" >' + value.price + '</td>' +
+                                '</tr> '
+                            );
                         });
                     }
                 }

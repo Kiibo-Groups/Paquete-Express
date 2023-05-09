@@ -207,8 +207,7 @@
                     _token: '{{ csrf_token() }}'
                 },
                 dataType: 'json',
-                success: function(response) {
-
+                success: function(response) { 
                     $("#checkout-city").prop('disabled', false);
                     if (response.code == 200) {
 
@@ -232,13 +231,16 @@
                 dataType: 'json',
                 success: function(response) {
 
-
+                    console.log("Paquete =>", response);
                     if (response.code == 200) {
 
                         $.each(response.data, function(key, value) {
                             $("#checkout-city").append('<option value="' + value.ciudad + '">' + value.ciudad + '</option>');
                         });
                     }
+                },
+                fail: function(response) {
+                    console.log("Error => ", response);
                 }
             });
 
