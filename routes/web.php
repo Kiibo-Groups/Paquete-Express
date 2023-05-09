@@ -345,6 +345,7 @@ Route::group(['middleware' => 'maintainance'], function () {
             Route::post('/billing/addresses', 'User\AccountController@billingSubmit')->name('user.billing.submit');
             Route::post('/shipping/addresses', 'User\AccountController@shippingSubmit')->name('user.shipping.submit');
             Route::get('/shipping/addresses/code', 'User\AccountController@shippingSubmitCode')->name('user.shipping.code.submit');
+            Route::get('/shipping/addresses/paquete', 'User\AccountController@shippingPaquete')->name('user.shipping.paquete.submit');
 
             //------------ ORDER ------------
             Route::get('/orders', 'User\OrderController@index')->name('user.order.index');

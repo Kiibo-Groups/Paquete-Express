@@ -111,7 +111,9 @@ class CheckoutController extends Controller
         $data['shipping'] = $shipping;
         $data['tax'] = $total_tax;
         $data['payments'] = PaymentSetting::whereStatus(1)->get();
-        $data['token'] =  Setting::value('token_compomex');
+        $data['token']    =  Setting::value('token_compomex');
+        $data['code_zip'] =  Setting::value('code_zip');
+        $data['token_express'] =  Setting::value('token_paqexpress');
 
         return view('front.checkout.billing',$data);
 
@@ -222,7 +224,11 @@ class CheckoutController extends Controller
         $data['shipping'] = $shipping;
         $data['tax'] = $total_tax;
         $data['payments'] = PaymentSetting::whereStatus(1)->get();
-        $data['token'] =  Setting::value('token_compomex');
+        $data['token']    =  Setting::value('token_compomex');
+        $data['code_zip'] =  Setting::value('code_zip');
+        $data['token_express'] =  Setting::value('token_paqexpress');
+
+
 
         $data['peso'] =  Setting::value('token_compomex');
         $data['alto'] =  Setting::value('token_compomex');

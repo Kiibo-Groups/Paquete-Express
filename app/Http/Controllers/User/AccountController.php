@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Http;
 
 class AccountController extends Controller
 {
@@ -129,6 +130,48 @@ class AccountController extends Controller
             array_push($zip, $data);
         }
 
+        return response()->json(['code' => 200, 'data' => $zip, 'message' => 'Se ha obtenido la siguiente información.']);
+    }
+
+
+    public function shippingPaquete(Request $request)
+    {
+
+        $code             = $request->codezip;
+        $code_zip_tienda  = $request->code_zip_tienda;
+        $token_express    = $request->token_express;
+        $url              = 'https://qa.paquetelleguexpress.com/api/v1/client/getRates';
+        $parameters    = [
+            "type"                => 2, // 2 para paqueteria
+            "origin_zipcode"      => $code_zip_tienda,
+            "destination_zipcode" => $code,
+            "weight"              => 2,
+            "high"                => 45,
+            "width"               => 50,
+            "long"                => 40
+        ];
+
+        $response = Http::withToken($token_express)->post($url, $parameters);
+        $data = json_decode($response);
+
+        $zip = [];
+
+        foreach ($data->data as $key => $value) {
+            if ($value->status == 200 && $value->rows > 0) {
+
+                foreach ($value->data as $key2 => $dato) {
+
+                    $data = [
+                        'provider'    => $dato->provider,
+                        'description' => $dato->description,
+                        'display'     => $dato->display,
+                        'weight'      => $dato->weight,
+                        'price'       => $dato->price,
+                    ];
+                    array_push($zip, $data);
+                }
+            }
+        }
         return response()->json(['code' => 200, 'data' => $zip, 'message' => 'Se ha obtenido la siguiente información.']);
     }
 

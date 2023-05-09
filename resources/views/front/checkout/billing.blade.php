@@ -178,6 +178,8 @@
                             </div>
                         </form>
                         <input id="token_compomex" type="hidden"  value="{{ $token }}" >
+                        <input id="code_zip" type="hidden"  value="{{ $code_zip}}" >
+                        <input id="token_express" type="hidden"  value="{{ $token_express}}" >
                     </div>
                 </div>
             </div>
@@ -193,6 +195,8 @@
         $("#checkout-zip").blur(function() {
             var input_value = $(this).val();
             var token_compomex = $("#token_compomex").val();
+            var code_zip       = $("#code_zip").val();
+            var token_express  = $("#token_express").val();
 
             $.ajax({
                 url: '{{ route('user.shipping.code.submit') }}',
@@ -215,6 +219,30 @@
                     }
                 }
             });
+
+            $.ajax({
+                url: '{{ route('user.shipping.paquete.submit') }}',
+                type: "GET",
+                data: {
+                    codezip: input_value,
+                    code_zip_tienda: code_zip,
+                    token_express: token_express,
+                    _token: '{{ csrf_token() }}'
+                },
+                dataType: 'json',
+                success: function(response) {
+
+
+                    if (response.code == 200) {
+
+                        $.each(response.data, function(key, value) {
+                            $("#checkout-city").append('<option value="' + value.ciudad + '">' + value.ciudad + '</option>');
+                        });
+                    }
+                }
+            });
+
+
         });
     });
 </script>

@@ -52,7 +52,7 @@
 
                 <?php if($shipping): ?>
                     <tr>
-                        <td><?php echo e(__('Shipping')); ?>:ddd</td>
+                        <td><?php echo e(__('Shipping')); ?>:</td>
                         <td class="text-gray-dark">
                             <?php echo e(PriceHelper::setCurrencyPrice($shipping ? $shipping->price : 0)); ?></td>
                     </tr>
