@@ -103,7 +103,7 @@ class CheckoutController extends Controller
         $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
         $state_tax = Auth::check() && Auth::user()->state_id ? Auth::user()->state->price : 0;
         $total_amount = $grand_total + $state_tax;
-
+        //dd($cart);
         $data['cart'] = $cart;
         $data['cart_total'] = $cart_total;
         $data['grand_total'] = $total_amount;
@@ -215,7 +215,7 @@ class CheckoutController extends Controller
         $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
         $state_tax = Auth::check() && Auth::user()->state_id ? Auth::user()->state->price : 0;
         $grand_total = $grand_total + $state_tax;
-
+        //dd($cart);
         $total_amount = $grand_total;
         $data['cart'] = $cart;
         $data['cart_total'] = $cart_total;

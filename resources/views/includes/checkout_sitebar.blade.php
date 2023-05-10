@@ -50,7 +50,7 @@
 
                 @if ($shipping)
                     <tr>
-                        <td>{{ __('Shipping') }}:</td>
+                        <td>{{ __('Shipping') }}:XXXXX</td>
                         <td class="text-gray-dark">
                             {{ PriceHelper::setCurrencyPrice($shipping ? $shipping->price : 0) }}</td>
                     </tr>
