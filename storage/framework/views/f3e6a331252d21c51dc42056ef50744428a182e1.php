@@ -114,19 +114,7 @@ $message = $__bag->first($__errorArgs[0]); ?>
                       </div>
                    </div>
 
-                   <div class="col-md-6">
-                    <div class="form-group">
-                       <label for="billing-company"><?php echo e(__('CP Envío ')); ?></label>
-                       <input class="form-control" type="text" placeholder="<?php echo e(__('CP Envío ')); ?>" name="cp_envio" id="billing-company" value="<?php echo e($user->cp_envio); ?>">
-                       <?php $__errorArgs = ['cp_envio'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?>
-                       <p class="text-danger"><?php echo e($message); ?></p>
-                       <?php endif; ?>
-                      </div>
-                 </div>
+                    
                  <div class="col-md-6">
                     <div class="form-group">
                        <label for="billing-company"><?php echo e(__('Referencia de dirección de envío')); ?></label>

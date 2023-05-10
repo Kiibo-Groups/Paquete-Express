@@ -70,7 +70,7 @@ class PaytmController extends Controller
         }
 
         if(!$shipping){
-            $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first(); 
+            $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first();
         }
         $discount = [];
         if(Session::has('coupon')){
@@ -80,7 +80,30 @@ class PaytmController extends Controller
         if (!PriceHelper::Digital()){
             $shipping = null;
         }
-        
+
+
+        // ----------------------CreateOrder -------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         $grand_total = ($cart_total + ($shipping?$shipping->price:0)) + $total_tax;
         $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
         $grand_total += PriceHelper::StatePrce($request->state_id,$cart_total);
@@ -403,25 +426,25 @@ class PaytmController extends Controller
 
     public function notify(Request $request)
     {
-       
+
         $order_id = $request['ORDERID'];
 
         if ( 'TXN_SUCCESS' === $request['STATUS'] ) {
 			$transaction_id = $request['TXNID'];
-            
+
             $order = Order::where('transaction_number', $order_id )->first();
-            
+
             if (isset($order)) {
                 $data['txnid'] = $transaction_id;
                 $data['payment_status'] = 'Paid';
                 $order->update($data);
-                
+
                 TrackOrder::create([
                     'title' => 'Pending',
                     'order_id' => $order->id,
                 ]);
-                
-          
+
+
                 $user = Auth::user();
                 $cart = Session::get('cart');
                 $total_tax = 0;
@@ -429,7 +452,7 @@ class PaytmController extends Controller
                 $total = 0;
                 $option_price = 0;
                 foreach($cart as $key => $item){
-        
+
                     $total += $item['main_price'] * $item['qty'];
                     $option_price += $item['attribute_price'];
                     $cart_total = $total + $option_price;
@@ -447,30 +470,30 @@ class PaytmController extends Controller
                         $shipping = [];
                     }
                 }
-        
+
                 if(!$shipping){
-                    $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first(); 
+                    $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first();
                 }
                 $discount = [];
                 if(Session::has('coupon')){
                     $discount = Session::get('coupon');
                 }
-                
+
                 $grand_total = ($cart_total + ($shipping?$shipping->price:0)) + $total_tax;
                 $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
                 $total_amount = PriceHelper::setConvertPrice($grand_total);
-                
-                
+
+
                 PriceHelper::Transaction($order->id,$order->transaction_number,EmailHelper::getEmail(),PriceHelper::OrderTotal($order,'trns'));
                 PriceHelper::LicenseQtyDecrese($cart);
                 PriceHelper::LicenseQtyDecrese($cart);
-                
+
                 Notification::create([
                     'order_id' => $order->id
                 ]);
 
-       
-        
+
+
                 $emailData = [
                     'to' => EmailHelper::getEmail(),
                     'type' => "Order",
@@ -479,11 +502,11 @@ class PaytmController extends Controller
                     'transaction_number' => $order->transaction_number,
                     'site_title' => Setting::first()->title,
                 ];
-        
+
                 $email = new EmailHelper();
                 $email->sendTemplateMail($emailData);
-        
-               
+
+
                 Session::put('order_id',$order->id);
                 Session::forget('cart');
                 Session::forget('discount');
@@ -504,7 +527,7 @@ class PaytmController extends Controller
                         $sms->SendSms($user_number,"'purchase'",$order->transaction_number);
                     }
                 }
-                
+
                 return redirect()->route('front.checkout.success');
 
             }
@@ -517,6 +540,6 @@ class PaytmController extends Controller
             return redirect()->route('front.checkout.redirect');
 
         }
-    
+
     }
 }

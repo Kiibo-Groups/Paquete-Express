@@ -90,7 +90,7 @@
                       </div>
                    </div>
 
-                   <div class="col-md-6">
+                    {{--<div class="col-md-6">
                     <div class="form-group">
                        <label for="billing-company">{{__('CP Envío ')}}</label>
                        <input class="form-control" type="text" placeholder="{{__('CP Envío ')}}" name="cp_envio" id="billing-company" value="{{$user->cp_envio}}">
@@ -98,7 +98,7 @@
                        <p class="text-danger">{{$message}}</p>
                        @endif
                       </div>
-                 </div>
+                 </div>--}}
                  <div class="col-md-6">
                     <div class="form-group">
                        <label for="billing-company">{{__('Referencia de dirección de envío')}}</label>

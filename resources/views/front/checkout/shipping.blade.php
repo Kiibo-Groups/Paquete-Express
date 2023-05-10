@@ -73,7 +73,7 @@
                                 <div class="col-sm-12">
                                     <div class="form-group">
                                         <label for="checkout-company">{{ __('Company') }}</label>
-                                        <input class="form-control" name="ship_company" type="text" id="checkout-company"
+                                        <input class="form-control" name="ship_company" type="text" id="checkout-company" required
                                             value="{{ isset($user) ? $user->ship_company : '' }}">
                                     </div>
                                 </div>
@@ -119,7 +119,7 @@
                                     <div class="form-group">
                                         <label for="checkout-country">{{ __('Country') }}</label>
                                         <select class="form-control" name="ship_country" required id="billing-country">
-                                            <option selected>{{ __('Choose Country') }}</option>
+                                           {{-- <option selected>__('ChooseCountry') </option>--}}
                                             @foreach (DB::table('countries')->where('name', 'Mexico')->get() as $country)
                                                 <option value="{{ $country->name }}"
                                                     {{ isset($user) && $user->ship_country == $country->name ? 'selected' : '' }}>
@@ -144,6 +144,7 @@
                                                         <th scope="col">Detalle</th>
                                                         <th scope="col">Peso</th>
                                                         <th scope="col">Valor</th>
+                                                        <th scope="col"></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody id="tablaexpress">
@@ -194,8 +195,18 @@
 <script>
     $(document).ready(function() {
 
+
+        var checkout_zip = $("#checkout-zip").val();
+        if (checkout_zip != null) {
+            check();
+        }
         $("#checkout-zip").blur(function() {
-            var input_value = $(this).val();
+            check();
+        });
+
+        function check(){
+
+            var input_value = $("#checkout-zip").val();
             var token_compomex = $("#token_compomex").val();
             var code_zip = $("#code_zip").val();
             var token_express = $("#token_express").val();
@@ -239,26 +250,31 @@
 
                     if (response.code == 200) {
 
-                        console.log(response);
                         $("#mostrarcotizacion").show();
-                        //$("#tablaexpress").load(location.href+" #tablaexpress>*","");
-
 
                         $.each(response.data, function(key, value) {
                             $("#tablaexpress").append(
 
                                 '<tr>' +
-                                '<td>' + value.provider + '</td>' +
-                                '<td>' + value.description + '</td>' +
-                                '<td>' + value.display + '</td>' +
-                                '<td style="text-align: center" >' + value.weight + '</td>' +
-                                '<td style="text-align: right" >' + value.price + '</td>' +
+                                    '<td>' + value.provider + '</td>' +
+                                    '<td>' + value.description + '</td>' +
+                                    '<td>' + value.display + '</td>' +
+                                    '<td style="text-align: center" >' + value.weight + '</td>' +
+                                    '<td style="text-align: right" >' + value.price + '</td>' +
+                                    '<td style="text-align: right" ><input  type="checkbox" onclick=" valores (' + value.price + ')  "/></td>' +
                                 '</tr> '
                             );
                         });
                     }
                 }
             });
-        });
+
+        }
+
+
+
     });
+    function valores(p){
+            console.log(p)
+        }
 </script>

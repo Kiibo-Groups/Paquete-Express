@@ -74,7 +74,7 @@
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <label for="checkout-company">{{ __('Company') }}</label>
-                                            <input class="form-control" name="bill_company" type="text"
+                                            <input class="form-control" name="bill_company" type="text" required
                                                 id="checkout-company"
                                                 value="{{ isset($user) ? $user->bill_company : '' }}">
                                         </div>
@@ -103,7 +103,7 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label for="checkout-zip">{{ __('Zip Code') }} </label>
-                                            <input class="form-control" name="bill_zip" type="text" id="checkout-zip"
+                                            <input class="form-control" name="bill_zip" type="text" id="checkout-zip" required
                                                 value="{{ isset($user) ? $user->bill_zip : '' }}">
                                         </div>
                                     </div>
@@ -123,7 +123,7 @@
                                         <div class="form-group">
                                             <label for="checkout-country">{{ __('Country') }}</label>
                                             <select class="form-control" name="bill_country" required id="billing-country">
-                                                <option selected>{{ __('Choose Country') }}</option>
+                                                {{-- <option selected>__('ChooseCountry') </option>--}}
                                                 @foreach (DB::table('countries')->where('name', 'Mexico')->get() as $country)
                                                     <option value="{{ $country->name }}"
                                                         {{ isset($user) && $user->bill_country == $country->name ? 'selected' : '' }}>
@@ -140,14 +140,14 @@
 
 
 
-                            <div class="form-group">
+                         {{--   <div class="form-group">
                                 <div class="custom-control custom-checkbox">
                                     <input class="custom-control-input" type="checkbox" id="same_address"
                                         name="same_ship_address" {{ Session::has('shipping_address') ? 'checked' : '' }}>
                                     <label class="custom-control-label"
                                         for="same_address">{{ __('Same as billing address') }}</label>
                                 </div>
-                            </div>
+                            </div>--}}
 
                             @if ($setting->is_privacy_trams == 1)
                                 <div class="form-group">
@@ -192,8 +192,20 @@
 
 <script>
     $(document).ready(function() {
+
+        var checkout_zip = $("#checkout-zip").val();
+        if (checkout_zip != null) {
+            check();
+        }
         $("#checkout-zip").blur(function() {
-            var input_value = $(this).val();
+            check();
+        });
+
+
+        function check(){
+
+            var input_value = $("#checkout-zip").val();
+
             var token_compomex = $("#token_compomex").val();
             var code_zip       = $("#code_zip").val();
             var token_express  = $("#token_express").val();
@@ -207,7 +219,7 @@
                     _token: '{{ csrf_token() }}'
                 },
                 dataType: 'json',
-                success: function(response) { 
+                success: function(response) {
                     $("#checkout-city").prop('disabled', false);
                     if (response.code == 200) {
 
@@ -218,34 +230,34 @@
                     }
                 }
             });
+            /*
+                $.ajax({
+                    url: '{{ route('user.shipping.paquete.submit') }}',
+                    type: "GET",
+                    data: {
+                        codezip: input_value,
+                        code_zip_tienda: code_zip,
+                        token_express: token_express,
+                        _token: '{{ csrf_token() }}'
+                    },
+                    dataType: 'json',
+                    success: function(response) {
 
-            $.ajax({
-                url: '{{ route('user.shipping.paquete.submit') }}',
-                type: "GET",
-                data: {
-                    codezip: input_value,
-                    code_zip_tienda: code_zip,
-                    token_express: token_express,
-                    _token: '{{ csrf_token() }}'
-                },
-                dataType: 'json',
-                success: function(response) {
+                        console.log("Paquete =>", response);
+                        if (response.code == 200) {
 
-                    console.log("Paquete =>", response);
-                    if (response.code == 200) {
-
-                        $.each(response.data, function(key, value) {
-                            $("#checkout-city").append('<option value="' + value.ciudad + '">' + value.ciudad + '</option>');
-                        });
+                            $.each(response.data, function(key, value) {
+                                $("#checkout-city").append('<option value="' + value.ciudad + '">' + value.ciudad + '</option>');
+                            });
+                        }
+                    },
+                    error: function(response) {
+                        console.log("Error => ", response);
                     }
-                },
-                error: function(response) {
-                    console.log("Error => ", response);
-                }
-            });
+                });
+            */
 
-
-        });
+        };
     });
 </script>
 

@@ -73,7 +73,7 @@
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <label for="checkout-company"><?php echo e(__('Company')); ?></label>
-                                            <input class="form-control" name="bill_company" type="text"
+                                            <input class="form-control" name="bill_company" type="text" required
                                                 id="checkout-company"
                                                 value="<?php echo e(isset($user) ? $user->bill_company : ''); ?>">
                                         </div>
@@ -102,7 +102,7 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label for="checkout-zip"><?php echo e(__('Zip Code')); ?> </label>
-                                            <input class="form-control" name="bill_zip" type="text" id="checkout-zip"
+                                            <input class="form-control" name="bill_zip" type="text" id="checkout-zip" required
                                                 value="<?php echo e(isset($user) ? $user->bill_zip : ''); ?>">
                                         </div>
                                     </div>
@@ -122,7 +122,7 @@
                                         <div class="form-group">
                                             <label for="checkout-country"><?php echo e(__('Country')); ?></label>
                                             <select class="form-control" name="bill_country" required id="billing-country">
-                                                <option selected><?php echo e(__('Choose Country')); ?></option>
+                                                
                                                 <?php $__currentLoopData = DB::table('countries')->where('name', 'Mexico')->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $country): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                     <option value="<?php echo e($country->name); ?>"
                                                         <?php echo e(isset($user) && $user->bill_country == $country->name ? 'selected' : ''); ?>>
@@ -139,14 +139,7 @@
 
 
 
-                            <div class="form-group">
-                                <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox" id="same_address"
-                                        name="same_ship_address" <?php echo e(Session::has('shipping_address') ? 'checked' : ''); ?>>
-                                    <label class="custom-control-label"
-                                        for="same_address"><?php echo e(__('Same as billing address')); ?></label>
-                                </div>
-                            </div>
+                         
 
                             <?php if($setting->is_privacy_trams == 1): ?>
                                 <div class="form-group">
@@ -191,8 +184,20 @@
 
 <script>
     $(document).ready(function() {
+
+        var checkout_zip = $("#checkout-zip").val();
+        if (checkout_zip != null) {
+            check();
+        }
         $("#checkout-zip").blur(function() {
-            var input_value = $(this).val();
+            check();
+        });
+
+
+        function check(){
+
+            var input_value = $("#checkout-zip").val();
+
             var token_compomex = $("#token_compomex").val();
             var code_zip       = $("#code_zip").val();
             var token_express  = $("#token_express").val();
@@ -207,7 +212,6 @@
                 },
                 dataType: 'json',
                 success: function(response) {
-
                     $("#checkout-city").prop('disabled', false);
                     if (response.code == 200) {
 
@@ -218,31 +222,34 @@
                     }
                 }
             });
+            /*
+                $.ajax({
+                    url: '<?php echo e(route('user.shipping.paquete.submit')); ?>',
+                    type: "GET",
+                    data: {
+                        codezip: input_value,
+                        code_zip_tienda: code_zip,
+                        token_express: token_express,
+                        _token: '<?php echo e(csrf_token()); ?>'
+                    },
+                    dataType: 'json',
+                    success: function(response) {
 
-            $.ajax({
-                url: '<?php echo e(route('user.shipping.paquete.submit')); ?>',
-                type: "GET",
-                data: {
-                    codezip: input_value,
-                    code_zip_tienda: code_zip,
-                    token_express: token_express,
-                    _token: '<?php echo e(csrf_token()); ?>'
-                },
-                dataType: 'json',
-                success: function(response) {
+                        console.log("Paquete =>", response);
+                        if (response.code == 200) {
 
-
-                    if (response.code == 200) {
-
-                        $.each(response.data, function(key, value) {
-                            $("#checkout-city").append('<option value="' + value.ciudad + '">' + value.ciudad + '</option>');
-                        });
+                            $.each(response.data, function(key, value) {
+                                $("#checkout-city").append('<option value="' + value.ciudad + '">' + value.ciudad + '</option>');
+                            });
+                        }
+                    },
+                    error: function(response) {
+                        console.log("Error => ", response);
                     }
-                }
-            });
+                });
+            */
 
-
-        });
+        };
     });
 </script>
 
