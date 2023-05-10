@@ -137,6 +137,7 @@ class AccountController extends Controller
     public function shippingPaquete(Request $request)
     {
 
+       try {
         $code             = $request->codezip;
         $code_zip_tienda  = $request->code_zip_tienda;
         $token_express    = $request->token_express;
@@ -155,7 +156,7 @@ class AccountController extends Controller
         $data = json_decode($response);
 
         $zip = [];
-
+ 
         foreach ($data->data as $key => $value) {
             if ($value->status == 200 && $value->rows > 0) {
 
@@ -173,6 +174,10 @@ class AccountController extends Controller
             }
         }
         return response()->json(['code' => 200, 'data' => $zip, 'message' => 'Se ha obtenido la siguiente información.']);
+       } catch (\Exception $th) {
+        return response()->json(['data' => 'error', 'message' => $th->getMessage()]);
+       }
+        
     }
 
 

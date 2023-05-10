@@ -239,7 +239,7 @@
                         });
                     }
                 },
-                fail: function(response) {
+                error: function(response) {
                     console.log("Error => ", response);
                 }
             });
