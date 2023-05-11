@@ -72,8 +72,8 @@
                                 <div class="col-sm-12">
                                     <div class="form-group">
                                         <label for="checkout-company"><?php echo e(__('Company')); ?></label>
-                                        <input class="form-control" name="ship_company" type="text" id="checkout-company" required
-                                            value="<?php echo e(isset($user) ? $user->ship_company : ''); ?>">
+                                        <input class="form-control" name="ship_company" type="text" id="checkout-company"
+                                            required value="<?php echo e(isset($user) ? $user->ship_company : ''); ?>">
                                     </div>
                                 </div>
                             </div>
@@ -118,7 +118,7 @@
                                     <div class="form-group">
                                         <label for="checkout-country"><?php echo e(__('Country')); ?></label>
                                         <select class="form-control" name="ship_country" required id="billing-country">
-                                           
+                                            
                                             <?php $__currentLoopData = DB::table('countries')->where('name', 'Mexico')->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $country): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                 <option value="<?php echo e($country->name); ?>"
                                                     <?php echo e(isset($user) && $user->ship_country == $country->name ? 'selected' : ''); ?>>
@@ -177,8 +177,12 @@
                                         class="hidden-xs-down"><?php echo e(__('Continue')); ?></span><i
                                         class="icon-arrow-right"></i></button>
                             </div>
+
+                            <input id="transporte"   name="transporte"   type="hidden" >
+                            <input id="precio_shipp" name="precio_shipp" type="hidden" >
+                            <input id="rateToken"    name="rateToken"    type="hidden" >
                         </form>
-                        <input id="token_compomex" type="hidden" value="<?php echo e($token); ?>" >
+                        <input id="token_compomex" type="hidden" value="<?php echo e($token); ?>">
                         <input id="code_zip" type="hidden" value="<?php echo e($code_zip); ?>">
                         <input id="token_express" type="hidden" value="<?php echo e($token_express); ?>">
                     </div>
@@ -196,14 +200,14 @@
 
 
         var checkout_zip = $("#checkout-zip").val();
-        if (checkout_zip != null) {
+        if (checkout_zip != '') {
             check();
         }
         $("#checkout-zip").blur(function() {
             check();
         });
 
-        function check(){
+        function check() {
 
             var input_value = $("#checkout-zip").val();
             var token_compomex = $("#token_compomex").val();
@@ -246,7 +250,7 @@
                 dataType: 'json',
                 success: function(response) {
 
-
+                    // console.log(JSON.decode(response))
                     if (response.code == 200) {
 
                         $("#mostrarcotizacion").show();
@@ -255,12 +259,17 @@
                             $("#tablaexpress").append(
 
                                 '<tr>' +
-                                    '<td>' + value.provider + '</td>' +
-                                    '<td>' + value.description + '</td>' +
-                                    '<td>' + value.display + '</td>' +
-                                    '<td style="text-align: center" >' + value.weight + '</td>' +
-                                    '<td style="text-align: right" >' + value.price + '</td>' +
-                                    '<td style="text-align: right" ><input  type="checkbox" onclick=" valores (' + value.price + ')  "/></td>' +
+                                '<td>' + value.provider + '</td>' +
+                                '<td>' + value.description + '</td>' +
+                                '<td>' + value.display + '</td>' +
+                                '<td style="text-align: center" >' + value.weight +
+                                '</td>' +
+                                '<td style="text-align: right" >' + value.price +
+                                '</td>' +
+                                '<td style="text-align: right" ><input  type="checkbox"  onclick="valores(\'' +
+                                (value.price).replace(/,/g, '') + '\',\'' + value
+                                .description + '\' ,\'' + value
+                                .rateToken + '\')"   /></td>' +
                                 '</tr> '
                             );
                         });
@@ -273,9 +282,31 @@
 
 
     });
-    function valores(p){
-            console.log(p)
-        }
+
+    function valores(p, d, r) {
+        var precio       = Number(p);
+        var transporte   = $("#transporte").val(d);
+        var precio_shipp = $("#precio_shipp").val(precio);
+        var rateToken    = $("#rateToken").val(r);
+
+        $.ajax({
+                url: '<?php echo e(route('front.envio.setup')); ?>',
+                type: "GET",
+                data: {
+                    precio: p,
+                    _token: '<?php echo e(csrf_token()); ?>'
+                },
+                dataType: 'json',
+                success: function(response) {
+
+            $('.shipping_total_set').text(response.shipping_price);
+             $('.grand_total_set').text(response.grand_total);
+
+
+                }
+            });
+
+    }
 </script>
 
 <?php echo $__env->make('master.front', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /var/www/html/Paquete-Express/resources/views/front/checkout/shipping.blade.php ENDPATH**/ ?>

@@ -156,7 +156,7 @@ class AccountController extends Controller
         $data = json_decode($response);
 
         $zip = [];
- 
+
         foreach ($data->data as $key => $value) {
             if ($value->status == 200 && $value->rows > 0) {
 
@@ -168,6 +168,7 @@ class AccountController extends Controller
                         'display'     => $dato->display,
                         'weight'      => $dato->weight,
                         'price'       => $dato->price,
+                        'rateToken'   => $dato->rateToken,
                     ];
                     array_push($zip, $data);
                 }
@@ -177,7 +178,7 @@ class AccountController extends Controller
        } catch (\Exception $th) {
         return response()->json(['data' => 'error', 'message' => $th->getMessage()]);
        }
-        
+
     }
 
 

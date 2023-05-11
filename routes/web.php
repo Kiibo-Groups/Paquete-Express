@@ -427,6 +427,10 @@ Route::group(['middleware' => 'maintainance'], function () {
         Route::post('/checkout/shpping/store', 'Front\CheckoutController@shippingStore')->name('front.checkout.shipping.store');
         Route::get('/checkout/review/payment', 'Front\CheckoutController@payment')->name('front.checkout.payment');
         Route::get('/checkout/state/setup/{state_id}', 'Front\CheckoutController@stateSetUp')->name('front.state.setup');
+
+        Route::get('/checkout/envio/setup', 'Front\CheckoutController@envioSetUp')->name('front.envio.setup');
+
+
         Route::post('/checkout-submit', 'Front\CheckoutController@checkout')->name('front.checkout.submit');
         Route::get('/checkout/success', 'Front\CheckoutController@paymentSuccess')->name('front.checkout.success');
         Route::get('/checkout/cancle', 'Front\CheckoutController@paymentCancle')->name('front.checkout.cancle');

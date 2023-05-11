@@ -45,18 +45,18 @@
                 <?php if($discount): ?>
                     <tr>
                         <td><?php echo e(__('Coupon discount')); ?>:</td>
-                        <td class="text-danger">-
+                        <td class="text-danger">
                             <?php echo e(PriceHelper::setCurrencyPrice($discount ? $discount['discount'] : 0)); ?></td>
                     </tr>
                 <?php endif; ?>
 
-                <?php if($shipping): ?>
+
                     <tr>
-                        <td><?php echo e(__('Shipping')); ?>:XXXXX</td>
-                        <td class="text-gray-dark">
-                            <?php echo e(PriceHelper::setCurrencyPrice($shipping ? $shipping->price : 0)); ?></td>
+                        <td><?php echo e(__('Shipping')); ?>:</td>
+                        <td class="text-gray-dark shipping_total_set">
+                            <?php echo e(PriceHelper::setCurrencyPrice($shipping?:0)); ?></td>
                     </tr>
-                <?php endif; ?>
+
                 <tr>
                     <td class="text-lg text-primary"><?php echo e(__('Order total')); ?></td>
                     <td class="text-lg text-primary grand_total_set"><?php echo e(PriceHelper::setCurrencyPrice($grand_total)); ?>

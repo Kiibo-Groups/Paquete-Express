@@ -26,6 +26,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Mollie\Laravel\Facades\Mollie;
+use Illuminate\Support\Facades\Http;
 
 class CheckoutController extends Controller
 {
@@ -77,19 +78,21 @@ class CheckoutController extends Controller
         }
 
 
-        $shipping = [];
-        if(ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->exists()){
-            $shipping = ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->first();
-            if($cart_total >= $shipping->minimum_price){
-                $shipping = $shipping;
-            }else{
-                $shipping = [];
-            }
-        }
+        // $shipping = [];
+        // if(ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->exists()){
+        //     $shipping = ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->first();
+        //     if($cart_total >= $shipping->minimum_price){
+        //         $shipping = $shipping;
+        //     }else{
+        //         $shipping = [];
+        //     }
+        // }
 
-        if(!$shipping){
-            $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first();
-        }
+        // if(!$shipping){
+        //     $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first();
+        // }
+
+        $shipping = 0;
         $discount = [];
         if(Session::has('coupon')){
             $discount = Session::get('coupon');
@@ -99,7 +102,7 @@ class CheckoutController extends Controller
             $shipping = null;
         }
 
-        $grand_total = ($cart_total + ($shipping?$shipping->price:0)) + $total_tax;
+        $grand_total = ($cart_total + ($shipping?:0)) + $total_tax;
         $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
         $state_tax = Auth::check() && Auth::user()->state_id ? Auth::user()->state->price : 0;
         $total_amount = $grand_total + $state_tax;
@@ -189,19 +192,24 @@ class CheckoutController extends Controller
                 $total_tax += $item::taxCalculate($item);
             }
         }
-        $shipping = [];
-        if(ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->exists()){
-            $shipping = ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->first();
-            if($cart_total >= $shipping->minimum_price){
-                $shipping = $shipping;
-            }else{
-                $shipping = [];
-            }
-        }
+        // $shipping = [];
+        // if(ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->exists()){
+        //     $shipping = ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->first();
+        //     if($cart_total >= $shipping->minimum_price){
+        //         $shipping = $shipping;
+        //     }else{
+        //         $shipping = [];
+        //     }
+        // }
 
-        if(!$shipping){
-            $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first();
-        }
+        // if(!$shipping){
+        //     $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first();
+        // }
+
+
+        $shipping = 0;
+
+
         $discount = [];
         if(Session::has('coupon')){
             $discount = Session::get('coupon');
@@ -211,7 +219,7 @@ class CheckoutController extends Controller
             $shipping = null;
         }
 
-        $grand_total = ($cart_total + ($shipping?$shipping->price:0)) + $total_tax;
+        $grand_total = ($cart_total + ($shipping?:0)) + $total_tax;
         $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
         $state_tax = Auth::check() && Auth::user()->state_id ? Auth::user()->state->price : 0;
         $grand_total = $grand_total + $state_tax;
@@ -249,6 +257,8 @@ class CheckoutController extends Controller
 
     public function payment()
     {
+
+
         if(!Session::has('billing_address')){
             return redirect(route('front.checkout.billing'));
         }
@@ -277,19 +287,88 @@ class CheckoutController extends Controller
                 $total_tax += $item::taxCalculate($item);
             }
         }
-        $shipping = [];
-        if(ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->exists()){
-            $shipping = ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->first();
-            if($cart_total >= $shipping->minimum_price){
-                $shipping = $shipping;
-            }else{
-                $shipping = [];
-            }
-        }
 
-        if(!$shipping){
-            $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first();
-        }
+
+
+                // // ---------------------- createOrder ------------------------
+
+                // $setting = Setting::value('token_paqexpress');
+                // $token_express    = $setting;
+                // $url              = 'https://qa.paquetelleguexpress.com/api/v1/client/createOrder';
+                // $parameters    = [
+
+                //     "rateToken" => "18011683837705622WBPjhQFXnn",
+                //     "content" => [
+                //         "content" => "Computadora Mini Torre",
+                //         "insurance" => false,
+                //         "declared_value" => 0
+                //     ],
+                //     "origin" => [
+                //         "company"               => "Tecnología Lider México",
+                //         "name"                  => "Jazmin",
+                //         "lastname"              => "Tucker",
+                //         "email"                 => "originmail@exammple.com",
+                //         "phone"                 => "6789012341",
+                //         "property"              => "Corporativo",
+                //         "street"                => "Prol. Paseo de la Reforma",
+                //         "outdoor"               => "695",
+                //         "interior"              => null,
+                //         "location"              => "Santa Fe, Zedec Sta Fé",
+                //         "reference"             => "Junto a Oxxo",
+                //         "settlement_type_code"  => "001",
+                //         "road_type_code"        => "009"
+                //     ],
+                //     "destination" => [
+                //         "company"               => "Gobierno del Estado",
+                //         "name"                  => "Jade",
+                //         "lastname"              => "Lee",
+                //         "email"                 => "destinationmail@exammple.com",
+                //         "phone"                 => "5678901234",
+                //         "property"              => "Oficina Central",
+                //         "street"                => "Ignacio Zaragoza",
+                //         "outdoor"               => "920",
+                //         "interior"              => "Local B1",
+                //         "location"              => "Centro",
+                //         "reference"             => "Plaza Morelos",
+                //         "settlement_type_code"  => "001",
+                //         "road_type_code"        => "009"
+                //     ]
+                // ];
+
+                // $response = Http::withToken($token_express)->post($url, $parameters);
+                // $data = json_decode($response);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // $shipping = [];
+        // if(ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->exists()){
+        //     $shipping = ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->first();
+        //     if($cart_total >= $shipping->minimum_price){
+        //         $shipping = $shipping;
+        //     }else{
+        //         $shipping = [];
+        //     }
+        // }
+
+        // if(!$shipping){
+        //     $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first();
+        // }
+
+        $shipping = Session::get('shipping_address')['precio_shipp'];
+
         $discount = [];
         if(Session::has('coupon')){
             $discount = Session::get('coupon');
@@ -299,7 +378,7 @@ class CheckoutController extends Controller
             $shipping = null;
         }
 
-        $grand_total = ($cart_total + ($shipping?$shipping->price:0)) + $total_tax;
+        $grand_total = ($cart_total + ($shipping?:0)) + $total_tax;
         $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
         $state_tax = Auth::check() && Auth::user()->state_id ? Auth::user()->state->price : 0;
         $grand_total = $grand_total + $state_tax;
@@ -510,25 +589,28 @@ class CheckoutController extends Controller
             }
         }
 
-        $shipping = [];
-        if(ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->exists()){
-            $shipping = ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->first();
-            if($cart_total >= $shipping->minimum_price){
-                $shipping = $shipping;
-            }else{
-                $shipping = [];
-            }
-        }
+        // $shipping = [];
+        // if(ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->exists()){
+        //     $shipping = ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->first();
+        //     if($cart_total >= $shipping->minimum_price){
+        //         $shipping = $shipping;
+        //     }else{
+        //         $shipping = [];
+        //     }
+        // }
 
-        if(!$shipping){
-            $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first();
-        }
+        // if(!$shipping){
+        //     $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first();
+        // }
+
+        $shipping = Session::get('shipping_address')['precio_shipp'];
+
         $discount = [];
         if(Session::has('coupon')){
             $discount = Session::get('coupon');
         }
 
-        $grand_total = ($cart_total + ($shipping?$shipping->price:0)) + $total_tax;
+        $grand_total = ($cart_total + ($shipping?:0)) + $total_tax;
         $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
 
         $state_price = 0;
@@ -556,6 +638,46 @@ class CheckoutController extends Controller
         $total_amount = $grand_total + $state_price;
 
         $data['state_price'] = PriceHelper::setCurrencyPrice($state_price);
+        $data['grand_total'] = PriceHelper::setCurrencyPrice($total_amount);
+
+        return response()->json($data);
+
+    }
+
+
+
+    public function envioSetUp(Request $request)
+	{
+
+        if (!Session::has('cart')) {
+            return redirect(route('front.cart'));
+        }
+
+        $cart = Session::get('cart');
+        $total_tax = 0;
+        $cart_total = 0;
+        $total = 0;
+        foreach($cart as $key => $item){
+
+            $total += ($item['main_price'] + $item['attribute_price']) * $item['qty'];
+            $cart_total = $total;
+            $item = Item::findOrFail($key);
+            if($item->tax){
+                $total_tax += $item::taxCalculate($item);
+            }
+        }
+
+        $shipping = $request->precio;
+
+        $discount = [];
+        if(Session::has('coupon')){
+            $discount = Session::get('coupon');
+        }
+
+        $grand_total = ($cart_total + ($shipping?:0)) + $total_tax;
+        $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
+        $total_amount = $grand_total ;
+        $data['shipping_price'] = PriceHelper::setCurrencyPrice($shipping);
         $data['grand_total'] = PriceHelper::setCurrencyPrice($total_amount);
 
         return response()->json($data);

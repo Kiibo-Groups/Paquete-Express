@@ -43,18 +43,18 @@
                 @if ($discount)
                     <tr>
                         <td>{{ __('Coupon discount') }}:</td>
-                        <td class="text-danger">-
+                        <td class="text-danger">
                             {{ PriceHelper::setCurrencyPrice($discount ? $discount['discount'] : 0) }}</td>
                     </tr>
                 @endif
 
-                @if ($shipping)
+
                     <tr>
-                        <td>{{ __('Shipping') }}:XXXXX</td>
-                        <td class="text-gray-dark">
-                            {{ PriceHelper::setCurrencyPrice($shipping ? $shipping->price : 0) }}</td>
+                        <td>{{ __('Shipping') }}:</td>
+                        <td class="text-gray-dark shipping_total_set">
+                            {{ PriceHelper::setCurrencyPrice($shipping?:0) }}</td>
                     </tr>
-                @endif
+
                 <tr>
                     <td class="text-lg text-primary">{{ __('Order total') }}</td>
                     <td class="text-lg text-primary grand_total_set">{{ PriceHelper::setCurrencyPrice($grand_total) }}

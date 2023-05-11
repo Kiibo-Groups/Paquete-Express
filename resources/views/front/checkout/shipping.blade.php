@@ -73,8 +73,8 @@
                                 <div class="col-sm-12">
                                     <div class="form-group">
                                         <label for="checkout-company">{{ __('Company') }}</label>
-                                        <input class="form-control" name="ship_company" type="text" id="checkout-company" required
-                                            value="{{ isset($user) ? $user->ship_company : '' }}">
+                                        <input class="form-control" name="ship_company" type="text" id="checkout-company"
+                                            required value="{{ isset($user) ? $user->ship_company : '' }}">
                                     </div>
                                 </div>
                             </div>
@@ -119,7 +119,7 @@
                                     <div class="form-group">
                                         <label for="checkout-country">{{ __('Country') }}</label>
                                         <select class="form-control" name="ship_country" required id="billing-country">
-                                           {{-- <option selected>__('ChooseCountry') </option>--}}
+                                            {{-- <option selected>__('ChooseCountry') </option> --}}
                                             @foreach (DB::table('countries')->where('name', 'Mexico')->get() as $country)
                                                 <option value="{{ $country->name }}"
                                                     {{ isset($user) && $user->ship_country == $country->name ? 'selected' : '' }}>
@@ -178,8 +178,12 @@
                                         class="hidden-xs-down">{{ __('Continue') }}</span><i
                                         class="icon-arrow-right"></i></button>
                             </div>
+
+                            <input id="transporte"   name="transporte"   type="hidden" >
+                            <input id="precio_shipp" name="precio_shipp" type="hidden" >
+                            <input id="rateToken"    name="rateToken"    type="hidden" >
                         </form>
-                        <input id="token_compomex" type="hidden" value="{{ $token }}" >
+                        <input id="token_compomex" type="hidden" value="{{ $token }}">
                         <input id="code_zip" type="hidden" value="{{ $code_zip }}">
                         <input id="token_express" type="hidden" value="{{ $token_express }}">
                     </div>
@@ -197,14 +201,14 @@
 
 
         var checkout_zip = $("#checkout-zip").val();
-        if (checkout_zip != null) {
+        if (checkout_zip != '') {
             check();
         }
         $("#checkout-zip").blur(function() {
             check();
         });
 
-        function check(){
+        function check() {
 
             var input_value = $("#checkout-zip").val();
             var token_compomex = $("#token_compomex").val();
@@ -247,7 +251,7 @@
                 dataType: 'json',
                 success: function(response) {
 
-
+                    // console.log(JSON.decode(response))
                     if (response.code == 200) {
 
                         $("#mostrarcotizacion").show();
@@ -256,12 +260,17 @@
                             $("#tablaexpress").append(
 
                                 '<tr>' +
-                                    '<td>' + value.provider + '</td>' +
-                                    '<td>' + value.description + '</td>' +
-                                    '<td>' + value.display + '</td>' +
-                                    '<td style="text-align: center" >' + value.weight + '</td>' +
-                                    '<td style="text-align: right" >' + value.price + '</td>' +
-                                    '<td style="text-align: right" ><input  type="checkbox" onclick=" valores (' + value.price + ')  "/></td>' +
+                                '<td>' + value.provider + '</td>' +
+                                '<td>' + value.description + '</td>' +
+                                '<td>' + value.display + '</td>' +
+                                '<td style="text-align: center" >' + value.weight +
+                                '</td>' +
+                                '<td style="text-align: right" >' + value.price +
+                                '</td>' +
+                                '<td style="text-align: right" ><input  type="checkbox"  onclick="valores(\'' +
+                                (value.price).replace(/,/g, '') + '\',\'' + value
+                                .description + '\' ,\'' + value
+                                .rateToken + '\')"   /></td>' +
                                 '</tr> '
                             );
                         });
@@ -274,7 +283,29 @@
 
 
     });
-    function valores(p){
-            console.log(p)
-        }
+
+    function valores(p, d, r) {
+        var precio       = Number(p);
+        var transporte   = $("#transporte").val(d);
+        var precio_shipp = $("#precio_shipp").val(precio);
+        var rateToken    = $("#rateToken").val(r);
+
+        $.ajax({
+                url: '{{ route('front.envio.setup') }}',
+                type: "GET",
+                data: {
+                    precio: p,
+                    _token: '{{ csrf_token() }}'
+                },
+                dataType: 'json',
+                success: function(response) {
+
+            $('.shipping_total_set').text(response.shipping_price);
+             $('.grand_total_set').text(response.grand_total);
+
+
+                }
+            });
+
+    }
 </script>
