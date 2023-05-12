@@ -2501,7 +2501,7 @@ button:focus {
 
 .btn-primary {
     background-color: #377dff;
-    
+
 }
 
 .btn-primary:hover {
@@ -10572,19 +10572,19 @@ screen and (-ms-high-contrast:none) {
     z-index: 99;
     color: #fff;
   }
-  
+
   .cookie-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     align-self: center;
   }
-  
-  
+
+
   span.cookie-consent__message {
     background-color: transparent !important;
   }
-  
+
   span.cookie-consent__message p {
     margin-bottom: 0px;
     color: #fff;

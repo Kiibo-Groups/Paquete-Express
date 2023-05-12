@@ -2,6 +2,11 @@
     <?php echo e(__('Shipping')); ?>
 
 <?php $__env->stopSection(); ?>
+<style>
+    .seleccion{
+        background-color: #111111;
+    }
+</style>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <?php $__env->startSection('content'); ?>
@@ -69,6 +74,25 @@
                                 </div>
                             </div>
                             <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="checkout-zip"><?php echo e(__('Zip Code')); ?> </label>
+                                        <input class="form-control" name="ship_zip" type="text" id="checkout-zip"
+                                            value="<?php echo e(isset($user) ? $user->ship_zip : ''); ?>">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="checkout-city"><?php echo e(__('City')); ?></label>
+                                        
+                                        <select class="form-control select2 select-search" name="ship_city"
+                                            id="checkout-city" required disabled>
+                                            <option value="<?php echo e(isset($user) ? $user->ship_city : ''); ?>">Select</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-sm-12">
                                     <div class="form-group">
                                         <label for="checkout-company"><?php echo e(__('Company')); ?></label>
@@ -94,25 +118,7 @@
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="checkout-zip"><?php echo e(__('Zip Code')); ?> </label>
-                                        <input class="form-control" name="ship_zip" type="text" id="checkout-zip"
-                                            value="<?php echo e(isset($user) ? $user->ship_zip : ''); ?>">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="checkout-city"><?php echo e(__('City')); ?></label>
-                                        
-                                        <select class="form-control select2 select-search" name="ship_city"
-                                            id="checkout-city" required disabled>
-                                            <option value="<?php echo e(isset($user) ? $user->ship_city : ''); ?>">Select</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
+
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="form-group">
@@ -129,30 +135,20 @@
                                 </div>
                             </div>
 
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="u-table-res">
-                                        <div id="mostrarcotizacion" style="display: none">
-                                            <h6>Cotizar Envío</h6>
 
-                                            <table class="table table-bordered mb-0">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col">Proveedor</th>
-                                                        <th scope="col">Descripción</th>
-                                                        <th scope="col">Detalle</th>
-                                                        <th scope="col">Peso</th>
-                                                        <th scope="col">Valor</th>
-                                                        <th scope="col"></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="tablaexpress">
-                                                </tbody>
-                                            </table>
+                            <div id="mostrarcotizacion" style="display: none">
+                                <h6>Cotizar Envío</h6>
+                                <div class="row mt-4" >
+                                    <div class="col-12" >
+                                        <div class="payment-methods" id="tablaexpress">
+
+
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
+
 
 
                             <input class="form-control" name="peso" required type="hidden" step="0.1"
@@ -178,9 +174,9 @@
                                         class="icon-arrow-right"></i></button>
                             </div>
 
-                            <input id="transporte"   name="transporte"   type="hidden" >
-                            <input id="precio_shipp" name="precio_shipp" type="hidden" >
-                            <input id="rateToken"    name="rateToken"    type="hidden" >
+                            <input id="transporte" name="transporte" type="hidden">
+                            <input id="precio_shipp" name="precio_shipp" type="hidden">
+                            <input id="rateToken" name="rateToken" type="hidden">
                         </form>
                         <input id="token_compomex" type="hidden" value="<?php echo e($token); ?>">
                         <input id="code_zip" type="hidden" value="<?php echo e($code_zip); ?>">
@@ -250,7 +246,7 @@
                 dataType: 'json',
                 success: function(response) {
 
-                    // console.log(JSON.decode(response))
+
                     if (response.code == 200) {
 
                         $("#mostrarcotizacion").show();
@@ -258,19 +254,20 @@
                         $.each(response.data, function(key, value) {
                             $("#tablaexpress").append(
 
-                                '<tr>' +
-                                '<td>' + value.provider + '</td>' +
-                                '<td>' + value.description + '</td>' +
-                                '<td>' + value.display + '</td>' +
-                                '<td style="text-align: center" >' + value.weight +
-                                '</td>' +
-                                '<td style="text-align: right" >' + value.price +
-                                '</td>' +
-                                '<td style="text-align: right" ><input  type="checkbox"  onclick="valores(\'' +
-                                (value.price).replace(/,/g, '') + '\',\'' + value
-                                .description + '\' ,\'' + value
-                                .rateToken + '\')"   /></td>' +
-                                '</tr> '
+                                '<div  class="single-payment-method eliminar '+ key +'"  >' +
+                                                '<a class="text-decoration-none " onclick="valores(\'' +
+                                                (value.price).replace(/,/g, '') + '\',\'' + value
+                                                .description + '\' ,\'' + value
+                                                .rateToken + '\', '+ key +')">' +
+                                                '<img max-width="50%" src="<?php echo e(asset('assets/logos/')); ?>/' + value
+                                                .provider + '.png"  >' +
+                                                '<h5> <b> $' + value.price + '</b></h5>' +
+                                                '<h6>' + value.description + '</h6>' +
+                                                '<p>' + value.display + '</p>' +
+                                                '</a>' +
+
+                                '</div>'
+
                             );
                         });
                     }
@@ -283,28 +280,34 @@
 
     });
 
-    function valores(p, d, r) {
-        var precio       = Number(p);
-        var transporte   = $("#transporte").val(d);
+    function valores(p, d, r, k) {
+        var precio = Number(p);
+        var transporte = $("#transporte").val(d);
         var precio_shipp = $("#precio_shipp").val(precio);
-        var rateToken    = $("#rateToken").val(r);
+        var rateToken = $("#rateToken").val(r);
+        var key = k;
 
+        $(".eliminar").removeClass("seleccion");
+
+        $('.'+k).addClass("seleccion");
         $.ajax({
-                url: '<?php echo e(route('front.envio.setup')); ?>',
-                type: "GET",
-                data: {
-                    precio: p,
-                    _token: '<?php echo e(csrf_token()); ?>'
-                },
-                dataType: 'json',
-                success: function(response) {
+            url: '<?php echo e(route('front.envio.setup')); ?>',
+            type: "GET",
+            data: {
+                precio: p,
+                _token: '<?php echo e(csrf_token()); ?>'
+            },
+            dataType: 'json',
+            success: function(response) {
 
-            $('.shipping_total_set').text(response.shipping_price);
-             $('.grand_total_set').text(response.grand_total);
+                $('.shipping_total_set').text(response.shipping_price);
+                $('.grand_total_set').text(response.grand_total);
 
 
-                }
-            });
+
+            }
+        });
+
 
     }
 </script>
