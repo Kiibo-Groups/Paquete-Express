@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Mollie\Laravel\Facades\Mollie;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\DB;
 
 class CheckoutController extends Controller
 {
@@ -48,7 +49,7 @@ class CheckoutController extends Controller
     public function __construct()
     {
         $setting = Setting::first();
-        if($setting->is_guest_checkout != 1){
+        if ($setting->is_guest_checkout != 1) {
             $this->middleware('auth');
         }
         $this->middleware('localize');
@@ -56,8 +57,37 @@ class CheckoutController extends Controller
         $this->__paypalConstruct();
     }
 
-	public function ship_address()
-	{
+    public function ship_address()
+    {
+
+        $hasNullValues = DB::table('users')->where('email', Auth::user()->email)
+            ->whereNull('colonia_envio')
+            ->whereNull('localidad_envio')
+            ->whereNull('municipio_envio')
+            ->whereNull('estado_envio')
+            ->whereNull('rc_fiscal')
+            ->whereNull('calle_fiscal')
+            ->whereNull('numero_interior')
+            ->whereNull('numero_exterior')
+            ->whereNull('colonia_fiscal')
+            ->whereNull('codigo_postal')
+            ->whereNull('localidad_fiscal')
+            ->whereNull('regimen_fiscal')
+            ->whereNull('referencia_direccion')
+            ->whereNull('referencia_direccion_envio')
+             ->exists();
+
+        if ($hasNullValues) {
+
+
+            Session::flash('error',__('Por favor rellene toda la información de perfil y dirección, para poder continuar con el pago.'));
+            return redirect()->back();
+
+        }
+
+
+
+
 
         if (!Session::has('cart')) {
             return redirect(route('front.cart'));
@@ -68,11 +98,11 @@ class CheckoutController extends Controller
         $cart_total = 0;
         $total = 0;
 
-        foreach($cart as $key => $item){
+        foreach ($cart as $key => $item) {
             $total += ($item['main_price'] + $item['attribute_price']) * $item['qty'];
             $cart_total = $total;
             $item = Item::findOrFail($key);
-            if($item->tax){
+            if ($item->tax) {
                 $total_tax += $item::taxCalculate($item);
             }
         }
@@ -94,15 +124,15 @@ class CheckoutController extends Controller
 
         $shipping = 0;
         $discount = [];
-        if(Session::has('coupon')){
+        if (Session::has('coupon')) {
             $discount = Session::get('coupon');
         }
 
-        if (!PriceHelper::Digital()){
+        if (!PriceHelper::Digital()) {
             $shipping = null;
         }
 
-        $grand_total = ($cart_total + ($shipping?:0)) + $total_tax;
+        $grand_total = ($cart_total + ($shipping ?: 0)) + $total_tax;
         $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
         $state_tax = Auth::check() && Auth::user()->state_id ? Auth::user()->state->price : 0;
         $total_amount = $grand_total + $state_tax;
@@ -118,8 +148,7 @@ class CheckoutController extends Controller
         $data['code_zip'] =  Setting::value('code_zip');
         $data['token_express'] =  Setting::value('token_paqexpress');
 
-        return view('front.checkout.billing',$data);
-
+        return view('front.checkout.billing', $data);
     }
 
 
@@ -127,10 +156,10 @@ class CheckoutController extends Controller
     public function billingStore(Request $request)
     {
 
-        if($request->same_ship_address){
-            Session::put('billing_address',$request->all());
+        if ($request->same_ship_address) {
+            Session::put('billing_address', $request->all());
 
-            if(PriceHelper::CheckDigital()){
+            if (PriceHelper::CheckDigital()) {
                 $shipping = [
                     "ship_first_name" => $request->bill_first_name,
                     "ship_last_name" => $request->bill_last_name,
@@ -143,7 +172,7 @@ class CheckoutController extends Controller
                     "ship_city" => $request->bill_city,
                     "ship_country" => $request->bill_country,
                 ];
-            }else{
+            } else {
                 $shipping = [
                     "ship_first_name" => $request->bill_first_name,
                     "ship_last_name" => $request->bill_last_name,
@@ -151,18 +180,17 @@ class CheckoutController extends Controller
                     "ship_phone" => $request->bill_phone,
                 ];
             }
-            Session::put('shipping_address',$shipping);
-        }else{
-            Session::put('billing_address',$request->all());
+            Session::put('shipping_address', $shipping);
+        } else {
+            Session::put('billing_address', $request->all());
             Session::forget('shipping_address');
         }
 
-        if(Session::has('shipping_address')){
+        if (Session::has('shipping_address')) {
             return redirect()->route('front.checkout.payment');
-        }else{
+        } else {
             return redirect()->route('front.checkout.shipping');
         }
-
     }
 
 
@@ -183,12 +211,12 @@ class CheckoutController extends Controller
         $cart_total = 0;
         $total = 0;
 
-        foreach($cart as $key => $item){
+        foreach ($cart as $key => $item) {
 
             $total += ($item['main_price'] + $item['attribute_price']) * $item['qty'];
             $cart_total = $total;
             $item = Item::findOrFail($key);
-            if($item->tax){
+            if ($item->tax) {
                 $total_tax += $item::taxCalculate($item);
             }
         }
@@ -211,15 +239,15 @@ class CheckoutController extends Controller
 
 
         $discount = [];
-        if(Session::has('coupon')){
+        if (Session::has('coupon')) {
             $discount = Session::get('coupon');
         }
 
-        if (!PriceHelper::Digital()){
+        if (!PriceHelper::Digital()) {
             $shipping = null;
         }
 
-        $grand_total = ($cart_total + ($shipping?:0)) + $total_tax;
+        $grand_total = ($cart_total + ($shipping ?: 0)) + $total_tax;
         $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
         $state_tax = Auth::check() && Auth::user()->state_id ? Auth::user()->state->price : 0;
         $grand_total = $grand_total + $state_tax;
@@ -243,13 +271,13 @@ class CheckoutController extends Controller
         $data['largo'] =  Setting::value('token_compomex');
         $data['ancho'] =  Setting::value('token_compomex');
 
-        return view('front.checkout.shipping',$data);
+        return view('front.checkout.shipping', $data);
     }
 
     public function shippingStore(Request $request)
     {
 
-        Session::put('shipping_address',$request->all());
+        Session::put('shipping_address', $request->all());
         return redirect(route('front.checkout.payment'));
     }
 
@@ -259,11 +287,11 @@ class CheckoutController extends Controller
     {
 
 
-        if(!Session::has('billing_address')){
+        if (!Session::has('billing_address')) {
             return redirect(route('front.checkout.billing'));
         }
 
-        if(!Session::has('shipping_address')){
+        if (!Session::has('shipping_address')) {
             return redirect(route('front.checkout.shipping'));
         }
 
@@ -278,65 +306,65 @@ class CheckoutController extends Controller
         $cart_total = 0;
         $total = 0;
 
-        foreach($cart as $key => $item){
+        foreach ($cart as $key => $item) {
 
             $total += ($item['main_price'] + $item['attribute_price']) * $item['qty'];
             $cart_total = $total;
             $item = Item::findOrFail($key);
-            if($item->tax){
+            if ($item->tax) {
                 $total_tax += $item::taxCalculate($item);
             }
         }
 
 
 
-                // // ---------------------- createOrder ------------------------
+        // // ---------------------- createOrder ------------------------
 
-                // $setting = Setting::value('token_paqexpress');
-                // $token_express    = $setting;
-                // $url              = 'https://qa.paquetelleguexpress.com/api/v1/client/createOrder';
-                // $parameters    = [
+        $setting = Setting::value('token_paqexpress');
+        $token_express    = $setting;
+        $url              = 'https://qa.paquetelleguexpress.com/api/v1/client/createOrder';
+        $parameters    = [
 
-                //     "rateToken" => "18011683837705622WBPjhQFXnn",
-                //     "content" => [
-                //         "content" => "Computadora Mini Torre",
-                //         "insurance" => false,
-                //         "declared_value" => 0
-                //     ],
-                //     "origin" => [
-                //         "company"               => "Tecnología Lider México",
-                //         "name"                  => "Jazmin",
-                //         "lastname"              => "Tucker",
-                //         "email"                 => "originmail@exammple.com",
-                //         "phone"                 => "6789012341",
-                //         "property"              => "Corporativo",
-                //         "street"                => "Prol. Paseo de la Reforma",
-                //         "outdoor"               => "695",
-                //         "interior"              => null,
-                //         "location"              => "Santa Fe, Zedec Sta Fé",
-                //         "reference"             => "Junto a Oxxo",
-                //         "settlement_type_code"  => "001",
-                //         "road_type_code"        => "009"
-                //     ],
-                //     "destination" => [
-                //         "company"               => "Gobierno del Estado",
-                //         "name"                  => "Jade",
-                //         "lastname"              => "Lee",
-                //         "email"                 => "destinationmail@exammple.com",
-                //         "phone"                 => "5678901234",
-                //         "property"              => "Oficina Central",
-                //         "street"                => "Ignacio Zaragoza",
-                //         "outdoor"               => "920",
-                //         "interior"              => "Local B1",
-                //         "location"              => "Centro",
-                //         "reference"             => "Plaza Morelos",
-                //         "settlement_type_code"  => "001",
-                //         "road_type_code"        => "009"
-                //     ]
-                // ];
+            "rateToken" => "18011683837705622WBPjhQFXnn",
+            "content" => [
+                "content" => "Computadora Mini Torre",
+                "insurance" => false,
+                "declared_value" => 0
+            ],
+            "origin" => [
+                "company"               => "Tecnología Lider México",
+                "name"                  => "Jazmin",
+                "lastname"              => "Tucker",
+                "email"                 => "originmail@exammple.com",
+                "phone"                 => "6789012341",
+                "property"              => "Corporativo",
+                "street"                => "Prol. Paseo de la Reforma",
+                "outdoor"               => "695",
+                "interior"              => null,
+                "location"              => "Santa Fe, Zedec Sta Fé",
+                "reference"             => "Junto a Oxxo",
+                "settlement_type_code"  => "001",
+                "road_type_code"        => "009"
+            ],
+            "destination" => [
+                "company"               => "Gobierno del Estado",
+                "name"                  => "Jade",
+                "lastname"              => "Lee",
+                "email"                 => "destinationmail@exammple.com",
+                "phone"                 => "5678901234",
+                "property"              => "Oficina Central",
+                "street"                => "Ignacio Zaragoza",
+                "outdoor"               => "920",
+                "interior"              => "Local B1",
+                "location"              => "Centro",
+                "reference"             => "Plaza Morelos",
+                "settlement_type_code"  => "001",
+                "road_type_code"        => "009"
+            ]
+        ];
 
-                // $response = Http::withToken($token_express)->post($url, $parameters);
-                // $data = json_decode($response);
+        $response = Http::withToken($token_express)->post($url, $parameters);
+        $data = json_decode($response);
 
 
 
@@ -370,15 +398,15 @@ class CheckoutController extends Controller
         $shipping = Session::get('shipping_address')['precio_shipp'];
 
         $discount = [];
-        if(Session::has('coupon')){
+        if (Session::has('coupon')) {
             $discount = Session::get('coupon');
         }
 
-        if (!PriceHelper::Digital()){
+        if (!PriceHelper::Digital()) {
             $shipping = null;
         }
 
-        $grand_total = ($cart_total + ($shipping?:0)) + $total_tax;
+        $grand_total = ($cart_total + ($shipping ?: 0)) + $total_tax;
         $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
         $state_tax = Auth::check() && Auth::user()->state_id ? Auth::user()->state->price : 0;
         $grand_total = $grand_total + $state_tax;
@@ -393,11 +421,11 @@ class CheckoutController extends Controller
         $data['shipping'] = $shipping;
         $data['tax'] = $total_tax;
         $data['payments'] = PaymentSetting::whereStatus(1)->get();
-        return view('front.checkout.payment',$data);
+        return view('front.checkout.payment', $data);
     }
 
-	public function checkout(PaymentRequest $request)
-	{
+    public function checkout(PaymentRequest $request)
+    {
 
 
         $input = $request->all();
@@ -406,170 +434,166 @@ class CheckoutController extends Controller
         $payment_redirect = false;
         $payment = null;
 
-        if(Session::has('currency')){
+        if (Session::has('currency')) {
             $currency = Currency::findOrFail(Session::get('currency'));
-        }else{
-            $currency = Currency::where('is_default',1)->first();
+        } else {
+            $currency = Currency::where('is_default', 1)->first();
         }
 
         // use currency check
-        $usd_supported = ['USD','EUR'];
-        $paypal_supported = ['USD','EUR','AUD','BRL','CAD','HKD','JPY','MXN','NZD','PHP','GBP','RUB'];
+        $usd_supported = ['USD', 'EUR'];
+        $paypal_supported = ['USD', 'EUR', 'AUD', 'BRL', 'CAD', 'HKD', 'JPY', 'MXN', 'NZD', 'PHP', 'GBP', 'RUB'];
         $paystack_supported = ['NGN'];
         switch ($input['payment_method']) {
 
             case 'Stripe':
-                if(!in_array($currency->name,$usd_supported)){
-                    Session::flash('error',__('Currency Not Supported'));
+                if (!in_array($currency->name, $usd_supported)) {
+                    Session::flash('error', __('Currency Not Supported'));
                     return redirect()->back();
                 }
                 $checkout = true;
                 $payment = $this->stripeSubmit($input);
-            break;
+                break;
 
             case 'Paypal':
-                if(!in_array($currency->name,$paypal_supported)){
-                    Session::flash('error',__('Currency Not Supported'));
+                if (!in_array($currency->name, $paypal_supported)) {
+                    Session::flash('error', __('Currency Not Supported'));
                     return redirect()->back();
                 }
                 $checkout = true;
                 $payment_redirect = true;
                 $payment = $this->paypalSubmit($input);
-            break;
+                break;
 
 
             case 'Mollie':
-                if(!in_array($currency->name,$usd_supported)){
-                    Session::flash('error',__('Currency Not Supported'));
+                if (!in_array($currency->name, $usd_supported)) {
+                    Session::flash('error', __('Currency Not Supported'));
                     return redirect()->back();
                 }
                 $checkout = true;
                 $payment_redirect = true;
                 $payment = $this->MollieSubmit($input);
-            break;
+                break;
 
             case 'Paystack':
-                if(!in_array($currency->name,$paystack_supported)){
-                    Session::flash('error',__('Currency Not Supported'));
+                if (!in_array($currency->name, $paystack_supported)) {
+                    Session::flash('error', __('Currency Not Supported'));
                     return redirect()->back();
                 }
                 $checkout = true;
                 $payment = $this->PaystackSubmit($input);
 
-            break;
+                break;
 
             case 'Bank':
                 $checkout = true;
                 $payment = $this->BankSubmit($input);
-            break;
+                break;
 
             case 'Cash On Delivery':
                 $checkout = true;
                 $payment = $this->cashOnDeliverySubmit($input);
-            break;
-
+                break;
         }
 
 
 
-        if($checkout){
-            if($payment_redirect){
+        if ($checkout) {
+            if ($payment_redirect) {
 
-                if($payment['status']){
+                if ($payment['status']) {
                     return redirect()->away($payment['link']);
-                }else{
-                    Session::put('message',$payment['message']);
+                } else {
+                    Session::put('message', $payment['message']);
                     return redirect()->route('front.checkout.cancle');
                 }
-            }else{
-                if($payment['status']){
+            } else {
+                if ($payment['status']) {
                     return redirect()->route('front.checkout.success');
-                }else{
-                    Session::put('message',$payment['message']);
+                } else {
+                    Session::put('message', $payment['message']);
                     return redirect()->route('front.checkout.cancle');
                 }
             }
-        }else{
-            return redirect()->route('front.checkout.cancle');
-        }
-
-	}
-
-	public function paymentRedirect(Request $request)
-	{
-        $responseData = $request->all();
-        if(Session::has('order_payment_id')){
-            $payment = $this->paypalNotify($responseData);
-            if($payment['status']){
-                return redirect()->route('front.checkout.success');
-            }else{
-                Session::put('message',$payment['message']);
-                return redirect()->route('front.checkout.cancle');
-            }
-        }else{
+        } else {
             return redirect()->route('front.checkout.cancle');
         }
     }
 
-	public function mollieRedirect(Request $request)
-	{
+    public function paymentRedirect(Request $request)
+    {
+        $responseData = $request->all();
+        if (Session::has('order_payment_id')) {
+            $payment = $this->paypalNotify($responseData);
+            if ($payment['status']) {
+                return redirect()->route('front.checkout.success');
+            } else {
+                Session::put('message', $payment['message']);
+                return redirect()->route('front.checkout.cancle');
+            }
+        } else {
+            return redirect()->route('front.checkout.cancle');
+        }
+    }
+
+    public function mollieRedirect(Request $request)
+    {
 
         $responseData = $request->all();
 
         $payment = Mollie::api()->payments()->get(Session::get('payment_id'));
         $responseData['payment_id'] = $payment->id;
-        if($payment->status == 'paid'){
+        if ($payment->status == 'paid') {
             $payment = $this->mollieNotify($responseData);
-            if($payment['status']){
+            if ($payment['status']) {
                 return redirect()->route('front.checkout.success');
-            }else{
-                Session::put('message',$payment['message']);
+            } else {
+                Session::put('message', $payment['message']);
                 return redirect()->route('front.checkout.cancle');
             }
-        }else{
+        } else {
             return redirect()->route('front.checkout.cancle');
         }
-
     }
 
-	public function paymentSuccess()
-	{
-        if(Session::has('order_id')){
+    public function paymentSuccess()
+    {
+        if (Session::has('order_id')) {
             $order_id = Session::get('order_id');
             $order = Order::find($order_id);
             $cart = json_decode($order->cart, true);
             $setting = Setting::first();
-            if($setting->is_twilio == 1){
+            if ($setting->is_twilio == 1) {
                 // message
                 $sms = new SmsHelper();
                 $user_number = $order->user->phone;
-                if($user_number){
-                    $sms->SendSms($user_number,"'purchase'");
+                if ($user_number) {
+                    $sms->SendSms($user_number, "'purchase'");
                 }
             }
-            return view('front.checkout.success',compact('order','cart'));
+            return view('front.checkout.success', compact('order', 'cart'));
         }
         return redirect()->route('front.index');
-
-	}
-
+    }
 
 
-	public function paymentCancle()
-	{
+
+    public function paymentCancle()
+    {
         $message = '';
-        if(Session::has('message')){
+        if (Session::has('message')) {
             $message = Session::get('message');
             Session::forget('message');
-        }else{
+        } else {
             $message = __('Payment Failed!');
         }
-        Session::flash('error',$message);
+        Session::flash('error', $message);
         return redirect()->route('front.checkout.billing');
-	}
+    }
 
     public function stateSetUp($state_id)
-	{
+    {
 
         if (!Session::has('cart')) {
             return redirect(route('front.cart'));
@@ -579,12 +603,12 @@ class CheckoutController extends Controller
         $total_tax = 0;
         $cart_total = 0;
         $total = 0;
-        foreach($cart as $key => $item){
+        foreach ($cart as $key => $item) {
 
             $total += ($item['main_price'] + $item['attribute_price']) * $item['qty'];
             $cart_total = $total;
             $item = Item::findOrFail($key);
-            if($item->tax){
+            if ($item->tax) {
                 $total_tax += $item::taxCalculate($item);
             }
         }
@@ -606,31 +630,30 @@ class CheckoutController extends Controller
         $shipping = Session::get('shipping_address')['precio_shipp'];
 
         $discount = [];
-        if(Session::has('coupon')){
+        if (Session::has('coupon')) {
             $discount = Session::get('coupon');
         }
 
-        $grand_total = ($cart_total + ($shipping?:0)) + $total_tax;
+        $grand_total = ($cart_total + ($shipping ?: 0)) + $total_tax;
         $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
 
         $state_price = 0;
-        if($state_id){
+        if ($state_id) {
             $state = State::findOrFail($state_id);
-            if($state->type == 'fixed'){
+            if ($state->type == 'fixed') {
                 $state_price = $state->price;
-            }else{
+            } else {
                 $state_price = ($cart_total * $state->price) / 100;
             }
-
-        }else{
-            if(Auth::check() && Auth::user()->state_id){
+        } else {
+            if (Auth::check() && Auth::user()->state_id) {
                 $state = Auth::user()->state;
-                if($state->type == 'fixed'){
+                if ($state->type == 'fixed') {
                     $state_price = $state->price;
-                }else{
+                } else {
                     $state_price = ($cart_total * $state->price) / 100;
                 }
-            }else{
+            } else {
                 $state_price = 0;
             }
         }
@@ -641,13 +664,12 @@ class CheckoutController extends Controller
         $data['grand_total'] = PriceHelper::setCurrencyPrice($total_amount);
 
         return response()->json($data);
-
     }
 
 
 
     public function envioSetUp(Request $request)
-	{
+    {
 
         if (!Session::has('cart')) {
             return redirect(route('front.cart'));
@@ -657,12 +679,12 @@ class CheckoutController extends Controller
         $total_tax = 0;
         $cart_total = 0;
         $total = 0;
-        foreach($cart as $key => $item){
+        foreach ($cart as $key => $item) {
 
             $total += ($item['main_price'] + $item['attribute_price']) * $item['qty'];
             $cart_total = $total;
             $item = Item::findOrFail($key);
-            if($item->tax){
+            if ($item->tax) {
                 $total_tax += $item::taxCalculate($item);
             }
         }
@@ -670,18 +692,16 @@ class CheckoutController extends Controller
         $shipping = $request->precio;
 
         $discount = [];
-        if(Session::has('coupon')){
+        if (Session::has('coupon')) {
             $discount = Session::get('coupon');
         }
 
-        $grand_total = ($cart_total + ($shipping?:0)) + $total_tax;
+        $grand_total = ($cart_total + ($shipping ?: 0)) + $total_tax;
         $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
-        $total_amount = $grand_total ;
+        $total_amount = $grand_total;
         $data['shipping_price'] = PriceHelper::setCurrencyPrice($shipping);
         $data['grand_total'] = PriceHelper::setCurrencyPrice($total_amount);
 
         return response()->json($data);
-
     }
-
 }

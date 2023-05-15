@@ -232,8 +232,6 @@
                 }
             });
 
-
-
             $.ajax({
                 url: '<?php echo e(route('user.shipping.paquete.submit')); ?>',
                 type: "GET",
@@ -245,29 +243,22 @@
                 },
                 dataType: 'json',
                 success: function(response) {
-
-
                     if (response.code == 200) {
-
                         $("#mostrarcotizacion").show();
-
                         $.each(response.data, function(key, value) {
                             $("#tablaexpress").append(
-
                                 '<div  class="single-payment-method eliminar '+ key +'"  >' +
-                                                '<a class="text-decoration-none " onclick="valores(\'' +
-                                                (value.price).replace(/,/g, '') + '\',\'' + value
-                                                .description + '\' ,\'' + value
-                                                .rateToken + '\', '+ key +')">' +
-                                                '<img max-width="50%" src="<?php echo e(asset('assets/logos/')); ?>/' + value
-                                                .provider + '.png"  >' +
-                                                '<h5> <b> $' + value.price + '</b></h5>' +
-                                                '<h6>' + value.description + '</h6>' +
-                                                '<p>' + value.display + '</p>' +
-                                                '</a>' +
-
+                                    '<a class="text-decoration-none " onclick="valores(\'' +
+                                    (value.price).replace(/,/g, '') + '\',\'' + value
+                                    .description + '\' ,\'' + value
+                                    .rateToken + '\', '+ key +')">' +
+                                    '<img max-width="50%" src="<?php echo e(asset('assets/logos/')); ?>/' + value
+                                    .provider + '.png"  >' +
+                                    '<h5> <b> $' + value.price + '</b></h5>' +
+                                    '<h6>' + value.description + '</h6>' +
+                                    '<p>' + value.display + '</p>' +
+                                    '</a>' +
                                 '</div>'
-
                             );
                         });
                     }
@@ -275,8 +266,6 @@
             });
 
         }
-
-
 
     });
 
@@ -302,9 +291,6 @@
 
                 $('.shipping_total_set').text(response.shipping_price);
                 $('.grand_total_set').text(response.grand_total);
-
-
-
             }
         });
 
