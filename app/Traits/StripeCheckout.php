@@ -139,7 +139,7 @@ trait StripeCheckout
                 $orderData['payment_status'] = 'Paid';
 
                 $order = Order::create($orderData);
-
+dd(Session::get('shipping_address')['rateToken']);
                 // ---------------------- createOrder ------------------------
                 $token_express    = $setting->token_express;
                 $url              = 'https://qa.paquetelleguexpress.com/api/v1/client/createOrder';

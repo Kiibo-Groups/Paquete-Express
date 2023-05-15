@@ -318,14 +318,19 @@ class CheckoutController extends Controller
 
 
 
-        // // ---------------------- createOrder ------------------------
+        //  ---------------------- createOrder ------------------------
 
-        $setting = Setting::value('token_paqexpress');
+        $ship = Session::get('shipping_address');
+        $user = Auth::user();
+
+        dd(Auth::user());
+
+        $setting          = Setting::value('token_paqexpress');
         $token_express    = $setting;
         $url              = 'https://qa.paquetelleguexpress.com/api/v1/client/createOrder';
         $parameters    = [
 
-            "rateToken" => "18011683837705622WBPjhQFXnn",
+            "rateToken" => Session::get('shipping_address')['rateToken'],
             "content" => [
                 "content" => "Computadora Mini Torre",
                 "insurance" => false,
@@ -347,28 +352,28 @@ class CheckoutController extends Controller
                 "road_type_code"        => "009"
             ],
             "destination" => [
-                "company"               => "Gobierno del Estado",
-                "name"                  => "Jade",
-                "lastname"              => "Lee",
-                "email"                 => "destinationmail@exammple.com",
-                "phone"                 => "5678901234",
-                "property"              => "Oficina Central",
-                "street"                => "Ignacio Zaragoza",
-                "outdoor"               => "920",
-                "interior"              => "Local B1",
-                "location"              => "Centro",
-                "reference"             => "Plaza Morelos",
+                "company"               => $ship['ship_company'] ,
+                "name"                  => $ship['ship_first_name'] ,
+                "lastname"              => $ship['ship_last_name'] ,
+                "email"                 => $ship['ship_email'] ,
+                "phone"                 => $ship['ship_phone'] ,
+                "property"              => 'Corporativo' ,
+                "street"                => $user->calle_fiscal ,
+                "outdoor"               => $user->numero_exterior ,
+                "interior"              => $user->numero_interior ,
+                "location"              => $user->localidad_envio ,
+                "reference"             => $user->referencia_direccion_envio ,
                 "settlement_type_code"  => "001",
                 "road_type_code"        => "009"
             ]
         ];
 
         $response = Http::withToken($token_express)->post($url, $parameters);
-        $data = json_decode($response);
+        $data1    = json_decode($response);
 
+        $data['data1'] = $data1;
 
-
-
+       // dd($data1 );
 
 
 
