@@ -59,33 +59,36 @@ class CheckoutController extends Controller
 
     public function ship_address()
     {
-
-        $hasNullValues = DB::table('users')->where('email', Auth::user()->email)
-            ->whereNull('colonia_envio')
-            ->whereNull('localidad_envio')
-            ->whereNull('municipio_envio')
-            ->whereNull('estado_envio')
-            ->whereNull('rc_fiscal')
-            ->whereNull('calle_fiscal')
-            ->whereNull('numero_interior')
-            ->whereNull('numero_exterior')
-            ->whereNull('colonia_fiscal')
-            ->whereNull('codigo_postal')
-            ->whereNull('localidad_fiscal')
-            ->whereNull('regimen_fiscal')
-            ->whereNull('referencia_direccion')
-            ->whereNull('referencia_direccion_envio')
-             ->exists();
-
-        if ($hasNullValues) {
+        if (Auth::user()) {
 
 
-            Session::flash('error',__('Por favor rellene toda la información de perfil y dirección, para poder continuar con el pago.'));
-            return redirect()->back();
+            $hasNullValues = DB::table('users')->where('email', Auth::user()->email)
+                ->whereNull('colonia_envio')
+                ->whereNull('localidad_envio')
+                ->whereNull('municipio_envio')
+                ->whereNull('estado_envio')
+                ->whereNull('rc_fiscal')
+                ->whereNull('calle_fiscal')
+                ->whereNull('numero_interior')
+                ->whereNull('numero_exterior')
+                ->whereNull('colonia_fiscal')
+                ->whereNull('codigo_postal')
+                ->whereNull('localidad_fiscal')
+                ->whereNull('regimen_fiscal')
+                ->whereNull('referencia_direccion')
+                ->whereNull('referencia_direccion_envio')
+                ->exists();
 
+            if ($hasNullValues) {
+
+
+                Session::flash('error', __('Por favor rellene toda la información de perfil y dirección, para poder continuar con el pago.'));
+                return redirect()->back();
+            }
+        }else{
+            Session::flash('error', __('Por favor regístre la información de perfil y dirección, para poder continuar con el pago.'));
+                return redirect()->back();
         }
-
-
 
 
 
@@ -352,17 +355,17 @@ class CheckoutController extends Controller
                 "road_type_code"        => "009"
             ],
             "destination" => [
-                "company"               => $ship['ship_company'] ,
-                "name"                  => $ship['ship_first_name'] ,
-                "lastname"              => $ship['ship_last_name'] ,
-                "email"                 => $ship['ship_email'] ,
-                "phone"                 => $ship['ship_phone'] ,
-                "property"              => 'Corporativo' ,
-                "street"                => $user->calle_fiscal ,
-                "outdoor"               => $user->numero_exterior ,
-                "interior"              => $user->numero_interior ,
-                "location"              => $user->localidad_envio ,
-                "reference"             => $user->referencia_direccion_envio ,
+                "company"               => $ship['ship_company'],
+                "name"                  => $ship['ship_first_name'],
+                "lastname"              => $ship['ship_last_name'],
+                "email"                 => $ship['ship_email'],
+                "phone"                 => $ship['ship_phone'],
+                "property"              => 'Corporativo',
+                "street"                => $user->calle_fiscal,
+                "outdoor"               => $user->numero_exterior,
+                "interior"              => $user->numero_interior,
+                "location"              => $user->localidad_envio,
+                "reference"             => $user->referencia_direccion_envio,
                 "settlement_type_code"  => "001",
                 "road_type_code"        => "009"
             ]
@@ -373,7 +376,7 @@ class CheckoutController extends Controller
 
         $data['data1'] = $data1;
 
-       // dd($data1 );
+        // dd($data1 );
 
 
 
