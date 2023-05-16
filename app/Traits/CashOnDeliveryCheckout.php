@@ -21,10 +21,10 @@ use Illuminate\Support\Str;
 
 trait CashOnDeliveryCheckout
 {
-    
+
     public function cashOnDeliverySubmit($data){
         $user = Auth::user();
-       
+
         $setting = Setting::first();
         $cart = Session::get('cart');
         $total_tax = 0;
@@ -40,6 +40,7 @@ trait CashOnDeliveryCheckout
             if($item->tax){
                 $total_tax += $item::taxCalculate($item);
             }
+            $content = $item['name']; // ----------- createOrder
         }
 
         $shipping = [];
@@ -53,13 +54,13 @@ trait CashOnDeliveryCheckout
         }
 
         if(!$shipping){
-            $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first(); 
+            $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first();
         }
 
         if (!PriceHelper::Digital()){
             $shipping = null;
         }
-        
+
         $discount = [];
         if(Session::has('coupon')){
             $discount = Session::get('coupon');
@@ -89,7 +90,7 @@ trait CashOnDeliveryCheckout
             'order_id' => $order->id,
         ]);
 
-        
+
         PriceHelper::Transaction($order->id,$order->transaction_number,EmailHelper::getEmail(),PriceHelper::OrderTotal($order,'trns'));
         PriceHelper::LicenseQtyDecrese($cart);
         PriceHelper::stockDecrese();
@@ -123,7 +124,7 @@ trait CashOnDeliveryCheckout
                 $sms->SendSms($user_number,"'purchase'",$order->transaction_number);
             }
         }
-       
+
         Session::put('order_id',$order->id);
         Session::forget('cart');
         Session::forget('discount');

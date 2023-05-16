@@ -60,20 +60,13 @@ trait StripeCheckout
             if ($item->tax) {
                 $total_tax += $item::taxCalculate($item);
             }
+            $content = $item['name']; // ----------- createOrder
         }
-        // $shipping = [];
-        // if(ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->exists()){
-        //     $shipping = ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->first();
-        //     if($cart_total >= $shipping->minimum_price){
-        //         $shipping = $shipping;
-        //     }else{
-        //         $shipping = [];
-        //     }
-        // }
 
-        // if(!$shipping){
-        //     $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first();
-        // }
+
+
+
+
 
         $shipping = Session::get('shipping_address')['precio_shipp'];
 
@@ -87,7 +80,7 @@ trait StripeCheckout
         }
 
         $orderData['state'] =  $data['state_id'] ? json_encode(State::findOrFail($data['state_id']), true) : null;
-        $grand_total        = ($cart_total + ($shipping ? $shipping->price : 0)) + $total_tax;
+        $grand_total        = ($cart_total + ($shipping ?: 0)) + $total_tax;
         $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
         $grand_total += PriceHelper::StatePrce($data['state_id'], $cart_total);
         $total_amount = PriceHelper::setConvertPrice($grand_total);
@@ -105,6 +98,7 @@ trait StripeCheckout
         $orderData['currency_sign'] = PriceHelper::setCurrencySign();
         $orderData['currency_value'] = PriceHelper::setCurrencyValue();
         $orderData['order_status'] = 'Pending';
+
 
         $stripe = Stripe::make(Config::get('services.stripe.secret'));
         try {
@@ -138,62 +132,63 @@ trait StripeCheckout
                 $orderData['charge_id'] = $charge['id'];
                 $orderData['payment_status'] = 'Paid';
 
-                $order = Order::create($orderData);
-dd(Session::get('shipping_address')['rateToken']);
-                // ---------------------- createOrder ------------------------
-                $token_express    = $setting->token_express;
-                $url              = 'https://qa.paquetelleguexpress.com/api/v1/client/createOrder';
-                $parameters    = [
 
-                    "rateToken"                 => Session::get('shipping_address')['rateToken'],
-                    "content" => [
-                        "content"               => "Computadora Mini Torre",
-                        "insurance"             => false,
-                        "declared_value"        => 0
+                //  ---------------------- createOrder ------------------------
+
+                $ship = Session::get('shipping_address');
+                $user = Auth::user();
+                $setting          = Setting::first();
+                $token_express    = $setting->token_paqexpress;
+                $url              = 'https://qa.paquetelleguexpress.com/api/v1/client/createOrder';
+                $parameters       = [
+
+                    "rateToken" => Session::get('shipping_address')['rateToken'],
+                    "content"   => [
+                        "content"        => $content,
+                        "insurance"      => false,
+                        "declared_value" => 0
                     ],
                     "origin" => [
-                        "company"               => "Tecnología Lider México",
-                        "name"                  => "Jazmin",
-                        "lastname"              => "Tucker",
-                        "email"                 => "originmail@exammple.com",
-                        "phone"                 => "6789012341",
+                        "company"               => $setting->title,
+                        "name"                  => $setting->title,
+                        "lastname"              => $setting->title,
+                        "email"                 => $setting->footer_email,
+                        "phone"                 => $setting->footer_phone,
                         "property"              => "Corporativo",
-                        "street"                => "Prol. Paseo de la Reforma",
-                        "outdoor"               => "695",
+                        "street"                => $setting->footer_address,
+                        "outdoor"               => "",
                         "interior"              => null,
-                        "location"              => "Santa Fe, Zedec Sta Fé",
-                        "reference"             => "Junto a Oxxo",
+                        "location"              => $setting->footer_address,
+                        "reference"             => $setting->footer_address,
                         "settlement_type_code"  => "001",
                         "road_type_code"        => "009"
                     ],
                     "destination" => [
-                        "company"               => "Gobierno del Estado",
-                        "name"                  => "Jade",
-                        "lastname"              => "Lee",
-                        "email"                 => "destinationmail@exammple.com",
-                        "phone"                 => "5678901234",
-                        "property"              => "Oficina Central",
-                        "street"                => "Ignacio Zaragoza",
-                        "outdoor"               => "920",
-                        "interior"              => "Local B1",
-                        "location"              => "Centro",
-                        "reference"             => "Plaza Morelos",
+                        "company"               => $ship['ship_company'],
+                        "name"                  => $ship['ship_first_name'],
+                        "lastname"              => $ship['ship_last_name'],
+                        "email"                 => $ship['ship_email'],
+                        "phone"                 => $ship['ship_phone'],
+                        "property"              => $ship['ship_address1'],
+                        "street"                => $user->calle_fiscal,
+                        "outdoor"               => $user->numero_exterior,
+                        "interior"              => $user->numero_interior,
+                        "location"              => $user->localidad_envio,
+                        "reference"             => $user->referencia_direccion_envio,
                         "settlement_type_code"  => "001",
                         "road_type_code"        => "009"
                     ]
                 ];
 
                 $response = Http::withToken($token_express)->post($url, $parameters);
-                $data = json_decode($response);
+                $data1    = json_decode($response);
 
+                $orderKey = $data1->orderKey;
 
+                $orderData['orderKey'] = $orderKey;
+                //----------------------Fin----------------------------------------------------------
 
-
-
-
-
-
-
+                $order = Order::create($orderData);
 
                 //------------------------------------------------------------------
 

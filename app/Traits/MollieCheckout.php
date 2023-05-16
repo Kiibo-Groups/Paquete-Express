@@ -22,12 +22,12 @@ trait MollieCheckout
 {
     public function __construct()
     {
-      
+
     }
 
 
     public function MollieSubmit($data){
-        
+
         $notify_url = route('front.checkout.mollie.redirect');
         $cart = Session::get('cart');
         $setting = Setting::find(1);
@@ -44,6 +44,7 @@ trait MollieCheckout
             if($item->tax){
                 $total_tax += $item->tax->value;
             }
+            $content = $item['name']; // ----------- createOrder
         }
         $shipping = [];
         if(ShippingService::whereStatus(1)->exists()){
@@ -53,7 +54,7 @@ trait MollieCheckout
         if(Session::has('coupon')){
             $discount = Session::get('coupon');
         }
-        
+
         if (!PriceHelper::Digital()){
             $shipping = null;
         }
@@ -61,7 +62,7 @@ trait MollieCheckout
         $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
         $grand_total += PriceHelper::StatePrce($data['state_id'],$cart_total);
         $total_amount = PriceHelper::setConvertPrice($grand_total);
-       
+
         $payment = Mollie::api()->payments()->create([
             'amount' => [
                 'currency' => PriceHelper::setCurrencyName(),
@@ -71,11 +72,11 @@ trait MollieCheckout
             'redirectUrl' => $notify_url,
             ]);
 
-       
+
         Session::put('payment_id',$payment->id);
         Session::put('input_data',$data);
         $payment = Mollie::api()->payments()->get($payment->id);
-      
+
         if ($payment->getCheckoutUrl()) {
             /** redirect to mollie **/
 
@@ -92,9 +93,9 @@ trait MollieCheckout
 
  }
 
-    
+
     public function mollieNotify($responseData){
-        $input_data = Session::get('input_data');   
+        $input_data = Session::get('input_data');
         $user = Auth::user();
         $cart = Session::get('cart');
         $total_tax = 0;
@@ -122,13 +123,13 @@ trait MollieCheckout
         }
 
         if(!$shipping){
-            $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first(); 
+            $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first();
         }
         $discount = [];
         if(Session::has('coupon')){
             $discount = Session::get('coupon');
         }
-        
+
         $grand_total = ($cart_total + ($shipping?$shipping->price:0)) + $total_tax;
         $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
         $total_amount = PriceHelper::setConvertPrice($grand_total);
@@ -156,7 +157,7 @@ trait MollieCheckout
             'order_id' => $order->id,
         ]);
 
-        
+
         PriceHelper::Transaction($order->id,$order->transaction_number,EmailHelper::getEmail(),PriceHelper::OrderTotal($order,'trns'));
         PriceHelper::LicenseQtyDecrese($cart);
         PriceHelper::stockDecrese();

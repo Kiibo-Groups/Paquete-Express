@@ -39,7 +39,9 @@
 
                                     $ship = Session::get('shipping_address');
                                     $bill = Session::get('billing_address');
+
                                 @endphp
+
                                 <ul class="list-unstyled">
                                     <li><span class="text-muted">{{ __('Name') }}:
                                         </span>{{ $ship['ship_first_name'] }} {{ $ship['ship_last_name'] }}</li>

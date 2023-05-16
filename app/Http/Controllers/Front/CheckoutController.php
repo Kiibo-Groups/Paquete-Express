@@ -111,19 +111,7 @@ class CheckoutController extends Controller
         }
 
 
-        // $shipping = [];
-        // if(ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->exists()){
-        //     $shipping = ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->first();
-        //     if($cart_total >= $shipping->minimum_price){
-        //         $shipping = $shipping;
-        //     }else{
-        //         $shipping = [];
-        //     }
-        // }
 
-        // if(!$shipping){
-        //     $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first();
-        // }
 
         $shipping = 0;
         $discount = [];
@@ -200,9 +188,7 @@ class CheckoutController extends Controller
     public function shipping()
     {
 
-        // if(Session::has('shipping_address')){
-        //     return redirect(route('front.checkout.payment'));
-        // }
+
 
         if (!Session::has('cart')) {
             return redirect(route('front.cart'));
@@ -223,19 +209,6 @@ class CheckoutController extends Controller
                 $total_tax += $item::taxCalculate($item);
             }
         }
-        // $shipping = [];
-        // if(ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->exists()){
-        //     $shipping = ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->first();
-        //     if($cart_total >= $shipping->minimum_price){
-        //         $shipping = $shipping;
-        //     }else{
-        //         $shipping = [];
-        //     }
-        // }
-
-        // if(!$shipping){
-        //     $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first();
-        // }
 
 
         $shipping = 0;
@@ -254,7 +227,7 @@ class CheckoutController extends Controller
         $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
         $state_tax = Auth::check() && Auth::user()->state_id ? Auth::user()->state->price : 0;
         $grand_total = $grand_total + $state_tax;
-        //dd($cart);
+
         $total_amount = $grand_total;
         $data['cart'] = $cart;
         $data['cart_total'] = $cart_total;
@@ -317,91 +290,9 @@ class CheckoutController extends Controller
             if ($item->tax) {
                 $total_tax += $item::taxCalculate($item);
             }
+            $content = $item['name'];
         }
 
-
-
-        //  ---------------------- createOrder ------------------------
-
-        $ship = Session::get('shipping_address');
-        $user = Auth::user();
-
-        dd(Auth::user());
-
-        $setting          = Setting::value('token_paqexpress');
-        $token_express    = $setting;
-        $url              = 'https://qa.paquetelleguexpress.com/api/v1/client/createOrder';
-        $parameters    = [
-
-            "rateToken" => Session::get('shipping_address')['rateToken'],
-            "content" => [
-                "content" => "Computadora Mini Torre",
-                "insurance" => false,
-                "declared_value" => 0
-            ],
-            "origin" => [
-                "company"               => "Tecnología Lider México",
-                "name"                  => "Jazmin",
-                "lastname"              => "Tucker",
-                "email"                 => "originmail@exammple.com",
-                "phone"                 => "6789012341",
-                "property"              => "Corporativo",
-                "street"                => "Prol. Paseo de la Reforma",
-                "outdoor"               => "695",
-                "interior"              => null,
-                "location"              => "Santa Fe, Zedec Sta Fé",
-                "reference"             => "Junto a Oxxo",
-                "settlement_type_code"  => "001",
-                "road_type_code"        => "009"
-            ],
-            "destination" => [
-                "company"               => $ship['ship_company'],
-                "name"                  => $ship['ship_first_name'],
-                "lastname"              => $ship['ship_last_name'],
-                "email"                 => $ship['ship_email'],
-                "phone"                 => $ship['ship_phone'],
-                "property"              => 'Corporativo',
-                "street"                => $user->calle_fiscal,
-                "outdoor"               => $user->numero_exterior,
-                "interior"              => $user->numero_interior,
-                "location"              => $user->localidad_envio,
-                "reference"             => $user->referencia_direccion_envio,
-                "settlement_type_code"  => "001",
-                "road_type_code"        => "009"
-            ]
-        ];
-
-        $response = Http::withToken($token_express)->post($url, $parameters);
-        $data1    = json_decode($response);
-
-        $data['data1'] = $data1;
-
-        // dd($data1 );
-
-
-
-
-
-
-
-
-
-
-
-
-        // $shipping = [];
-        // if(ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->exists()){
-        //     $shipping = ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->first();
-        //     if($cart_total >= $shipping->minimum_price){
-        //         $shipping = $shipping;
-        //     }else{
-        //         $shipping = [];
-        //     }
-        // }
-
-        // if(!$shipping){
-        //     $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first();
-        // }
 
         $shipping = Session::get('shipping_address')['precio_shipp'];
 
@@ -429,6 +320,7 @@ class CheckoutController extends Controller
         $data['shipping'] = $shipping;
         $data['tax'] = $total_tax;
         $data['payments'] = PaymentSetting::whereStatus(1)->get();
+
         return view('front.checkout.payment', $data);
     }
 
@@ -621,19 +513,6 @@ class CheckoutController extends Controller
             }
         }
 
-        // $shipping = [];
-        // if(ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->exists()){
-        //     $shipping = ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->first();
-        //     if($cart_total >= $shipping->minimum_price){
-        //         $shipping = $shipping;
-        //     }else{
-        //         $shipping = [];
-        //     }
-        // }
-
-        // if(!$shipping){
-        //     $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first();
-        // }
 
         $shipping = Session::get('shipping_address')['precio_shipp'];
 

@@ -167,8 +167,8 @@ class PriceHelper
             }
 
         }
-        
-          
+
+
      }
 
         if(Session::has('currency')){
@@ -225,7 +225,7 @@ class PriceHelper
             $discount = json_decode($order->discount,true);
         }
 
-        $grand_total = ($cart_total + ($shipping?$shipping['price']:0)) + $total_tax;
+        $grand_total = ($cart_total + ($shipping?:0)) + $total_tax;
         $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
         $grand_total = $grand_total + $order->state_price;
 
@@ -434,10 +434,10 @@ class PriceHelper
 
     public static function testPrice($price)
     {
-        
-        
+
+
         $setting = Setting::first();
-           
+
           if($setting->is_decimal == 1){
             if(is_numeric( $price ) || floor( $price ) != $price){
                 return number_format($price, 2, $setting->decimal_separator, $setting->thousand_separator);
@@ -445,7 +445,7 @@ class PriceHelper
                 return number_format($price, 2, $setting->decimal_separator, $setting->thousand_separator);
             }
         }else{
-           
+
             return number_format($price);
         }
     }

@@ -56,7 +56,7 @@ trait PaypalCheckout
     }
 
     public function paypalSubmit($data){
-        
+
         $user = Auth::user();
         $setting = Setting::first();
         $cart = Session::get('cart');
@@ -74,6 +74,7 @@ trait PaypalCheckout
             if($item->tax){
                 $total_tax += $item::taxCalculate($item);
             }
+            $content = $item['name']; // ----------- createOrder
         }
         $shipping = [];
         if(ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->exists()){
@@ -86,13 +87,13 @@ trait PaypalCheckout
         }
 
         if(!$shipping){
-            $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first(); 
+            $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first();
         }
 
         if (!PriceHelper::Digital()){
             $shipping = null;
         }
-        
+
         $discount = [];
         if(Session::has('coupon')){
             $discount = Session::get('coupon');
@@ -111,7 +112,7 @@ trait PaypalCheckout
         $orderData['billing_info'] = json_encode(Session::get('billing_address'),true);
         $orderData['payment_method'] = 'Paypal';
         $orderData['user_id'] = isset($user) ? $user->id : 0;
-        
+
         $paypal_item_name = 'Payment via paypal from'.' '.$setting->title;
         $paypal_item_amount =  $total_amount;
 
@@ -179,7 +180,7 @@ trait PaypalCheckout
     }
 
     public function paypalNotify($responseData){
-    
+
         $orderData = Session::get('order_data');
         /** Get the payment ID before session clear **/
         $payment_id = Session::get('order_payment_id');
@@ -207,7 +208,7 @@ trait PaypalCheckout
             $total = 0;
             $option_price = 0;
             foreach($cart as $key => $item){
-    
+
                 $total += $item['main_price'] * $item['qty'];
                 $option_price += $item['attribute_price'];
                 $cart_total = $total + $option_price;
@@ -225,9 +226,9 @@ trait PaypalCheckout
                     $shipping = [];
                 }
             }
-    
+
             if(!$shipping){
-                $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first(); 
+                $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first();
             }
             $discount = [];
             if(Session::has('coupon')){
@@ -255,7 +256,7 @@ trait PaypalCheckout
             PriceHelper::Transaction($order->id,$order->transaction_number,EmailHelper::getEmail(),PriceHelper::OrderTotal($order,'trns'));
             PriceHelper::LicenseQtyDecrese($cart);
             PriceHelper::LicenseQtyDecrese($cart);
-            
+
             if(Session::has('copon')){
                 $code = PromoCode::find(Session::get('copon')['code']['id']);
                 $code->no_of_times--;
@@ -277,7 +278,7 @@ trait PaypalCheckout
             Notification::create([
                 'order_id' => $order->id
             ]);
-            
+
             $setting = Setting::first();
             if($setting->is_twilio == 1){
                 // message

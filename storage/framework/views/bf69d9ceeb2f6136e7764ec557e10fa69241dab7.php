@@ -39,7 +39,9 @@
 
                                     $ship = Session::get('shipping_address');
                                     $bill = Session::get('billing_address');
+
                                 ?>
+
                                 <ul class="list-unstyled">
                                     <li><span class="text-muted"><?php echo e(__('Name')); ?>:
                                         </span><?php echo e($ship['ship_first_name']); ?> <?php echo e($ship['ship_last_name']); ?></li>

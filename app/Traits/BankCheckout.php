@@ -18,6 +18,7 @@ use App\Models\State;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Http;
 
 trait BankCheckout
 {
@@ -39,8 +40,9 @@ trait BankCheckout
             if($item->tax){
                 $total_tax += $item::taxCalculate($item);
             }
+            $content = $item['name']; // ----------- createOrder
         }
-    
+
         $shipping = [];
         if(ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->exists()){
             $shipping = ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->first();
@@ -52,13 +54,13 @@ trait BankCheckout
         }
 
         if(!$shipping){
-            $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first(); 
+            $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first();
         }
 
         if (!PriceHelper::Digital()){
             $shipping = null;
         }
-        
+
         $discount = [];
         if(Session::has('coupon')){
             $discount = Session::get('coupon');
@@ -84,6 +86,66 @@ trait BankCheckout
         $orderData['payment_status'] = 'Unpaid';
         $orderData['txnid'] = $data['txn_id'];
         $orderData['order_status'] = 'Pending';
+
+                //  ---------------------- createOrder ------------------------
+
+                $ship = Session::get('shipping_address');
+                $user = Auth::user();
+                $setting          = Setting::first();
+                $token_express    = $setting->token_paqexpress;
+                $url              = 'https://qa.paquetelleguexpress.com/api/v1/client/createOrder';
+                $parameters       = [
+
+                    "rateToken" => Session::get('shipping_address')['rateToken'],
+                    "content"   => [
+                        "content"        => $content,
+                        "insurance"      => false,
+                        "declared_value" => 0
+                    ],
+                    "origin" => [
+                        "company"               => $setting->title,
+                        "name"                  => $setting->title,
+                        "lastname"              => $setting->title,
+                        "email"                 => $setting->footer_email,
+                        "phone"                 => $setting->footer_phone,
+                        "property"              => "Corporativo",
+                        "street"                => $setting->footer_address,
+                        "outdoor"               => "",
+                        "interior"              => null,
+                        "location"              => $setting->footer_address,
+                        "reference"             => $setting->footer_address,
+                        "settlement_type_code"  => "001",
+                        "road_type_code"        => "009"
+                    ],
+                    "destination" => [
+                        "company"               => $ship['ship_company'],
+                        "name"                  => $ship['ship_first_name'],
+                        "lastname"              => $ship['ship_last_name'],
+                        "email"                 => $ship['ship_email'],
+                        "phone"                 => $ship['ship_phone'],
+                        "property"              => 'Corporativo',
+                        "street"                => $user->calle_fiscal,
+                        "outdoor"               => $user->numero_exterior,
+                        "interior"              => $user->numero_interior,
+                        "location"              => $user->localidad_envio,
+                        "reference"             => $user->referencia_direccion_envio,
+                        "settlement_type_code"  => "001",
+                        "road_type_code"        => "009"
+                    ]
+                ];
+
+                $response = Http::withToken($token_express)->post($url, $parameters);
+                $data1    = json_decode($response);
+
+                $orderKey = $data1->orderKey;
+
+                $orderData['orderKey'] = $orderKey;
+            //----------------------Fin----------------------------------------------------------
+
+
+
+
+
         $order = Order::create($orderData);
         TrackOrder::create([
             'title' => 'Pending',
@@ -124,7 +186,7 @@ trait BankCheckout
                 $sms->SendSms($user_number,"'purchase'",$order->transaction_number);
             }
         }
-        
+
         Session::put('order_id',$order->id);
         Session::forget('cart');
         Session::forget('discount');

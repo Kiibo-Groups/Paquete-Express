@@ -50,6 +50,7 @@ trait PaystackCheckout
             if($item->tax){
                 $total_tax += $item::taxCalculate($item);
             }
+            $content = $item['name']; // ----------- createOrder
         }
         $shipping = [];
         if(ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->exists()){
@@ -62,7 +63,7 @@ trait PaystackCheckout
         }
 
         if(!$shipping){
-            $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first(); 
+            $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first();
         }
         $discount = [];
         if(Session::has('coupon')){
@@ -72,7 +73,7 @@ trait PaystackCheckout
         if (!PriceHelper::Digital()){
             $shipping = null;
         }
-        
+
         $grand_total = ($cart_total + ($shipping?$shipping->price:0)) + $total_tax;
         $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
         $grand_total += PriceHelper::StatePrce($data['state_id'],$cart_total);
@@ -95,7 +96,7 @@ trait PaystackCheckout
         try{
                 $orderData['txnid'] =  $data['ref_id'];
                 $orderData['payment_status'] = 'Paid';
-                
+
                 $order = Order::create($orderData);
                 PriceHelper::Transaction($order->id,$order->transaction_number,EmailHelper::getEmail(),PriceHelper::OrderTotal($order,'trns'));
                 PriceHelper::LicenseQtyDecrese($cart);
@@ -110,8 +111,8 @@ trait PaystackCheckout
                     'title' => 'Pending',
                     'order_id' => $order->id,
                 ]);
-    
-                
+
+
                 Notification::create([
                     'order_id' => $order->id
                 ]);
@@ -137,14 +138,14 @@ trait PaystackCheckout
                         $sms->SendSms($user_number,"'purchase'",$order->transaction_number);
                     }
                 }
-              
+
                 if($discount){
                     $coupon_id = $discount['code']['id'];
                     $get_coupon = PromoCode::findOrFail($coupon_id);
                     $get_coupon->no_of_times -= 1;
                     $get_coupon->update();
                 }
-        
+
                 Session::put('order_id',$order->id);
                 Session::forget('cart');
                 Session::forget('discount');
@@ -152,7 +153,7 @@ trait PaystackCheckout
                 return [
                     'status' => true
                 ];
-            
+
 
         }catch (Exception $e){
 
