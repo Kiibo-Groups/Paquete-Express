@@ -225,7 +225,7 @@ class PriceHelper
             $discount = json_decode($order->discount,true);
         }
 
-        $grand_total = ($cart_total + ($shipping?:0)) + $total_tax;
+        $grand_total = ($cart_total + (int)($shipping?:0)) + $total_tax;
         $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
         $grand_total = $grand_total + $order->state_price;
 
