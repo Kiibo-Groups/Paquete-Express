@@ -268,7 +268,7 @@ class PriceHelper
         }
 
 
-        $grand_total = ($cart_total + ($shipping?$shipping['price']:0)) + $total_tax;
+        $grand_total = ($cart_total + ($shipping?(int)$shipping:0)) + $total_tax;
         $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
         $curr = Currency::where('is_default',1)->first();
         $total_amount = round($grand_total * $curr->value,2);
