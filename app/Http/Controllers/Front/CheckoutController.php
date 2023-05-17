@@ -59,87 +59,90 @@ class CheckoutController extends Controller
 
     public function ship_address()
     {
+
         if (Auth::user()) {
 
 
             $hasNullValues = DB::table('users')->where('email', Auth::user()->email)
-                ->whereNull('colonia_envio')
-                ->whereNull('localidad_envio')
-                ->whereNull('municipio_envio')
-                ->whereNull('estado_envio')
-                ->whereNull('rc_fiscal')
-                ->whereNull('calle_fiscal')
-                ->whereNull('numero_interior')
-                ->whereNull('numero_exterior')
-                ->whereNull('colonia_fiscal')
-                ->whereNull('codigo_postal')
-                ->whereNull('localidad_fiscal')
-                ->whereNull('regimen_fiscal')
-                ->whereNull('referencia_direccion')
-                ->whereNull('referencia_direccion_envio')
+                ->whereNotNull('colonia_envio')
+                ->whereNotNull('localidad_envio')
+                ->whereNotNull('municipio_envio')
+                ->whereNotNull('estado_envio')
+                ->whereNotNull('rc_fiscal')
+                ->whereNotNull('calle_fiscal')
+                ->whereNotNull('numero_interior')
+                ->whereNotNull('numero_exterior')
+                ->whereNotNull('colonia_fiscal')
+                ->whereNotNull('codigo_postal')
+                ->whereNotNull('localidad_fiscal')
+                ->whereNotNull('regimen_fiscal')
+                ->whereNotNull('referencia_direccion')
+                ->whereNotNull('referencia_direccion_envio')
                 ->exists();
+
+
 
             if ($hasNullValues) {
 
 
+                if (!Session::has('cart')) {
+                    return redirect(route('front.cart'));
+                }
+                $data['user'] = Auth::user() ? Auth::user() : null;
+                $cart = Session::get('cart');
+                $total_tax = 0;
+                $cart_total = 0;
+                $total = 0;
+
+                foreach ($cart as $key => $item) {
+                    $total += ($item['main_price'] + $item['attribute_price']) * $item['qty'];
+                    $cart_total = $total;
+                    $item = Item::findOrFail($key);
+                    if ($item->tax) {
+                        $total_tax += $item::taxCalculate($item);
+                    }
+                }
+
+
+
+
+                $shipping = 0;
+                $discount = [];
+                if (Session::has('coupon')) {
+                    $discount = Session::get('coupon');
+                }
+
+                if (!PriceHelper::Digital()) {
+                    $shipping = null;
+                }
+
+                $grand_total = ($cart_total + ($shipping ?: 0)) + $total_tax;
+                $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
+                $state_tax = Auth::check() && Auth::user()->state_id ? Auth::user()->state->price : 0;
+                $total_amount = $grand_total + $state_tax;
+                //dd($cart);
+                $data['cart'] = $cart;
+                $data['cart_total'] = $cart_total;
+                $data['grand_total'] = $total_amount;
+                $data['discount'] = $discount;
+                $data['shipping'] = $shipping;
+                $data['tax'] = $total_tax;
+                $data['payments'] = PaymentSetting::whereStatus(1)->get();
+                $data['token']    =  Setting::value('token_compomex');
+                $data['code_zip'] =  Setting::value('code_zip');
+                $data['token_express'] =  Setting::value('token_paqexpress');
+
+                return view('front.checkout.billing', $data);
+
+            } else {
+
                 Session::flash('error', __('Por favor rellene toda la información de perfil y dirección, para poder continuar con el pago.'));
                 return redirect()->back();
             }
-        }else{
+        } else {
             Session::flash('error', __('Por favor regístre la información de perfil y dirección, para poder continuar con el pago.'));
-                return redirect()->back();
+            return redirect()->back();
         }
-
-
-
-        if (!Session::has('cart')) {
-            return redirect(route('front.cart'));
-        }
-        $data['user'] = Auth::user() ? Auth::user() : null;
-        $cart = Session::get('cart');
-        $total_tax = 0;
-        $cart_total = 0;
-        $total = 0;
-
-        foreach ($cart as $key => $item) {
-            $total += ($item['main_price'] + $item['attribute_price']) * $item['qty'];
-            $cart_total = $total;
-            $item = Item::findOrFail($key);
-            if ($item->tax) {
-                $total_tax += $item::taxCalculate($item);
-            }
-        }
-
-
-
-
-        $shipping = 0;
-        $discount = [];
-        if (Session::has('coupon')) {
-            $discount = Session::get('coupon');
-        }
-
-        if (!PriceHelper::Digital()) {
-            $shipping = null;
-        }
-
-        $grand_total = ($cart_total + ($shipping ?: 0)) + $total_tax;
-        $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
-        $state_tax = Auth::check() && Auth::user()->state_id ? Auth::user()->state->price : 0;
-        $total_amount = $grand_total + $state_tax;
-        //dd($cart);
-        $data['cart'] = $cart;
-        $data['cart_total'] = $cart_total;
-        $data['grand_total'] = $total_amount;
-        $data['discount'] = $discount;
-        $data['shipping'] = $shipping;
-        $data['tax'] = $total_tax;
-        $data['payments'] = PaymentSetting::whereStatus(1)->get();
-        $data['token']    =  Setting::value('token_compomex');
-        $data['code_zip'] =  Setting::value('code_zip');
-        $data['token_express'] =  Setting::value('token_paqexpress');
-
-        return view('front.checkout.billing', $data);
     }
 
 

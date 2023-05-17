@@ -163,7 +163,7 @@ body_theme4 <?php endif; ?>
                             <!-- Logo-->
                             <div class="site-branding"><a class="site-logo align-self-center"
                                     href="<?php echo e(route('front.index')); ?>"><img
-                                        src="<?php echo e(asset('assets/images/' . $setting->logo)); ?>"
+                                        src="<?php echo e(asset('public/assets/images/' . $setting->logo)); ?>"
                                         alt="<?php echo e($setting->title); ?>"></a></div>
                             <!-- Search / Categories-->
                             <div class="search-box-wrap d-none d-lg-block d-flex">
