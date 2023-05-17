@@ -122,7 +122,7 @@
             <div class="col-4" style="float: left;">
                 <div class="payment-methods">
                     <div class="single-payment-method">
-                        <img class="" src="{{ asset('assets/logos/' . $orderKey . '.png') }}">
+                        <img class="" src="{{ asset('public/assets/logos/' . $orderKey . '.png') }}">
                     </div>
                 </div>
             </div>

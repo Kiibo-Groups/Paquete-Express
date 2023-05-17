@@ -253,7 +253,7 @@
                                     (value.price).replace(/,/g, '') + '\',\'' + value
                                     .description + '\' ,\'' + value
                                     .rateToken + '\', '+ key +')">' +
-                                    '<img max-width="50%" src="{{ asset('assets/logos/') }}/' + value
+                                    '<img max-width="50%" src="{{ asset('public/assets/logos/') }}/' + value
                                     .provider + '.png"  >' +
                                     '<h5> <b> $' + value.price + '</b></h5>' +
                                     '<h6>' + value.description + '</h6>' +
