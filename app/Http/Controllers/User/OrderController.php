@@ -34,12 +34,13 @@ class OrderController extends Controller
         return view('user.order.index',compact('orders'));
     }
 
-  
+
     public function details($id)
     {
         $user = Auth::user();
         $order = Order::findOrfail($id);
         $cart = json_decode($order->cart, true);
+       // dd( $order);
         return view('user.order.invoice',compact('user','order','cart'));
     }
 

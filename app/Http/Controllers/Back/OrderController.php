@@ -37,8 +37,8 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
-        
-      
+
+
         if($request->type){
             if($request->start_date && $request->end_date){
                 $datas = $start_date = Carbon::parse($request->start_date);
@@ -47,7 +47,7 @@ class OrderController extends Controller
             }else{
                 $datas = Order::latest('id')->whereOrderStatus($request->type)->get();
             }
-            
+
         }else{
             if($request->start_date && $request->end_date){
                 $datas = $start_date = Carbon::parse($request->start_date);
@@ -70,6 +70,7 @@ class OrderController extends Controller
     {
         $order = Order::findOrfail($id);
         $cart = json_decode($order->cart, true);
+
         return view('back.order.invoice',compact('order','cart'));
     }
 
@@ -119,7 +120,7 @@ class OrderController extends Controller
         if($user_number){
             $sms->SendSms($user_number,"'order_status'",$order->transaction_number);
         }
-       
+
         return redirect()->route('back.order.index')->withSuccess(__('Status Updated Successfully.'));
     }
 

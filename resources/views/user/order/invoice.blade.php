@@ -267,6 +267,7 @@
                           @php
                               $shipping = json_decode($order->shipping,true);
                           @endphp
+
                           <tr>
                           <td class="px-0 border-top border-top-2">
                           <span class="text-muted">{{__('Shipping')}}</span>
@@ -274,9 +275,9 @@
                           <td class="px-0 text-right border-top border-top-2" colspan="5">
                               <span >
                               @if ($setting->currency_direction == 1)
-                                  {{$order->currency_sign}}{{round($shipping['price']*$order->currency_value,2)}}
+                                  {{ $order->currency_sign}}{{ round($shipping,2)}}
                               @else
-                                  {{round($shipping['price']*$order->currency_value,2)}}{{$order->currency_sign}}
+                                  {{round($shipping,2)}}{{$order->currency_sign}}
                               @endif
 
                               </span>
