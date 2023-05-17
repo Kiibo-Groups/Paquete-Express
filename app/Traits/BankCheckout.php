@@ -23,7 +23,8 @@ use Illuminate\Support\Facades\Http;
 trait BankCheckout
 {
 
-    public function BankSubmit($data){
+    public function BankSubmit($data)
+    {
         $user = Auth::user();
         $setting = Setting::first();
         $cart = Session::get('cart');
@@ -31,53 +32,41 @@ trait BankCheckout
         $cart_total = 0;
         $total = 0;
         $option_price = 0;
-        foreach($cart as $key => $item){
+        foreach ($cart as $key => $item) {
 
             $total += $item['main_price'] * $item['qty'];
             $option_price += $item['attribute_price'];
             $cart_total = $total + $option_price;
             $item = Item::findOrFail($key);
-            if($item->tax){
+            if ($item->tax) {
                 $total_tax += $item::taxCalculate($item);
             }
             $content = $item['name']; // ----------- createOrder
         }
 
-        $shipping = [];
-        if(ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->exists()){
-            $shipping = ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->first();
-            if($cart_total >= $shipping->minimum_price){
-                $shipping = $shipping;
-            }else{
-                $shipping = [];
-            }
-        }
+        $shipping = Session::get('shipping_address')['precio_shipp'];
 
-        if(!$shipping){
-            $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first();
-        }
-
-        if (!PriceHelper::Digital()){
+        if (!PriceHelper::Digital()) {
             $shipping = null;
         }
 
         $discount = [];
-        if(Session::has('coupon')){
+        if (Session::has('coupon')) {
             $discount = Session::get('coupon');
         }
-        $grand_total = ($cart_total + ($shipping?$shipping->price:0)) + $total_tax;
+        $grand_total = ($cart_total + ($shipping ? $shipping : 0)) + $total_tax;
         $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
-        $grand_total += PriceHelper::StatePrce($data['state_id'],$cart_total);
+        $grand_total += PriceHelper::StatePrce($data['state_id'], $cart_total);
         $total_amount = PriceHelper::setConvertPrice($grand_total);
 
-        $orderData['state'] =  $data['state_id'] ? json_encode(State::findOrFail($data['state_id']),true) : null;
-        $orderData['cart'] = json_encode($cart,true);
-        $orderData['discount'] = json_encode($discount,true);
-        $orderData['shipping'] = json_encode($shipping,true);
+        $orderData['state'] =  $data['state_id'] ? json_encode(State::findOrFail($data['state_id']), true) : null;
+        $orderData['cart'] = json_encode($cart, true);
+        $orderData['discount'] = json_encode($discount, true);
+        $orderData['shipping'] = json_encode($shipping, true);
         $orderData['tax'] = $total_tax;
-        $orderData['state_price'] = PriceHelper::StatePrce($data['state_id'],$cart_total);
-        $orderData['shipping_info'] = json_encode(Session::get('shipping_address'),true);
-        $orderData['billing_info'] = json_encode(Session::get('billing_address'),true);
+        $orderData['state_price'] = PriceHelper::StatePrce($data['state_id'], $cart_total);
+        $orderData['shipping_info'] = json_encode(Session::get('shipping_address'), true);
+        $orderData['billing_info'] = json_encode(Session::get('billing_address'), true);
         $orderData['payment_method'] = 'Bank Transfer';
         $orderData['user_id'] = isset($user) ? $user->id : 0;
         $orderData['transaction_number'] = Str::random(10);
@@ -87,60 +76,60 @@ trait BankCheckout
         $orderData['txnid'] = $data['txn_id'];
         $orderData['order_status'] = 'Pending';
 
-                //  ---------------------- createOrder ------------------------
+        //  ---------------------- createOrder ------------------------
 
-                $ship = Session::get('shipping_address');
-                $user = Auth::user();
-                $setting          = Setting::first();
-                $token_express    = $setting->token_paqexpress;
-                $url              = 'https://qa.paquetelleguexpress.com/api/v1/client/createOrder';
-                $parameters       = [
+        $ship = Session::get('shipping_address');
+        $user = Auth::user();
+        $setting          = Setting::first();
+        $token_express    = $setting->token_paqexpress;
+        $url              = 'https://qa.paquetelleguexpress.com/api/v1/client/createOrder';
+        $parameters       = [
 
-                    "rateToken" => Session::get('shipping_address')['rateToken'],
-                    "content"   => [
-                        "content"        => $content,
-                        "insurance"      => false,
-                        "declared_value" => 0
-                    ],
-                    "origin" => [
-                        "company"               => $setting->title,
-                        "name"                  => $setting->title,
-                        "lastname"              => $setting->title,
-                        "email"                 => $setting->footer_email,
-                        "phone"                 => $setting->footer_phone,
-                        "property"              => "Corporativo",
-                        "street"                => $setting->footer_address,
-                        "outdoor"               => "",
-                        "interior"              => null,
-                        "location"              => $setting->footer_address,
-                        "reference"             => $setting->footer_address,
-                        "settlement_type_code"  => "001",
-                        "road_type_code"        => "009"
-                    ],
-                    "destination" => [
-                        "company"               => $ship['ship_company'],
-                        "name"                  => $ship['ship_first_name'],
-                        "lastname"              => $ship['ship_last_name'],
-                        "email"                 => $ship['ship_email'],
-                        "phone"                 => $ship['ship_phone'],
-                        "property"              => 'Corporativo',
-                        "street"                => $user->calle_fiscal,
-                        "outdoor"               => $user->numero_exterior,
-                        "interior"              => $user->numero_interior,
-                        "location"              => $user->localidad_envio,
-                        "reference"             => $user->referencia_direccion_envio,
-                        "settlement_type_code"  => "001",
-                        "road_type_code"        => "009"
-                    ]
-                ];
+            "rateToken" => Session::get('shipping_address')['rateToken'],
+            "content"   => [
+                "content"        => $content,
+                "insurance"      => false,
+                "declared_value" => 0
+            ],
+            "origin" => [
+                "company"               => $setting->title,
+                "name"                  => $setting->title,
+                "lastname"              => $setting->title,
+                "email"                 => $setting->footer_email,
+                "phone"                 => $setting->footer_phone,
+                "property"              => "Corporativo",
+                "street"                => $setting->footer_address,
+                "outdoor"               => "",
+                "interior"              => null,
+                "location"              => $setting->footer_address,
+                "reference"             => $setting->footer_address,
+                "settlement_type_code"  => "001",
+                "road_type_code"        => "009"
+            ],
+            "destination" => [
+                "company"               => $ship['ship_company'],
+                "name"                  => $ship['ship_first_name'],
+                "lastname"              => $ship['ship_last_name'],
+                "email"                 => $ship['ship_email'],
+                "phone"                 => $ship['ship_phone'],
+                "property"              => 'Corporativo',
+                "street"                => $user->calle_fiscal,
+                "outdoor"               => $user->numero_exterior,
+                "interior"              => $user->numero_interior,
+                "location"              => $user->localidad_envio,
+                "reference"             => $user->referencia_direccion_envio,
+                "settlement_type_code"  => "001",
+                "road_type_code"        => "009"
+            ]
+        ];
 
-                $response = Http::withToken($token_express)->post($url, $parameters);
-                $data1    = json_decode($response);
+        $response = Http::withToken($token_express)->post($url, $parameters);
+        $data1    = json_decode($response);
 
-                $orderKey = $data1->orderKey;
+        $orderKey = $data1->orderKey;
 
-                $orderData['orderKey'] = $orderKey;
-            //----------------------Fin----------------------------------------------------------
+        $orderData['orderKey'] = $orderKey;
+        //----------------------Fin----------------------------------------------------------
 
 
 
@@ -152,7 +141,7 @@ trait BankCheckout
             'order_id' => $order->id,
         ]);
 
-        PriceHelper::Transaction($order->id,$order->transaction_number,EmailHelper::getEmail(),PriceHelper::OrderTotal($order,'trns'));
+        PriceHelper::Transaction($order->id, $order->transaction_number, EmailHelper::getEmail(), PriceHelper::OrderTotal($order, 'trns'));
         PriceHelper::LicenseQtyDecrese($cart);
         PriceHelper::stockDecrese();
         Notification::create([
@@ -171,23 +160,23 @@ trait BankCheckout
         $email = new EmailHelper();
         $email->sendTemplateMail($emailData);
 
-        if($discount){
+        if ($discount) {
             $coupon_id = $discount['code']['id'];
             $get_coupon = PromoCode::findOrFail($coupon_id);
             $get_coupon->no_of_times -= 1;
             $get_coupon->update();
         }
 
-        if($setting->is_twilio == 1){
+        if ($setting->is_twilio == 1) {
             // message
             $sms = new SmsHelper();
-            $user_number = json_decode($order->billing_info,true)['bill_phone'];
-            if($user_number){
-                $sms->SendSms($user_number,"'purchase'",$order->transaction_number);
+            $user_number = json_decode($order->billing_info, true)['bill_phone'];
+            if ($user_number) {
+                $sms->SendSms($user_number, "'purchase'", $order->transaction_number);
             }
         }
 
-        Session::put('order_id',$order->id);
+        Session::put('order_id', $order->id);
         Session::forget('cart');
         Session::forget('discount');
         Session::forget('coupon');
@@ -195,5 +184,4 @@ trait BankCheckout
             'status' => true
         ];
     }
-
 }
