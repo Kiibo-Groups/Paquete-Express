@@ -32,8 +32,9 @@ use App\Models\Slider;
 use App\Models\Subcategory;
 use App\Models\TrackOrder;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Http;
 
-use function GuzzleHttp\json_decode;
+//use function GuzzleHttp\json_decode;
 
 class FrontendController extends Controller
 {
@@ -498,12 +499,41 @@ public function page($slug)
 
     public function track(Request $request)
     {
-        $order = Order::where('transaction_number',$request->order_number)->first();
+        $order    = Order::where('transaction_number',$request->order_number)->first();
+        $orderKey = $order->orderKey;
+
+        $setting  = Setting::first();
+        $token_express    = $setting->token_paqexpress;
+        $url              = 'https://qa.paquetelleguexpress.com/api/v1/client/getOrder';
+        $parameters    = [
+            "orderKey" => $orderKey,
+
+        ];
+        $response = Http::withToken($token_express)->post($url, $parameters);
+        $data = json_decode($response);
+
+        if ($response) {
+            $orderKey = $data->data->provider;
+            $service = $data->data->service;
+            $serviceDescription = $data->data->serviceDescription;
+            $orderKey = $data->data->provider;
+        } else {
+            $orderKey = '';
+            $service = '';
+            $serviceDescription = '';
+        }
+
+
+
+
 
         if($order){
             return view('user.order.track',[
                 'numbers' => 3,
-                'track_orders' => TrackOrder::whereOrderId($order->id)->get()->toArray()
+                'track_orders' => TrackOrder::whereOrderId($order->id)->get()->toArray(),
+                'orderKey' => $orderKey,
+                'service' => $service,
+                'serviceDescription' => $serviceDescription,
             ]);
         }else{
             return view('user.order.track',[
