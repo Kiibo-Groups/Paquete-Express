@@ -23,6 +23,17 @@ class BaseController extends Controller
 
         return response()->json($response, 200);
     }
+    public function sendArticulosResponse($result, $message)
+    {
+    	$response = [
+            'success' => true,
+            'Datos_Aticulo'    => $result,
+            'message' => $message,
+        ];
+
+
+        return response()->json($response, 200);
+    }
 
 
     /**

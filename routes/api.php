@@ -15,3 +15,5 @@ use Illuminate\Http\Request;
 */
 
 Route::get('usuarios','API\RegisterController@getUsuarios');
+Route::get('articulos','API\RegisterController@getArticulos');
+Route::get('articulo/{sku}','API\RegisterController@getArticuloVer');
