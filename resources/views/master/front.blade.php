@@ -158,7 +158,7 @@ body_theme4 @endif
                             <!-- Logo-->
                             <div class="site-branding"><a class="site-logo align-self-center"
                                     href="{{ route('front.index') }}"><img
-                                        src="{{ asset('public/assets/images/' . $setting->logo) }}"
+                                        src="{{ asset('assets/images/' . $setting->logo) }}"
                                         alt="{{ $setting->title }}"></a></div>
                             <!-- Search / Categories-->
                             <div class="search-box-wrap d-none d-lg-block d-flex">
