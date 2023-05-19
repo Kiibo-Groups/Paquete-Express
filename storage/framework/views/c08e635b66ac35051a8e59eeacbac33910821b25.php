@@ -50,7 +50,9 @@
                         <div class="product-badge product-badge2 bg-info"> -<?php echo e(PriceHelper::DiscountPercentage($item)); ?></div>
                         <?php endif; ?>
                         <div class="product-thumb">
+                            <a href="<?php echo e(route('front.product', $item->slug)); ?>">
                             <img class="lazy" data-src="<?php echo e(asset('assets/images/'.$item->thumbnail)); ?>" alt="Product">
+                            </a>
                             <div class="product-button-group">
                                 <a class="product-button wishlist_store" href="<?php echo e(route('user.wishlist.store',$item->id)); ?>" title="<?php echo e(__('Wishlist')); ?>"><i class="icon-heart"></i></a>
                                 <a class="product-button product_compare" href="javascript:;" data-target="<?php echo e(route('fornt.compare.product',$item->id)); ?>" title="<?php echo e(__('Compare')); ?>"><i class="icon-repeat"></i></a>
@@ -110,8 +112,9 @@
                                     <?php if($item->previous_price && $item->previous_price !=0): ?>
                                     <div class="product-badge product-badge2 bg-info"> -<?php echo e(PriceHelper::DiscountPercentage($item)); ?></div>
                                     <?php endif; ?>
-
+                                    <a href="<?php echo e(route('front.product', $item->slug)); ?>">
                                     <img class="lazy" data-src="<?php echo e(asset('assets/images/'.$item->thumbnail)); ?>" alt="Product">
+                                    </a>
                                     <div class="product-button-group">
                                         <a class="product-button wishlist_store" href="<?php echo e(route('user.wishlist.store',$item->id)); ?>" title="<?php echo e(__('Wishlist')); ?>"><i class="icon-heart"></i></a>
                                         <a data-target="<?php echo e(route('fornt.compare.product',$item->id)); ?>" class="product-button product_compare" href="javascript:;" title="<?php echo e(__('Compare')); ?>"><i class="icon-repeat"></i></a>
