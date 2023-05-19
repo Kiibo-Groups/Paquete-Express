@@ -7,7 +7,7 @@ use Illuminate\
         Support\ServiceProvider,
         Support\Facades\DB
     };
-
+    use Illuminate\Pagination\Paginator;
 class AppServiceProvider extends ServiceProvider
 {
     public function boot()
@@ -23,6 +23,11 @@ class AppServiceProvider extends ServiceProvider
             }
             session()->put('popup' , 1);
         });
+
+
+        Paginator::defaultView('vendor.pagination.default');
+        //Paginator::defaultView('vendor.pagination.bootstrap-4');
+        //Paginator::defaultSimpleView('vendor.pagination.simple-bootstrap-4');
     }
 
     public function register()

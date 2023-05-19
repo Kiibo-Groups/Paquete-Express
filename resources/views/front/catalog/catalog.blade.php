@@ -152,13 +152,12 @@
 
 
         <!-- Pagination-->
-        <div class="row mt-15" id="item_pagination">
+       <div class="row mt-15" id="item_pagination">
             <div class="col-lg-12 text-center">
                 {{$items->links()}}
             </div>
         </div>
 
-        <script type="text/javascript" src="{{asset('assets/front/js/catalog.js')}}"></script>
 
 
 

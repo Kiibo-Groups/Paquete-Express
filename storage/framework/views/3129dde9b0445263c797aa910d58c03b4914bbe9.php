@@ -604,6 +604,9 @@ body_theme4 <?php endif; ?>
     <script type="text/javascript" src="<?php echo e(asset('assets/front/js/myscript.js')); ?>"></script>
 
 
+    <script type="text/javascript" src="<?php echo e(asset('assets/front/js/catalog.js')); ?>"></script>
+
+
 
 
 

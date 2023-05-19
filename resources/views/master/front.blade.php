@@ -596,6 +596,9 @@ body_theme4 @endif
     <script type="text/javascript" src="{{ asset('assets/front/js/myscript.js') }}"></script>
 
 
+    <script type="text/javascript" src="{{asset('assets/front/js/catalog.js')}}"></script>
+
+
 
 
 
