@@ -247,11 +247,12 @@
                                         </td>
                                         <td class="px-0 text-right border-top border-top-2" colspan="5">
                                             <span >
+
                                             <?php if($setting->currency_direction == 1): ?>
-                                                <?php echo e($order->currency_sign); ?><?php echo e(round($shipping['price']*$order->currency_value,2)); ?>
+                                                <?php echo e($order->currency_sign); ?> <?php echo e(round($shipping,2)); ?>
 
                                             <?php else: ?>
-                                                <?php echo e(round($shipping['price']*$order->currency_value,2)); ?><?php echo e($order->currency_sign); ?>
+                                                <?php echo e(round($shipping,2)); ?> <?php echo e($order->currency_sign); ?>
 
                                             <?php endif; ?>
 
