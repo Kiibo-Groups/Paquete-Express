@@ -28,8 +28,8 @@ class PostRepository
         if($request->photo){
             $input['photo'] = json_encode($this->storeImageData($request),true);
         }
-        
-        
+
+
         Post::create($input);
     }
 
@@ -56,11 +56,11 @@ class PostRepository
 
     public function storeImageData($request)
     {
-        
+
         $storeData = [];
         if ($photos = $request->file('photo')) {
             foreach($photos as $key => $photo){
-                $storeData[$key] = ImageHelper::handleUploadedImage($photo,'assets/images');
+                $storeData[$key] = ImageHelper::handleUploadedImage($photo,'public/assets/images');
             }
         }
         return $storeData;
@@ -68,15 +68,15 @@ class PostRepository
 
     public function UpdateImageData($request,$post)
     {
-        
+
         $storeData = json_decode($post->photo,true);
-        
+
         if ($photos = $request->file('photo')) {
             foreach($photos as $key => $photo){
-                array_push($storeData,ImageHelper::handleUploadedImage($photo,'assets/images'));
+                array_push($storeData,ImageHelper::handleUploadedImage($photo,'public/assets/images'));
             }
         }
-        
+
         return $storeData;
     }
 
@@ -114,7 +114,7 @@ class PostRepository
         if (file_exists(base_path('../').'assets/images/'.$delete_photo)) {
             unlink(base_path('../').'assets/images/'.$delete_photo);
         }
-        
+
         unset($photos[$key]);
         $new_photos = json_encode($photos,true);
         $post->update(['photo'=> $new_photos]);

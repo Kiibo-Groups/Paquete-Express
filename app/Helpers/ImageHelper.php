@@ -31,7 +31,7 @@ class ImageHelper
             $thum = Str::random(8).'.'.$file->getClientOriginalExtension();
             $image = \Image::make($file)->resize(230,230);
 
-            $image->save(base_path('public/').$path.'/'.$thum);
+            $image->save(base_path('/public').$path.'/'.$thum);
 
             $photo = time().$file->getClientOriginalName();
             $file->move($path,$photo);
