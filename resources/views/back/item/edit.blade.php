@@ -28,6 +28,7 @@
     @csrf
 
     @method('PUT')
+    <input type="hidden" value="normal" name="itemtype">
     <div class="row">
 
         <div class="col-lg-8">

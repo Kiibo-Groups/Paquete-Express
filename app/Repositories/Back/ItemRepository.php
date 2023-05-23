@@ -21,8 +21,14 @@ class ItemRepository
 
     public function store($request)
     {
-        
+
         $input = $request->all();
+
+        if ($request->item_type == "normal") {
+            $input['pvolum'] = (($request->alto * $request->ancho * $request->largo ) / 5 ) ;
+        }
+
+
         if ($file = $request->file('photo')) {
             $images_name = ImageHelper::ItemhandleUploadedImage($request->file('photo'),'assets/images');
 
@@ -109,7 +115,13 @@ class ItemRepository
 
     public function update($item,$request)
     {
+
+
         $input = $request->all();
+        if ($request->itemtype == "normal") {
+            $input['pvolum'] = (($request->alto * $request->ancho * $request->largo ) / 5 ) ;
+        }
+
 
         if ( $request->file('photo')) {
 

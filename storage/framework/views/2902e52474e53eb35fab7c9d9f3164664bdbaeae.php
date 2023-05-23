@@ -6,7 +6,7 @@
 <div class="card mb-4">
     <div class="card-body">
         <div class="d-sm-flex align-items-center justify-content-between">
-            <h3 class="mb-0 bc-title"><b><?php echo e(__('Update Product')); ?></b> </h3>
+            <h3 class="mb-0 bc-title"><b><?php echo e(__('Update License Product')); ?></b> </h3>
             <a class="btn btn-primary   btn-sm" href="<?php echo e(route('back.item.index')); ?>"><i class="fas fa-chevron-left"></i> <?php echo e(__('Back')); ?></a>
         </div>
     </div>
@@ -26,7 +26,6 @@
     <?php echo csrf_field(); ?>
 
     <?php echo method_field('PUT'); ?>
-    <input type="hidden" value="normal" name="itemtype">
     <div class="row">
 
         <div class="col-lg-8">
@@ -107,6 +106,94 @@
                         <br>
                         <span class="mt-1 text-info"><?php echo e(__('Image Size Should Be 800 x 800. or square size')); ?></span>
                     </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="file_type"><?php echo e(__('Select Type')); ?> *</label>
+                        <select class="form-control" id="file_type" name="file_type">
+                            <option value="file" <?php echo e($item->file_type =='file' ? 'selected' : ''); ?> ><?php echo e(__('File')); ?></option>
+                            <option value="link" <?php echo e($item->file_type =='link' ? 'selected' : ''); ?> ><?php echo e(__('Link')); ?></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group view_file <?php echo e($item->file_type == 'file' ? '' : 'd-none'); ?> ">
+                        <label for="file"><?php echo e(__('File')); ?>
+
+                            *</label>
+                        <div class="input-group mb-1">
+                            <input type="file" class="form-control" id="file" name="file">
+                        </div>
+                        <?php if(file_exists('assets/files/'.$item->file)): ?>
+                            <a download href="<?php echo e(asset('assets/files/'.$item->file)); ?>"><?php echo e(__('Download File')); ?></a>
+                        <?php endif; ?>
+                        <p class="text-warning"><?php echo e(__('File type must be zip')); ?></p>
+                    </div>
+
+                    <div class="form-group view_link <?php echo e($item->file_type == 'link' ? '' : 'd-none'); ?>">
+                        <label for="link"><?php echo e(__('Link')); ?>
+
+                            *</label>
+                        <div class="input-group mb-3">
+                            <input type="text" id="link" name="link" class="form-control" value="<?php echo e($item->link); ?>" placeholder="<?php echo e(__('Enter Link')); ?>">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="video"><?php echo e(__('Add License')); ?> *</label>
+                    </div>
+                    <?php if(!empty($license_name)): ?>
+                    <?php $__currentLoopData = array_combine($license_name,$license_key); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $name => $key): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <div id="license-section">
+                        <div class="d-flex">
+                            <div class="flex-grow-1">
+                                <div class="form-group">
+                                    <input type="text" class="form-control"
+                                        name="license_name[]"
+                                        placeholder="<?php echo e(__('License Name')); ?>" value="<?php echo e($name); ?>">
+                                    </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="form-group">
+                                    <input type="text" class="form-control"
+                                        name="license_key[]"
+                                        placeholder="<?php echo e(__('License Key')); ?>" value="<?php echo e($key); ?>">
+                                    </div>
+                            </div>
+                            <div class="flex-btn">
+                                <button type="button" class="btn btn-success add-license" data-text="<?php echo e(__('License Name')); ?>" data-text1="<?php echo e(__('License Key')); ?>"> <i class="fa fa-plus"></i> </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    <?php else: ?>
+                    <div id="license-section">
+                        <div class="d-flex">
+                            <div class="flex-grow-1">
+                                <div class="form-group">
+                                    <input type="text" class="form-control"
+                                        name="license_name[]"
+                                        placeholder="<?php echo e(__('License Name')); ?>" value="">
+                                    </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="form-group">
+                                    <input type="text" class="form-control"
+                                        name="license_key[]"
+                                        placeholder="<?php echo e(__('License Key')); ?>" value="">
+                                    </div>
+                            </div>
+                            <div class="flex-btn">
+                                <button type="button" class="btn btn-success add-license" data-text="<?php echo e(__('License Name')); ?>" data-text1="<?php echo e(__('License Key')); ?>"> <i class="fa fa-plus"></i> </button>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
             <div class="card">
@@ -228,8 +315,8 @@
             <div class="card">
                 <div class="card-body">
                     <input type="hidden" class="check_button" name="is_button" value="0">
-                    <button type="submit" class="btn btn-secondary mr-2"><?php echo e(__('Update')); ?></button>
-                    <a class="btn btn-success" href="<?php echo e(route('back.attribute.index',$item->id)); ?>"><?php echo e(__('Manage Attributes')); ?></a>
+                    <button type="submit" class="btn btn-secondary mr-2"><?php echo e(__('Save')); ?></button>
+                    <button type="submit" class="btn btn-info save__edit"><?php echo e(__('Save & Edit')); ?></button>
                 </div>
             </div>
             <div class="card">
@@ -310,16 +397,7 @@
             </div>
             <div class="card">
                 <div class="card-body">
-                    <div class="form-group">
-                        <label for="stock"><?php echo e(__('Total in stock')); ?>
 
-                            *</label>
-                        <div class="input-group mb-3">
-                            <input type="number" id="stock"
-                                name="stock" class="form-control"
-                                placeholder="<?php echo e(__('Total in stock')); ?>" value="<?php echo e($item->stock); ?>" >
-                        </div>
-                    </div>
                     <div class="form-group">
                         <label for="tax_id"><?php echo e(__('Select Tax')); ?> *</label>
                         <select name="tax_id" id="tax_id" class="form-control">
@@ -344,86 +422,31 @@
                     </div>
                 </div>
             </div>
-
-
-            <div class="card">
-                <div class="card-body">
-                    <div class="form-group">
-                        <label for="peso">Peso (Kg)</label>
-                        <div class="input-group mb-3">
-                            <input type="number" id="peso" step="0.1" min="0"
-                                name="peso" class="form-control"
-                                placeholder="Peso" value="<?php echo e($item->peso); ?>" >
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="alto">Alto (Cm)</label>
-                        <div class="input-group mb-3">
-                            <input type="number" id="alto" step="0.1" min="0"
-                                name="alto" class="form-control"
-                                placeholder="Alto" value="<?php echo e($item->alto); ?>" >
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="ancho">Ancho (Cm)</label>
-                        <div class="input-group mb-3">
-                            <input type="number" id="ancho" step="0.1" min="0"
-                                name="ancho" class="form-control"
-                                placeholder="Ancho" value="<?php echo e($item->ancho); ?>" >
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="largo">Largo (Cm)</label>
-                        <div class="input-group mb-3">
-                            <input type="number" id="largo" step="0.1" min="0"
-                                name="largo" class="form-control"
-                                placeholder="Largo" value="<?php echo e($item->largo); ?>" >
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </div>
 
     </div>
 </form>
+
+
 </div>
 
-
-<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="confirm-deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-
-		<!-- Modal Header -->
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel"><?php echo e(__('Confirm Delete?')); ?></h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-          </button>
-		</div>
-
-		<!-- Modal Body -->
-        <div class="modal-body">
-			<?php echo e(__('You are going to delete this image from gallery.')); ?> <?php echo e(__('Do you want to delete it?')); ?>
-
-		</div>
-
-		<!-- Modal footer -->
-        <div class="modal-footer">
-			<button type="button" class="btn btn-secondary" data-dismiss="modal"><?php echo e(__('Cancel')); ?></button>
-			<form action="" class="d-inline btn-ok" method="POST">
-                <?php echo csrf_field(); ?>
-                <?php echo method_field('DELETE'); ?>
-                <button type="submit" class="btn btn-danger"><?php echo e(__('Delete')); ?></button>
-			</form>
-		</div>
-
-      </div>
-    </div>
-  </div>
-
-
-
 <?php $__env->stopSection(); ?>
-
-<?php echo $__env->make('master.back', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /var/www/html/Paquete-Express/resources/views/back/item/edit.blade.php ENDPATH**/ ?>
+<?php $__env->startSection('scripts'); ?>
+    <script>
+        $(document).on('change','#file_type',function(){
+            let type = $(this).val();
+            if(type == 'file'){
+                $('.view_link').addClass('d-none');
+                $('.view_file').removeClass('d-none');
+                $('.view_file input').prop('required',true);
+                $('.view_link input').prop('required',false);
+            }else{
+                $('.view_link').removeClass('d-none');
+                $('.view_file').addClass('d-none');
+                $('.view_file input').prop('required',false);
+                $('.view_link input').prop('required',true);
+            }
+        })
+    </script>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('master.back', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /var/www/html/Paquete-Express/resources/views/back/item/license/edit.blade.php ENDPATH**/ ?>

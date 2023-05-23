@@ -134,7 +134,7 @@ class ItemController extends Controller
     public function store(ItemRequest $request)
     {
 
-        dd($request);
+
         $item_id = $this->repository->store($request);
 
         if($request->is_button ==0){

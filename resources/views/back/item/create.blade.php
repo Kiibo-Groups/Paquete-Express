@@ -295,7 +295,7 @@
                         <div class="input-group mb-3">
                             <input type="number" id="peso" step="0.1" min="0"
                                 name="peso" class="form-control"
-                                placeholder="Peso" value="{{ old('peso') }}" >
+                                placeholder="Peso" value="{{ old('peso') }}"  >
                         </div>
                     </div>
                     <div class="form-group">
@@ -303,7 +303,7 @@
                         <div class="input-group mb-3">
                             <input type="number" id="alto" step="0.1" min="0"
                                 name="alto" class="form-control"
-                                placeholder="Alto" value="{{ old('alto') }}" >
+                                placeholder="Alto" value="{{ old('alto') }}" required >
                         </div>
                     </div>
                     <div class="form-group">
@@ -311,7 +311,7 @@
                         <div class="input-group mb-3">
                             <input type="number" id="ancho" step="0.1" min="0"
                                 name="ancho" class="form-control"
-                                placeholder="Ancho" value="{{ old('ancho') }}" >
+                                placeholder="Ancho" value="{{ old('ancho') }}" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -319,7 +319,7 @@
                         <div class="input-group mb-3">
                             <input type="number" id="largo" step="0.1" min="0"
                                 name="largo" class="form-control"
-                                placeholder="Largo" value="{{ old('largo') }}" >
+                                placeholder="Largo" value="{{ old('largo') }}" required>
                         </div>
                     </div>
                 </div>
