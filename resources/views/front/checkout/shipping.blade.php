@@ -163,6 +163,8 @@
 
                             <input class="form-control" name="largo" type="hidden" step="0.1" id="largo"
                                 value="{{ $largo }}">
+                                <input class="form-control" name="pvolum" type="hidden"  id="pvolum"
+                                value="{{ $pvolum }}">
 
 
 
@@ -206,10 +208,14 @@
 
         function check() {
 
-            var input_value = $("#checkout-zip").val();
+            var input_value    = $("#checkout-zip").val();
             var token_compomex = $("#token_compomex").val();
-            var code_zip = $("#code_zip").val();
-            var token_express = $("#token_express").val();
+            var code_zip       = $("#code_zip").val();
+            var token_express  = $("#token_express").val();
+            var pvolum         = $("#pvolum").val();
+            var alto           = $("#alto").val();
+            var ancho          = $("#ancho").val();
+            var largo          = $("#largo").val();
 
             $.ajax({
                 url: '{{ route('user.shipping.code.submit') }}',
@@ -240,6 +246,10 @@
                     codezip: input_value,
                     code_zip_tienda: code_zip,
                     token_express: token_express,
+                    pvolum: pvolum,
+                    alto: alto,
+                    ancho: ancho,
+                    largo: largo,
                     _token: '{{ csrf_token() }}'
                 },
                 dataType: 'json',

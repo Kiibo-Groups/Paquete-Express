@@ -201,7 +201,12 @@ class CheckoutController extends Controller
 
         $total_tax = 0;
         $cart_total = 0;
-        $total = 0;
+        $total  = 0;
+        $pvolum = 0;
+        $ancho  = 0;
+        $largo  = 0;
+        $alto   = 0;
+        $peso   = 0;
 
         foreach ($cart as $key => $item) {
 
@@ -211,6 +216,15 @@ class CheckoutController extends Controller
             if ($item->tax) {
                 $total_tax += $item::taxCalculate($item);
             }
+            if ($item->item_type == 'normal') {
+                $pvolum += $item->pvolum;
+                $alto += $item->alto;
+                $largo += $item->largo;
+                $ancho += $item->ancho;
+                $peso += $item->peso;
+            }
+
+
         }
 
 
@@ -242,13 +256,14 @@ class CheckoutController extends Controller
         $data['token']    =  Setting::value('token_compomex');
         $data['code_zip'] =  Setting::value('code_zip');
         $data['token_express'] =  Setting::value('token_paqexpress');
+        $data['pvolum'] = $pvolum;
 
 
+        $data['peso']  =  $peso;
+        $data['alto']  =  $alto;
+        $data['largo'] =  $largo;
+        $data['ancho'] =  $ancho;
 
-        $data['peso'] =  Setting::value('token_compomex');
-        $data['alto'] =  Setting::value('token_compomex');
-        $data['largo'] =  Setting::value('token_compomex');
-        $data['ancho'] =  Setting::value('token_compomex');
 
         return view('front.checkout.shipping', $data);
     }

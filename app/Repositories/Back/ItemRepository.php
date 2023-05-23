@@ -25,7 +25,7 @@ class ItemRepository
         $input = $request->all();
 
         if ($request->item_type == "normal") {
-            $input['pvolum'] = (($request->alto * $request->ancho * $request->largo ) / 5 ) ;
+            $input['pvolum'] = (($request->alto * $request->ancho * $request->largo ) / 5000 ) ;
         }
 
 
@@ -119,7 +119,7 @@ class ItemRepository
 
         $input = $request->all();
         if ($request->itemtype == "normal") {
-            $input['pvolum'] = (($request->alto * $request->ancho * $request->largo ) / 5 ) ;
+            $input['pvolum'] = (($request->alto * $request->ancho * $request->largo ) / 5000 ) ;
         }
 
 

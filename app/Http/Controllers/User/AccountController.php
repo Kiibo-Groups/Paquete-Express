@@ -137,16 +137,18 @@ class AccountController extends Controller
     public function shippingPaquete(Request $request)
     {
 
+
        try {
         $code             = $request->codezip;
         $code_zip_tienda  = $request->code_zip_tienda;
         $token_express    = $request->token_express;
+        $pvolum           = $request->pvolum;
         $url              = 'https://qa.paquetelleguexpress.com/api/v1/client/getRates';
         $parameters    = [
             "type"                => 2, // 2 para paqueteria
             "origin_zipcode"      => $code_zip_tienda,
             "destination_zipcode" => $code,
-            "weight"              => 2,
+            "weight"              => $pvolum ,
             "high"                => 45,
             "width"               => 50,
             "long"                => 40
