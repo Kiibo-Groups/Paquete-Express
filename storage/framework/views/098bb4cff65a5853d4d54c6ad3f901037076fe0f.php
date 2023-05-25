@@ -36,7 +36,7 @@
             <li><span class="text-muted"><?php echo e(__('Monday-Friday')); ?>:</span><?php echo e($setting->friday_start); ?> - <?php echo e($setting->friday_end); ?></li>
             <li><span class="text-muted"><?php echo e(__('Saturday')); ?>:</span><?php echo e($setting->satureday_start); ?> - <?php echo e($setting->satureday_end); ?></li>
           </ul>
-          
+
         </section>
         <!-- Widget Address-->
         <section class="widget widget-featured-posts card rounded p-4">
@@ -58,6 +58,23 @@
             <a class="social-button shape-circle sb-facebook" href="<?php echo e($link); ?>" data-toggle="tooltip" data-placement="top"><i class="<?php echo e($icons[$link_key]); ?>"></i></a>
             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
           </div>
+        </section>
+
+        <!-- Widget Map-->
+        <section class="widget widget-featured-posts card rounded p-4" style="height: 500px" >
+            <h3 class="widget-title padding-bottom-1x">Ubicación de la tienda</h3>
+            <?php if (isset($component)) { $__componentOriginal6646f552db3ce73656792d9f4888fd4b44f4dc0e = $component; } ?>
+<?php $component = $__env->getContainer()->make(Larswiegers\LaravelMaps\Components\Google::class, ['centerPoint' => ['lat' => 19.4104231, 'long' => -99.1659553],'zoomLevel' => 16,'markers' => [['lat' => 19.4104231, 'long' => -99.1659553, 'title' => 'Paquete Express']]]); ?>
+<?php $component->withName('maps-google'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php $component->withAttributes([]); ?>
+             <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal6646f552db3ce73656792d9f4888fd4b44f4dc0e)): ?>
+<?php $component = $__componentOriginal6646f552db3ce73656792d9f4888fd4b44f4dc0e; ?>
+<?php unset($__componentOriginal6646f552db3ce73656792d9f4888fd4b44f4dc0e); ?>
+<?php endif; ?>
         </section>
       </div>
 

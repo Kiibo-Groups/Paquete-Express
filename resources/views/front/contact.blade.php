@@ -36,7 +36,7 @@
             <li><span class="text-muted">{{__('Monday-Friday')}}:</span>{{$setting->friday_start}} - {{$setting->friday_end}}</li>
             <li><span class="text-muted">{{__('Saturday')}}:</span>{{$setting->satureday_start}} - {{$setting->satureday_end}}</li>
           </ul>
-          
+
         </section>
         <!-- Widget Address-->
         <section class="widget widget-featured-posts card rounded p-4">
@@ -58,6 +58,16 @@
             <a class="social-button shape-circle sb-facebook" href="{{$link}}" data-toggle="tooltip" data-placement="top"><i class="{{$icons[$link_key]}}"></i></a>
             @endforeach
           </div>
+        </section>
+
+        <!-- Widget Map-->
+        <section class="widget widget-featured-posts card rounded p-4" style="height: 500px" >
+            <h3 class="widget-title padding-bottom-1x">Ubicación de la tienda</h3>
+            <x-maps-google
+                :centerPoint="['lat' => 19.4104231, 'long' => -99.1659553]"
+                :zoomLevel="16"
+                :markers="[['lat' => 19.4104231, 'long' => -99.1659553, 'title' => 'Paquete Express']]">
+            </x-maps-google>
         </section>
       </div>
 
