@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\Item;
 use App\Models\User;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\UsuarioResource;
 use App\Http\Resources\ArticulosResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\API\BaseController as BaseController;
-use App\Models\Item;
 
 class RegisterController extends BaseController
 {
@@ -19,9 +20,10 @@ class RegisterController extends BaseController
 
      public function getUsuarios()
      {
-         $usuarios = User::get();
+         $usuarios = User::latest()->get();
+         $order    = Order::latest('id')->whereOrderStatus('Pending')->get();
 
-         return $this->sendResponse(UsuarioResource::collection($usuarios), 'Usuarios retrieved successfully.');
+         return $this->sendResponse(UsuarioResource::collection($order), 'Usuarios retrieved successfully.');
      }
 
 
