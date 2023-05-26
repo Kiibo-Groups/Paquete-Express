@@ -40,9 +40,9 @@ class UsuarioResource extends JsonResource
             'municipio_envio' => $this->user->municipio_envio,
             'estado_envio' => $this->user->estado_envio,
             'pais_envio' => $this->user->ship_country,
-            'referencia_pedido_en_ecommerce' => $this->transaction_number,
-            'fecha_pedido' => $this->created_at->format('M d, Y'),
-            'pedido' => $this->cart,
+            //'referencia_pedido_en_ecommerce' => $this->transaction_number,
+            //'fecha_pedido' => $this->created_at->format('M d, Y'),
+            //'pedido' => $this->cart,
         ];
     }
 }
