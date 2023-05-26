@@ -29,11 +29,17 @@ class UsuarioResource extends JsonResource
             'localidad_fiscal' => $this->localidad_fiscal,
             'regimen_fiscal' => $this->regimen_fiscal,
             'referencia_direccion' => $this->referencia_direccion,
-            'clave_pais' => $this->clave_pais,
+            'clave_pais_sat' => $this->clave_pais,
             'forma_pago_sat' => $this->forma_pago_sat,
+            'nombre_comercial' => $this->ship_company,
             'referencia_direccion_envio' => $this->referencia_direccion_envio,
             'ship_address1' => $this->ship_address1,
             'codigo_postal_envio' => $this->ship_zip,
+            'colonia_envio' => $this->colonia_envio,
+            'localidad_envio' => $this->localidad_envio,
+            'municipio_envio' => $this->municipio_envio,
+            'estado_envio' => $this->estado_envio,
+            'pais_envio' => $this->ship_country,
         ];
     }
 }
