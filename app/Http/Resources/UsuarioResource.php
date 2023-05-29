@@ -20,7 +20,7 @@ class UsuarioResource extends JsonResource
             'last_name' => $this->user->last_name,
             'email' => $this->user->email,
             'phone' => $this->user->phone,
-            'rc_fiscal' => $this->user->rc_fiscal,
+            'rfc_fiscal' => $this->user->rc_fiscal,
             'calle_fiscal' => $this->user->calle_fiscal,
             'numero_interior' => $this->user->numero_interior,
             'numero_exterior' => $this->user->numero_exterior,
