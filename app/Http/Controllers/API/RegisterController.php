@@ -18,12 +18,13 @@ class RegisterController extends BaseController
 
 
 
-     public function getUsuarios()
+     public function getUsuarios(Request $request)
      {
-        // $usuarios = User::latest()->get();
-         $order    = Order::latest('id')->whereOrderStatus('Pending')->get();
 
-         return $this->sendResponse(UsuarioResource::collection($order), 'Usuarios retrieved successfully.');
+         $user = User::where('email', $request->email)->get();
+        // $order    = Order::latest('id')->whereOrderStatus('Pending')->get();
+
+         return $this->sendResponse(UsuarioResource::collection($user), 'Usuarios retrieved successfully.');
      }
 
 
