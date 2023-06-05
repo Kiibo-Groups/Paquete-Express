@@ -15,6 +15,8 @@ use App\Models\ChieldCategory;
 use App\Models\Currency;
 use App\Models\Subcategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use GuzzleHttp\Client;
 
 class ItemController extends Controller
 {
@@ -321,6 +323,39 @@ class ItemController extends Controller
     {
         $datas = Item::where('item_type','normal')->where('stock',0)->get();
         return view('back.item.stockout',compact('datas'));
+    }
+
+
+    public function sku(Request $request)
+    {
+
+        $sku    = $request->sku;
+
+        //http://200.52.80.60/dashboard/api/api_ecommerce.php?cve_art=110020&cve_alm=1&cve_precio=1
+
+
+        $client = new Client();
+
+        $response = $client->get('http://200.52.80.60/dashboard/api/api_ecommerce.php?cve_art=' . $sku . '&cve_alm=1&cve_precio=1');
+        $data = json_decode($response->getBody());
+
+        $sku = [];
+        foreach ($data as $value) {
+             $data = [
+                 'existencia' => $value->Existencia,
+                 'Precio' => $value->Precio,
+                 'Descripcion_Producto' => $value->Descripcion_Producto
+             ];
+             array_push($sku, $data);
+        }
+
+        return response()->json(['code' => 200, 'data' => $sku, 'message' => 'Se ha obtenido la siguiente información.']);
+
+
+
+
+
+
     }
 
 

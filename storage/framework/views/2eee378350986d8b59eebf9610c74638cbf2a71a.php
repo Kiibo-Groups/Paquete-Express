@@ -1,5 +1,6 @@
-<?php $__env->startSection('content'); ?>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<?php $__env->startSection('content'); ?>
 <div class="container-fluid">
 
 <!-- Page Heading -->
@@ -181,6 +182,44 @@
                     <button type="submit" class="btn btn-info save__edit"><?php echo e(__('Save & Edit')); ?></button>
                 </div>
             </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="sku"><?php echo e(__('SKU')); ?> *</label>
+                        <input type="text" name="sku" class="form-control" id="sku"
+                            id="sku" placeholder="<?php echo e(__('Enter SKU')); ?>"
+                            >
+                    </div>
+                    <div class="form-group">
+                        <label for="stock"><?php echo e(__('Total in stock')); ?>
+
+                            *</label>
+                        <div class="input-group mb-3">
+                            <input type="number" id="stock"
+                                name="stock" class="form-control"
+                                placeholder="<?php echo e(__('Total in stock')); ?>" value="<?php echo e(old('stock')); ?>" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="tax_id"><?php echo e(__('Select Tax')); ?> *</label>
+                        <select name="tax_id" id="tax_id" class="form-control">
+                            <option value=""><?php echo e(__('Select One')); ?></option>
+                            <?php $__currentLoopData = DB::table('taxes')->whereStatus(1)->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tax): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($tax->id); ?>"><?php echo e($tax->name); ?></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="video"><?php echo e(__('Video Link')); ?> </label>
+                        <input type="text" name="video" class="form-control"
+                            id="video" placeholder="<?php echo e(__('Enter Video Link')); ?>"
+                            value="<?php echo e(old('video')); ?>">
+                    </div>
+                </div>
+            </div>
+
             <div class="card">
                 <div class="card-body">
                     <div class="form-group">
@@ -256,41 +295,6 @@
                     </div>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-body">
-                    <div class="form-group">
-                        <label for="stock"><?php echo e(__('Total in stock')); ?>
-
-                            *</label>
-                        <div class="input-group mb-3">
-                            <input type="number" id="stock"
-                                name="stock" class="form-control"
-                                placeholder="<?php echo e(__('Total in stock')); ?>" value="<?php echo e(old('stock')); ?>" >
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="tax_id"><?php echo e(__('Select Tax')); ?> *</label>
-                        <select name="tax_id" id="tax_id" class="form-control">
-                            <option value=""><?php echo e(__('Select One')); ?></option>
-                            <?php $__currentLoopData = DB::table('taxes')->whereStatus(1)->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tax): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <option value="<?php echo e($tax->id); ?>"><?php echo e($tax->name); ?></option>
-                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="sku"><?php echo e(__('SKU')); ?> *</label>
-                        <input type="text" name="sku" class="form-control"
-                            id="sku" placeholder="<?php echo e(__('Enter SKU')); ?>"
-                            value="<?php echo e(Str::random(10)); ?>" >
-                    </div>
-                    <div class="form-group">
-                        <label for="video"><?php echo e(__('Video Link')); ?> </label>
-                        <input type="text" name="video" class="form-control"
-                            id="video" placeholder="<?php echo e(__('Enter Video Link')); ?>"
-                            value="<?php echo e(old('video')); ?>">
-                    </div>
-                </div>
-            </div>
 
             <div class="card">
                 <div class="card-body">
@@ -332,5 +336,45 @@
 </div>
 
 <?php $__env->stopSection(); ?>
+
+<script>
+    $(document).ready(function() {
+
+        $("#sku").blur(function() {
+            check();
+        });
+
+        function check(){
+
+            var sku = $("#sku").val();
+
+            $.ajax({
+                url: '<?php echo e(route('back.item.sku')); ?>',
+                type: "GET",
+                data: {
+                    sku: sku,
+                    _token: '<?php echo e(csrf_token()); ?>'
+                },
+                dataType: 'json',
+                success: function(response) {
+                    $("#checkout-city").prop('disabled', false);
+                    if (response.code == 200) {
+                        $.each(response.data, function(key, value) {
+                            $("#stock").val(value.existencia);
+                            $("#discount_price").val(value.Precio);
+                            $("#previous_price").val(value.Precio);
+
+
+
+                           console.log(value);
+                        });
+                    }
+                }
+            });
+
+
+        };
+    });
+</script>
 
 <?php echo $__env->make('master.back', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /var/www/html/Paquete-Express/resources/views/back/item/create.blade.php ENDPATH**/ ?>

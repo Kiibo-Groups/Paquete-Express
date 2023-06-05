@@ -67,6 +67,8 @@ Route::group(['middleware' => 'adminlocalize'], function () {
             Route::post('item/galleries/update', 'Back\ItemController@galleriesUpdate')->name('back.item.galleries.update');
             Route::delete('item/gallery/{gallery}/delete', 'Back\ItemController@galleryDelete')->name('back.item.gallery.delete');
 
+            Route::get('item/sku', 'Back\ItemController@sku')->name('back.item.sku');
+
             // Bulk product upload
             Route::get('/product/csv/export', 'Back\CsvProductController@export')->name('back.csv.export');
             Route::get('bulk/product/index', 'Back\CsvProductController@index')->name('back.bulk.product.index');

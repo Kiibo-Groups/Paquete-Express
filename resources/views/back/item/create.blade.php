@@ -1,7 +1,7 @@
 @extends('master.back')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 @section('content')
-
 <div class="container-fluid">
 
 <!-- Page Heading -->
@@ -180,6 +180,43 @@
                     <button type="submit" class="btn btn-info save__edit">{{ __('Save & Edit') }}</button>
                 </div>
             </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="sku">{{ __('SKU') }} *</label>
+                        <input type="text" name="sku" class="form-control" id="sku"
+                            id="sku" placeholder="{{ __('Enter SKU') }}"
+                            >
+                    </div>
+                    <div class="form-group">
+                        <label for="stock">{{ __('Total in stock') }}
+                            *</label>
+                        <div class="input-group mb-3">
+                            <input type="number" id="stock"
+                                name="stock" class="form-control"
+                                placeholder="{{ __('Total in stock') }}" value="{{ old('stock') }}" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="tax_id">{{ __('Select Tax') }} *</label>
+                        <select name="tax_id" id="tax_id" class="form-control">
+                            <option value="">{{__('Select One')}}</option>
+                            @foreach(DB::table('taxes')->whereStatus(1)->get() as $tax)
+                            <option value="{{ $tax->id }}">{{ $tax->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="video">{{ __('Video Link') }} </label>
+                        <input type="text" name="video" class="form-control"
+                            id="video" placeholder="{{ __('Enter Video Link') }}"
+                            value="{{ old('video') }}">
+                    </div>
+                </div>
+            </div>
+
             <div class="card">
                 <div class="card-body">
                     <div class="form-group">
@@ -253,40 +290,6 @@
                     </div>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-body">
-                    <div class="form-group">
-                        <label for="stock">{{ __('Total in stock') }}
-                            *</label>
-                        <div class="input-group mb-3">
-                            <input type="number" id="stock"
-                                name="stock" class="form-control"
-                                placeholder="{{ __('Total in stock') }}" value="{{ old('stock') }}" >
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="tax_id">{{ __('Select Tax') }} *</label>
-                        <select name="tax_id" id="tax_id" class="form-control">
-                            <option value="">{{__('Select One')}}</option>
-                            @foreach(DB::table('taxes')->whereStatus(1)->get() as $tax)
-                            <option value="{{ $tax->id }}">{{ $tax->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="sku">{{ __('SKU') }} *</label>
-                        <input type="text" name="sku" class="form-control"
-                            id="sku" placeholder="{{ __('Enter SKU') }}"
-                            value="{{Str::random(10)}}" >
-                    </div>
-                    <div class="form-group">
-                        <label for="video">{{ __('Video Link') }} </label>
-                        <input type="text" name="video" class="form-control"
-                            id="video" placeholder="{{ __('Enter Video Link') }}"
-                            value="{{ old('video') }}">
-                    </div>
-                </div>
-            </div>
 
             <div class="card">
                 <div class="card-body">
@@ -335,3 +338,40 @@
 </div>
 
 @endsection
+
+<script>
+    $(document).ready(function() {
+
+        $("#sku").blur(function() {
+            check();
+        });
+
+        function check(){
+
+            var sku = $("#sku").val();
+
+            $.ajax({
+                url: '{{ route('back.item.sku') }}',
+                type: "GET",
+                data: {
+                    sku: sku,
+                    _token: '{{ csrf_token() }}'
+                },
+                dataType: 'json',
+                success: function(response) {
+                    $("#checkout-city").prop('disabled', false);
+                    if (response.code == 200) {
+                        $.each(response.data, function(key, value) {
+                            $("#stock").val(value.existencia);
+                            $("#discount_price").val(value.Precio);
+                            $("#previous_price").val(value.Precio);
+
+                        });
+                    }
+                }
+            });
+
+
+        };
+    });
+</script>
