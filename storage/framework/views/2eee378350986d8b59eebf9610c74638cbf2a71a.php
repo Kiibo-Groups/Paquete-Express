@@ -364,9 +364,6 @@
                             $("#discount_price").val(value.Precio);
                             $("#previous_price").val(value.Precio);
 
-
-
-                           console.log(value);
                         });
                     }
                 }

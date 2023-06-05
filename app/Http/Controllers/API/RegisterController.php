@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\VentaResource;
 use App\Http\Resources\UsuarioResource;
 use App\Http\Resources\ArticulosResource;
 use Illuminate\Support\Facades\Validator;
@@ -41,6 +42,18 @@ class RegisterController extends BaseController
 
          return $this->sendArticulosResponse(ArticulosResource::collection($articulos), 'Artículo retrieved successfully.');
      }
+
+
+
+
+     public function getOrden(Request $request)
+     {
+
+        $order    = Order::where('transaction_number', $request->order_id)->get();
+
+        return $this->sendResponse(VentaResource::collection($order), 'Orden retrieved successfully.');
+     }
+
 
 
 
