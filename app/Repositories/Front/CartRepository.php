@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Session;
 
 class CartRepository
 {
-  
+
     /**
      * Store cart.
      *
@@ -34,7 +34,7 @@ class CartRepository
         $qty = isset($input['quantity']) ? $input['quantity'] : 1 ;
         $qty = is_numeric($qty) ? $qty : 1;
         $cart = Session::get('cart');
-        $item = Item::where('id',$input['item_id'])->select('id','name','photo','discount_price','previous_price','slug','item_type','license_name','license_key')->first();
+        $item = Item::where('id',$input['item_id'])->select('id','name','photo','discount_price','previous_price','slug','item_type','license_name','license_key', 'sku')->first();
         $single = isset($request->type) ? ($request->type == '1' ? 1 : 0 ) : 0;
         if(Session::has('cart')){
             if($item->item_type == 'digital' || $item->item_type == 'license'){
@@ -135,6 +135,7 @@ class CartRepository
                     "price" => PriceHelper::grandPrice($item),
                     "main_price" => $item->discount_price,
                     "photo" => $item->photo,
+                    "sku" => $item->sku,
                     "type" => $item->item_type,
                     "item_type" => $item->item_type,
                     'item_l_n' => $item->item_type == 'license' ? end($license_name) : null,
@@ -159,7 +160,7 @@ class CartRepository
 
 
             Session::put('cart', $cart);
-            
+
             if($qty_check == 1){
                 $mgs = __('Product add successfully');
             }else{

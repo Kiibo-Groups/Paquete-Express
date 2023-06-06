@@ -20,10 +20,19 @@ class VentaResource extends JsonResource
 
         $prod = [];
         foreach (json_decode($this->cart,true) as $item){
+
+            if ($item['sku']) {
+               $sku =$item['sku'];
+            } else {
+                $sku = '';
+            }
+
+
             $prod[] = array(
                 'producto'=>$item['name'],
                 'Cantidad_Vendida '=> $item['qty'],
                 'precio_pactado'=> $item['price'],
+                'clave_artículo'=> $sku,
 
             );
         };
@@ -42,9 +51,16 @@ class VentaResource extends JsonResource
             $iva = 0;
         }
 
+        $shipping_info = json_decode($this->shipping_info,true);
+        if ($shipping_info) {
+            $entrega = $shipping_info['entrega'];
+        } else {
+            $entrega = '';
+        }
+
         return [
             //'ID' => $this->id,
-            'Referencia_pedido_en_ecommerce' => $this->transaction_number,
+            'Referencia_pedido_en_ecommerce_rateToken' => $this->orderKey,
             'Serie_pedido' => $this->transaction_number,
             'Folio_pedido' => $this->transaction_number,
             'Fecha_pedido' => $this->created_at->format('d-m-Y'),
@@ -54,8 +70,7 @@ class VentaResource extends JsonResource
             'Descuento_Pactado_en_%' => $descuento,
             'IVA' => $iva,
             'Total' => PriceHelper::OrderTotal($this),
-
-
+            'Fecha_estimada_entrega' => $entrega,
             'Productos' => $prod,
 
 

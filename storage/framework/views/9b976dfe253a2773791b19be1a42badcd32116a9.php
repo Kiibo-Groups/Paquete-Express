@@ -179,6 +179,7 @@
                             <input id="transporte" name="transporte" type="hidden">
                             <input id="precio_shipp" name="precio_shipp" type="hidden">
                             <input id="rateToken" name="rateToken" type="hidden">
+                            <input id="entrega" name="entrega" type="hidden">
                         </form>
                         <input id="token_compomex" type="hidden" value="<?php echo e($token); ?>">
                         <input id="code_zip" type="hidden" value="<?php echo e($code_zip); ?>">
@@ -261,7 +262,8 @@
                                     '<a class="text-decoration-none " onclick="valores(\'' +
                                     (value.price).replace(/,/g, '') + '\',\'' + value
                                     .description + '\' ,\'' + value
-                                    .rateToken + '\', '+ key +')">' +
+                                    .rateToken + '\', '+ key +',\'' + value
+                                    .display + '\')">' +
                                     '<img max-width="50%" src="<?php echo e(asset('public/assets/logos/')); ?>/' + value
                                     .provider + '.png"  >' +
                                     '<h5> <b> $' + value.price + '</b></h5>' +
@@ -279,11 +281,12 @@
 
     });
 
-    function valores(p, d, r, k) {
+    function valores(p, d, r, k, l) {
         var precio = Number(p);
         var transporte = $("#transporte").val(d);
         var precio_shipp = $("#precio_shipp").val(precio);
         var rateToken = $("#rateToken").val(r);
+        var entrega = $("#entrega").val(l);
         var key = k;
 
         $(".eliminar").removeClass("seleccion");

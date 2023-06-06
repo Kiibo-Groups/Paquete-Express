@@ -265,6 +265,7 @@ class CheckoutController extends Controller
         $data['ancho'] =  $ancho;
 
 
+
         return view('front.checkout.shipping', $data);
     }
 
