@@ -34,7 +34,7 @@ class CartRepository
         $qty = isset($input['quantity']) ? $input['quantity'] : 1 ;
         $qty = is_numeric($qty) ? $qty : 1;
         $cart = Session::get('cart');
-        $item = Item::where('id',$input['item_id'])->select('id','name','photo','discount_price','previous_price','slug','item_type','license_name','license_key', 'sku')->first();
+        $item = Item::where('id',$input['item_id'])->select('id','name','photo','discount_price','previous_price','slug','item_type','license_name','license_key', 'sku', 'alto', 'ancho', 'largo')->first();
         $single = isset($request->type) ? ($request->type == '1' ? 1 : 0 ) : 0;
         if(Session::has('cart')){
             if($item->item_type == 'digital' || $item->item_type == 'license'){

@@ -32,6 +32,8 @@ trait BankCheckout
         $cart_total = 0;
         $total = 0;
         $option_price = 0;
+
+        $prod = [];
         foreach ($cart as $key => $item) {
 
             $total += $item['main_price'] * $item['qty'];
@@ -41,9 +43,19 @@ trait BankCheckout
             if ($item->tax) {
                 $total_tax += $item::taxCalculate($item);
             }
-            $content = $item['name']; // ----------- createOrder
+            $content = $item['name'];
+            $prod[] = array(
+                'nombre'=>$item['name'],
+                'alto '=> $item['alto'],
+                'ancho'=> $item['ancho'],
+                'largo'=> $item['largo'],
+
+            );
+
+
         }
 
+        // ----------- createOrder
         $shipping = Session::get('shipping_address')['precio_shipp'];
 
         if (!PriceHelper::Digital()) {
@@ -86,6 +98,8 @@ trait BankCheckout
         $parameters       = [
 
             "rateToken" => Session::get('shipping_address')['rateToken'],
+            "producto" => $prod,
+            "peso_volumetrico"  => $ship['pvolum'],
             "content"   => [
                 "content"        => $content,
                 "insurance"      => false,

@@ -207,6 +207,7 @@ trait PaypalCheckout
             $cart_total = 0;
             $total = 0;
             $option_price = 0;
+            $prod = [];
             foreach($cart as $key => $item){
 
                 $total += $item['main_price'] * $item['qty'];
@@ -216,28 +217,38 @@ trait PaypalCheckout
                 if($item->tax){
                     $total_tax += $item->tax->value;
                 }
-            }
-            $shipping = [];
-            if(ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->exists()){
-                $shipping = ShippingService::whereStatus(1)->whereId(1)->whereIsCondition(1)->first();
-                if($cart_total >= $shipping->minimum_price){
-                    $shipping = $shipping;
-                }else{
-                    $shipping = [];
-                }
-            }
+                $content = $item['name'];
 
-            if(!$shipping){
-                $shipping = ShippingService::whereStatus(1)->where('id','!=',1)->first();
+                $prod[] = array(
+                    'nombre'=>$item['name'],
+                    'alto '=> $item['alto'],
+                    'ancho'=> $item['ancho'],
+                    'largo'=> $item['largo'],
+
+                );
             }
+           // ----------- createOrder -----------------------------
+
+
+            $shipping = Session::get('shipping_address')['precio_shipp'];
+
             $discount = [];
-            if(Session::has('coupon')){
+            if (Session::has('coupon')) {
                 $discount = Session::get('coupon');
             }
 
-            $grand_total = ($cart_total + ($shipping?$shipping->price:0)) + $total_tax;
+            if (!PriceHelper::Digital()) {
+                $shipping = null;
+            }
+
+            $grand_total = ($cart_total + ($shipping ?: 0)) + $total_tax;
             $grand_total = $grand_total - ($discount ? $discount['discount'] : 0);
             $total_amount = PriceHelper::setConvertPrice($grand_total);
+
+
+
+
+
             $orderData['cart'] = json_encode($cart,true);
             $orderData['discount'] = json_encode($discount,true);
             $orderData['shipping'] = json_encode($shipping,true);
@@ -252,6 +263,8 @@ trait PaypalCheckout
             $orderData['currency_sign'] = PriceHelper::setCurrencySign();
             $orderData['currency_value'] = PriceHelper::setCurrencyValue();
             $orderData['order_status'] = 'Pending';
+
+
             $order = Order::create($orderData);
             PriceHelper::Transaction($order->id,$order->transaction_number,EmailHelper::getEmail(),PriceHelper::OrderTotal($order,'trns'));
             PriceHelper::LicenseQtyDecrese($cart);

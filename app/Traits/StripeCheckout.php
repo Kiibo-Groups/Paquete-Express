@@ -51,6 +51,8 @@ trait StripeCheckout
         $cart_total   = 0;
         $total        = 0;
         $option_price = 0;
+
+        $prod = [];
         foreach ($cart as $key => $item) {
 
             $total += $item['main_price'] * $item['qty'];
@@ -60,12 +62,18 @@ trait StripeCheckout
             if ($item->tax) {
                 $total_tax += $item::taxCalculate($item);
             }
-            $content = $item['name']; // ----------- createOrder
+            $content = $item['name'];
+
+            $prod[] = array(
+                'nombre'=>$item['name'],
+                'alto '=> $item['alto'],
+                'ancho'=> $item['ancho'],
+                'largo'=> $item['largo'],
+
+            );
         }
 
-
-
-
+        // ----------- createOrder -----------------------------
 
 
         $shipping = Session::get('shipping_address')['precio_shipp'];
@@ -136,6 +144,7 @@ trait StripeCheckout
                 //  ---------------------- createOrder ------------------------
 
                 $ship = Session::get('shipping_address');
+
                 $user = Auth::user();
                 $setting          = Setting::first();
                 $token_express    = $setting->token_paqexpress;
@@ -143,6 +152,8 @@ trait StripeCheckout
                 $parameters       = [
 
                     "rateToken" => Session::get('shipping_address')['rateToken'],
+                    "producto" => $prod,
+                    "peso_volumetrico"  => $ship['pvolum'],
                     "content"   => [
                         "content"        => $content,
                         "insurance"      => false,
@@ -179,6 +190,7 @@ trait StripeCheckout
                         "road_type_code"        => "009"
                     ]
                 ];
+
 
                 $response = Http::withToken($token_express)->post($url, $parameters);
                 $data1    = json_decode($response);
