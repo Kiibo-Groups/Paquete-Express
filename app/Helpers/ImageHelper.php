@@ -8,33 +8,37 @@ use Image;
 class ImageHelper
 {
     public static function handleUploadedImage($file,$path,$delete=null) {
+
+
         if ($file) {
             if($delete){
 
-                if (file_exists(base_path('/public').$path.'/'.$delete)) {
-                    unlink(base_path('/public').$path.'/'.$delete);
+                if (file_exists(base_path('public/').$path.'/'.$delete)) {
+                    unlink(base_path('public/').$path.'/'.$delete);
                 }
             }
             $name = Str::random(4).$file->getClientOriginalName();
-            $file->move($path,$name);
+
+            $file->move('public/'.$path,$name);
             return $name;
         }
     }
-    public static function ItemhandleUploadedImage($file,$path,$delete=null) {
+    public static function ItemhandleUploadedImage($file,$path,$delete=null) {  //----Imagen principal-------
+
         if ($file) {
             if($delete){
-                if (file_exists(base_path('/public').$path.'/'.$delete)) {
-                    unlink(base_path('/public').$path.'/'.$delete);
+                if (file_exists(base_path('public/').$path.'/'.$delete)) {
+                    unlink(base_path('public/').$path.'/'.$delete);
                 }
             }
 
             $thum = Str::random(8).'.'.$file->getClientOriginalExtension();
             $image = \Image::make($file)->resize(230,230);
 
-            $image->save(base_path('/public').$path.'/'.$thum);
+            $image->save(base_path('public/').$path.'/'.$thum);
 
             $photo = time().$file->getClientOriginalName();
-            $file->move($path,$photo);
+            $file->move('public/'.$path,$photo);
             return [$photo,$thum];
         }
     }
@@ -42,10 +46,10 @@ class ImageHelper
     public static function handleUpdatedUploadedImage($file,$path,$data,$delete_path,$field) {
         $name = time().$file->getClientOriginalName();
 
-        $file->move(base_path('/public').$path,$name);
+        $file->move(base_path('public/').$path,$name);
         if($data[$field] != null){
-            if (file_exists(base_path('/public').$delete_path.$data[$field])) {
-                unlink(base_path('/public').$delete_path.$data[$field]);
+            if (file_exists(base_path('public/').$delete_path.$data[$field])) {
+                unlink(base_path('public/').$delete_path.$data[$field]);
             }
         }
         return $name;
@@ -58,18 +62,18 @@ class ImageHelper
 
         $image = \Image::make($file)->resize(230,230);
 
-        $image->save(base_path('/public').$path.'/'.$thum);
+        $image->save(base_path('public/').$path.'/'.$thum);
 
-        $file->move(base_path('/public').$path,$photo);
+        $file->move(base_path('public/').$path,$photo);
 
         if($data['thumbnail'] != null){
-            if (file_exists(base_path('/public').$delete_path.$data['thumbnail'])) {
-                unlink(base_path('/public').$delete_path.$data['thumbnail']);
+            if (file_exists(base_path('public/').$delete_path.$data['thumbnail'])) {
+                unlink(base_path('public/').$delete_path.$data['thumbnail']);
             }
         }
         if($data[$field] != null){
-            if (file_exists(base_path('/public').$delete_path.$data[$field])) {
-                unlink(base_path('/public').$delete_path.$data[$field]);
+            if (file_exists(base_path('public/').$delete_path.$data[$field])) {
+                unlink(base_path('public/').$delete_path.$data[$field]);
             }
         }
         return [$photo,$thum];
@@ -80,8 +84,8 @@ class ImageHelper
 
 
         if($data[$field] != null){
-            if (file_exists(base_path('/public').$delete_path.$data[$field])) {
-                unlink(base_path('/public').$delete_path.$data[$field]);
+            if (file_exists(base_path('public/').$delete_path.$data[$field])) {
+                unlink(base_path('public/').$delete_path.$data[$field]);
             }
         }
     }

@@ -259,6 +259,7 @@ class ItemRepository
 
     public function galleriesUpdate($request,$item_id=null)
     {
+
         Gallery::insert($this->storeImageData($request,$item_id));
     }
 
@@ -271,7 +272,7 @@ class ItemRepository
 
     public function galleryDelete($gallery)
     {
-        ImageHelper::handleDeletedImage($gallery,'photo','/assets/images/');
+        ImageHelper::handleDeletedImage($gallery,'photo','assets/images/');
         $gallery->delete();
     }
 
@@ -282,6 +283,7 @@ class ItemRepository
 
     public function storeImageData($request,$item_id=null)
     {
+        //dd($request->file('galleries'));
         $storeData = [];
         if ($galleries = $request->file('galleries')) {
             foreach($galleries as $key => $gallery){
