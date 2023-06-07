@@ -31,7 +31,12 @@ class UsuarioResource extends JsonResource
             'referencia_direccion' => $this->referencia_direccion,
             'clave_pais_sat' => $this->clave_pais,
             'forma_pago_sat' => $this->forma_pago_sat,
-            'nombre_comercial' => $this->ship_company,
+
+            'Municipio_Fiscal' => $this->bill_city,
+            'Estado_Fiscal' => $this->estado_envio,
+            'Pais_Fiscal' => $this->bill_country,
+            'Nombre_comercial_alias_persona_negocio_factura' => $this->bill_company,
+            'Nombre_comercial_alias_persona_negocio_envio' => $this->ship_company,
             'referencia_direccion_envio' => $this->referencia_direccion_envio,
             'ship_address1' => $this->ship_address1,
             'codigo_postal_envio' => $this->ship_zip,
@@ -40,6 +45,7 @@ class UsuarioResource extends JsonResource
             'municipio_envio' => $this->municipio_envio,
             'estado_envio' => $this->estado_envio,
             'pais_envio' => $this->ship_country,
+
             //'referencia_pedido_en_ecommerce' => $this->transaction_number,
             //'fecha_pedido' => $this->created_at->format('M d, Y'),
             //'pedido' => $this->cart,
