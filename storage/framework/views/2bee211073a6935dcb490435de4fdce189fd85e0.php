@@ -348,7 +348,14 @@
 
             <div class="card">
                 <div class="card-body">
-                  
+                  <div class="form-group">
+                        <label for="peso">Peso (Kg)</label>
+                        <div class="input-group mb-3">
+                            <input type="number" id="peso" step="0.1" min="0"
+                                name="peso" class="form-control"
+                                placeholder="Peso" value="<?php echo e($item->peso); ?>" >
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label for="alto">Alto (Cm)</label>
                         <div class="input-group mb-3">

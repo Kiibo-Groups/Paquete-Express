@@ -33,6 +33,10 @@ class VentaResource extends JsonResource
                 'Cantidad_Vendida '=> $item['qty'],
                 'precio_pactado'=> $item['price'],
                 'clave_artículo'=> $sku,
+                'peso'=> $item['peso'],
+                'alto'=> $item['alto'],
+                'ancho'=> $item['ancho'],
+                'largo'=> $item['largo'],
 
             );
         };
