@@ -51,7 +51,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="billing-zip">{{ __('Zip Code') }}</label>
-                                    <input class="form-control" type="text" name="bill_zip" id="billing-zip"
+                                    <input class="form-control" type="number" name="bill_zip" id="billing-zip"
                                         value="{{ $user->bill_zip }}">
                                     @error('bill_zip')
                                         <p class="text-danger">{{ $message }}</p>
@@ -151,7 +151,7 @@
                                                                                 <div class="col-md-6">
                                                                                     <div class="form-group">
                                                                                         <label for="shipping-zip">{{ __('Zip Code') }}</label>
-                                                                                        <input class="form-control" type="text" value="{{ $user->ship_zip }}"
+                                                                                        <input class="form-control" type="number" value="{{ $user->ship_zip }}"
                                                                                             name="ship_zip" id="shipping-zip">
                                                                                         @error('ship_zip')
                                                                                             <p class="text-danger">{{ $message }}</p>

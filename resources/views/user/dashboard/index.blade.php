@@ -201,7 +201,7 @@
                                                                 <div class="col-sm-6">
                                                                     <div class="form-group">
                                                                         <label for="reg-ln">{{ __('Código Postal Fiscal') }}</label>
-                                                                        <input class="form-control" type="text" name="codigo_postal"
+                                                                        <input class="form-control" type="number" name="codigo_postal"
                                                                             placeholder="{{ __('Código Postal Fiscal') }}" id="reg-ln"
                                                                             value="{{ $user->codigo_postal }}">
                                                                         @error('codigo_postal')

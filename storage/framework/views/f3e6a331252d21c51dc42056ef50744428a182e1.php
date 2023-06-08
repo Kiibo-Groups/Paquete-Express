@@ -59,7 +59,7 @@ $message = $__bag->first($__errorArgs[0]); ?>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="billing-zip"><?php echo e(__('Zip Code')); ?></label>
-                                    <input class="form-control" type="text" name="bill_zip" id="billing-zip"
+                                    <input class="form-control" type="number" name="bill_zip" id="billing-zip"
                                         value="<?php echo e($user->bill_zip); ?>">
                                     <?php $__errorArgs = ['bill_zip'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -187,7 +187,7 @@ $message = $__bag->first($__errorArgs[0]); ?>
                                                                                 <div class="col-md-6">
                                                                                     <div class="form-group">
                                                                                         <label for="shipping-zip"><?php echo e(__('Zip Code')); ?></label>
-                                                                                        <input class="form-control" type="text" value="<?php echo e($user->ship_zip); ?>"
+                                                                                        <input class="form-control" type="number" value="<?php echo e($user->ship_zip); ?>"
                                                                                             name="ship_zip" id="shipping-zip">
                                                                                         <?php $__errorArgs = ['ship_zip'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');

@@ -279,7 +279,7 @@ $message = $__bag->first($__errorArgs[0]); ?>
                                                                 <div class="col-sm-6">
                                                                     <div class="form-group">
                                                                         <label for="reg-ln"><?php echo e(__('Código Postal Fiscal')); ?></label>
-                                                                        <input class="form-control" type="text" name="codigo_postal"
+                                                                        <input class="form-control" type="number" name="codigo_postal"
                                                                             placeholder="<?php echo e(__('Código Postal Fiscal')); ?>" id="reg-ln"
                                                                             value="<?php echo e($user->codigo_postal); ?>">
                                                                         <?php $__errorArgs = ['codigo_postal'];
