@@ -199,6 +199,8 @@ class CheckoutController extends Controller
         $data['user'] = Auth::user();
         $cart = Session::get('cart');
 
+
+
         $total_tax = 0;
         $cart_total = 0;
         $total  = 0;
@@ -217,6 +219,7 @@ class CheckoutController extends Controller
                 $total_tax += $item::taxCalculate($item);
             }
             if ($item->item_type == 'normal') {
+
                 $pvolum += $item->pvolum;
                 $alto += $item->alto;
                 $largo += $item->largo;

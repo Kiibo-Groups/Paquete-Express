@@ -25,7 +25,14 @@ class ItemRepository
         $input = $request->all();
 
         if ($request->item_type == "normal") {
-            $input['pvolum'] = (($request->alto * $request->ancho * $request->largo ) / 5000 ) ;
+            $pvolum = (($request->alto * $request->ancho * $request->largo ) / 5000 ) ;
+
+            if ($pvolum >= 1 ) {
+                $input['pvolum'] = $pvolum;
+            } else {
+                $input['pvolum'] = 1;
+            }
+
         }
 
 
@@ -119,7 +126,14 @@ class ItemRepository
 
         $input = $request->all();
         if ($request->itemtype == "normal") {
-            $input['pvolum'] = (($request->alto * $request->ancho * $request->largo ) / 5000 ) ;
+            $pvolum = (($request->alto * $request->ancho * $request->largo ) / 5000 ) ;
+
+            if ($pvolum >= 1 ) {
+                $input['pvolum'] = $pvolum;
+            } else {
+                $input['pvolum'] = 1;
+            }
+
         }
 
 
