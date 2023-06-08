@@ -4,7 +4,7 @@
 <?php $__env->stopSection(); ?>
 <style>
     .seleccion{
-        background-color: #111111;
+        background-color: #005dfe;
     }
 </style>
 
@@ -137,7 +137,7 @@
 
 
                             <div id="mostrarcotizacion" style="display: none">
-                                <h6>Cotizar Envío</h6>
+                                <h6>Selecciona la paqueteria</h6>
                                 <div class="row mt-4" >
                                     <div class="col-12" >
                                         <div class="payment-methods" id="tablaexpress">
