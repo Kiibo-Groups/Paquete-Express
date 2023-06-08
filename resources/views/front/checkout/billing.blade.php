@@ -176,6 +176,8 @@
                                             class="icon-arrow-right"></i></button>
                                 @endif
                             </div>
+
+
                         </form>
                         <input id="token_compomex" type="hidden"  value="{{ $token }}" >
                         <input id="code_zip" type="hidden"  value="{{ $code_zip}}" >

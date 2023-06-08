@@ -172,16 +172,41 @@
                                 <a class="btn btn-primary btn-sm" href="{{ route('front.cart') }}"><span
                                         class="hidden-xs-down"><i class="icon-arrow-left"></i>
                                         {{ __('Back To Cart') }}</span>
-                                </a><button class="btn btn-primary  btn-sm" type="submit"><span
-                                        class="hidden-xs-down">{{ __('Continue') }}</span><i
-                                        class="icon-arrow-right"></i></button>
+                                </a>
+
+                                    <div id="envioOff">
+                                        <button disabled class="btn btn-primary  btn-sm" type="button"><span
+                                            class="hidden-xs-down">Por favor seleccione método de envío</span><i
+                                            ></i>
+                                        </button>
+                                    </div>
+
+                                    <div id="envioOn" style="display: none">
+                                        <button class="btn btn-primary  btn-sm" type="submit"><span
+                                            class="hidden-xs-down">{{ __('Continue') }}</span><i
+                                            class="icon-arrow-right"></i>
+                                        </button>
+                                    </div>
+
                             </div>
+
+
+
+
+
+
+
+
 
                             <input id="transporte" name="transporte" type="hidden">
                             <input id="precio_shipp" name="precio_shipp" type="hidden">
                             <input id="rateToken" name="rateToken" type="hidden">
                             <input id="entrega" name="entrega" type="hidden">
+
+
                         </form>
+
+
                         <input id="token_compomex" type="hidden" value="{{ $token }}">
                         <input id="code_zip" type="hidden" value="{{ $code_zip }}">
                         <input id="token_express" type="hidden" value="{{ $token_express }}">
@@ -302,6 +327,9 @@
             },
             dataType: 'json',
             success: function(response) {
+
+                $("#envioOff").hide();
+                $("#envioOn").show();
 
                 $('.shipping_total_set').text(response.shipping_price);
                 $('.grand_total_set').text(response.grand_total);
