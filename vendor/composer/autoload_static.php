@@ -821,6 +821,7 @@ class ComposerStaticInitd8442fe26c9150b07c9fc8fddabb45cf
         'App\\Http\\Requests\\UserRequest' => __DIR__ . '/../..' . '/app/Http/Requests/UserRequest.php',
         'App\\Http\\Resources\\ArticulosResource' => __DIR__ . '/../..' . '/app/Http/Resources/ArticulosResource.php',
         'App\\Http\\Resources\\UsuarioResource' => __DIR__ . '/../..' . '/app/Http/Resources/UsuarioResource.php',
+        'App\\Http\\Resources\\VentaResource' => __DIR__ . '/../..' . '/app/Http/Resources/VentaResource.php',
         'App\\Models\\Admin' => __DIR__ . '/../..' . '/app/Models/Admin.php',
         'App\\Models\\Attribute' => __DIR__ . '/../..' . '/app/Models/Attribute.php',
         'App\\Models\\AttributeOption' => __DIR__ . '/../..' . '/app/Models/AttributeOption.php',

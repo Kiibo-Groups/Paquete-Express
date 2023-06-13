@@ -125,6 +125,7 @@ return array(
     'App\\Http\\Requests\\UserRequest' => $baseDir . '/app/Http/Requests/UserRequest.php',
     'App\\Http\\Resources\\ArticulosResource' => $baseDir . '/app/Http/Resources/ArticulosResource.php',
     'App\\Http\\Resources\\UsuarioResource' => $baseDir . '/app/Http/Resources/UsuarioResource.php',
+    'App\\Http\\Resources\\VentaResource' => $baseDir . '/app/Http/Resources/VentaResource.php',
     'App\\Models\\Admin' => $baseDir . '/app/Models/Admin.php',
     'App\\Models\\Attribute' => $baseDir . '/app/Models/Attribute.php',
     'App\\Models\\AttributeOption' => $baseDir . '/app/Models/AttributeOption.php',

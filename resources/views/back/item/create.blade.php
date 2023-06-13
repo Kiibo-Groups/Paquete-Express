@@ -327,6 +327,37 @@
                     </div>
                 </div>
             </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="descripcionsat">Descripción SAT</label>
+                        <div class="input-group mb-3">
+                            <input type="text" id="descripcionsat"
+                                name="descripcionsat" class="form-control"
+                                placeholder="Descripción" value="{{ old('descripcionsat') }}"  >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="clavesat">Clave SAT</label>
+                        <div class="input-group mb-3">
+                            <input type="text" id="clavesat"
+                                name="clavesat" class="form-control"
+                                placeholder="Clave" value="{{ old('clavesat') }}" required >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="unidadsat">Unidad SAT</label>
+                        <div class="input-group mb-3">
+                            <input type="text" id="unidadsat"
+                                name="unidadsat" class="form-control"
+                                placeholder="Unidad" value="{{ old('unidadsat') }}" required>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
         </div>
 
     </div>

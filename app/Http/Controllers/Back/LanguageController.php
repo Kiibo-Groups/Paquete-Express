@@ -67,6 +67,7 @@ class LanguageController extends Controller
             $n = str_replace("_"," ",$key);
             $new[$n] = $value;
         }
+
         $mydata = json_encode($new);
         file_put_contents(resource_path().'/lang/'.$data->file, $mydata);
         return redirect()->route('back.language.index')->withSuccess(__('Language Added Successfully.'));
@@ -75,6 +76,7 @@ class LanguageController extends Controller
 
     public function edit($id)
     {
+
         $data = Language::find($id);
         $data_results = file_get_contents(resource_path().'/lang/'.$data->file);
         $lang = json_decode($data_results, true);
