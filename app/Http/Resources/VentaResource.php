@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Item;
 use App\Helpers\PriceHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -27,17 +28,28 @@ class VentaResource extends JsonResource
                 $sku = '';
             }
 
+            $art = Item::where('sku', $sku)->first();
 
             $prod[] = array(
                 'producto'=>$item['name'],
-                'Cantidad_Vendida '=> $item['qty'],
+                'cantidad_vendida '=> $item['qty'],
                 'precio_pactado'=> $item['price'],
                 'clave_artículo'=> $sku,
                 'peso'=> $item['peso'],
                 'alto'=> $item['alto'],
                 'ancho'=> $item['ancho'],
                 'largo'=> $item['largo'],
+                'descripcionsat' =>  $art->descripcionsat,
+                'clavesat' =>  $art->clavesat,
+                'unidadsat' =>  $art->unidadsat,
 
+            );
+
+            $partida[] = array(
+                'producto'=>$item['name'],
+                'cantidad '=> $item['qty'],
+                'costo'=> $item['price'],
+                'importe'=> $item['price'] * $item['qty'],
             );
         };
         //dd($prod);
@@ -76,6 +88,7 @@ class VentaResource extends JsonResource
             'Total' => PriceHelper::OrderTotal($this),
             'Fecha_estimada_entrega' => $entrega,
             'Productos' => $prod,
+            'total_de_partida' => $partida,
 
 
         ];
