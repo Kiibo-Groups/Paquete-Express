@@ -340,7 +340,7 @@
                         <div class="input-group mb-3">
                             <input type="text" id="descripcionsat"
                                 name="descripcionsat" class="form-control"
-                                placeholder="Descripción" value="<?php echo e(old('descripcionsat')); ?>"  >
+                                placeholder="Descripción" value="RUEDAS"  readonly>
                         </div>
                     </div>
                     <div class="form-group">
@@ -348,7 +348,7 @@
                         <div class="input-group mb-3">
                             <input type="text" id="clavesat"
                                 name="clavesat" class="form-control"
-                                placeholder="Clave" value="<?php echo e(old('clavesat')); ?>" required >
+                                placeholder="Clave" value="H87" readonly >
                         </div>
                     </div>
                     <div class="form-group">
@@ -356,7 +356,7 @@
                         <div class="input-group mb-3">
                             <input type="text" id="unidadsat"
                                 name="unidadsat" class="form-control"
-                                placeholder="Unidad" value="<?php echo e(old('unidadsat')); ?>" required>
+                                placeholder="Unidad" value="Pieza" readonly>
                         </div>
                     </div>
 
